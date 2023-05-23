@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.entity;
 
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity(name = "TB_CHATROOM")
 public class ChatRoom {

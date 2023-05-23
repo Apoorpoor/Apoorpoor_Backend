@@ -1,8 +1,9 @@
 package com.example.apoorpoor_backend.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
 
 @Entity(name ="TB_MEMBER")
 @Getter

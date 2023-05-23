@@ -25,33 +25,33 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatController {
-//    private final ChatService chatService;
-//    private final SimpMessagingTemplate msgOperation;
-//
-//    @MessageMapping("/pub/chat/enter")
-//    @SendTo("/sub/chat/room")
-//    public void enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-//        Thread.sleep(500);
-//        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
-//        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId(), newchatdto);
-//    }
-//    @MessageMapping("/pub/chat/talk")
-//    @SendTo("/sub/chat/room")
-//    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-//        Thread.sleep(500);
-//        chatService.sendChatRoom(chatDto, headerAccessor);
-//        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId(), chatDto);
-//    }
-//    @EventListener
-//    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
-//        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-//        ChatDto chatDto = chatService.disconnectChatRoom(headerAccessor);
-//        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId() , chatDto);
-//    }
-//    @PostMapping("/chat/image")
-//    public String uploadImage(@RequestParam(value = "image",required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
-//        String image_url = chatService.uploadImage(image);
-//        return image_url;
-//    }
+    private final ChatService chatService;
+    private final SimpMessagingTemplate msgOperation;
+
+    @MessageMapping("/pub/chat/enter")
+    @SendTo("/sub/chat/room")
+    public void enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+        Thread.sleep(500);
+        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId(), newchatdto);
+    }
+    @MessageMapping("/pub/chat/talk")
+    @SendTo("/sub/chat/room")
+    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+        Thread.sleep(500);
+        chatService.sendChatRoom(chatDto, headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId(), chatDto);
+    }
+    @EventListener
+    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        ChatDto chatDto = chatService.disconnectChatRoom(headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room" + chatDto.getRoomId() , chatDto);
+    }
+    @PostMapping("/chat/image")
+    public String uploadImage(@RequestParam(value = "image",required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
+        String image_url = chatService.uploadImage(image);
+        return image_url;
+    }
 
 }

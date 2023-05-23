@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.chat.entity;
+package com.example.apoorpoor_backend.entity;
 
 public enum MessageType {
     ENTER,

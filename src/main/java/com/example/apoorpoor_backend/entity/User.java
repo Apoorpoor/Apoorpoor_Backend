@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.member.entity;
+package com.example.apoorpoor_backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name ="TB_MEMBER")
 @Getter
-public class Member extends Timestamped{
+public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

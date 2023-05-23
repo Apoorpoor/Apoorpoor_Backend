@@ -1,9 +1,10 @@
 package com.example.apoorpoor_backend.entity;
 
 import com.example.apoorpoor_backend.dto.ChatDto;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor

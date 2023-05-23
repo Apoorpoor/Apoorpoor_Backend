@@ -31,3 +31,15 @@ spring:
     hibernate:
       ddl-auto: create
 
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA6BJV2PX4JZTXKNLG
+      secretKey: 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
+    s3:
+      bucket: myapoorpoor
+    stack:
+      auto-: 'false'
+    region:
+      static: ap-northeast-2
+

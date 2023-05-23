@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.member.entity;
+package com.example.apoorpoor_backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

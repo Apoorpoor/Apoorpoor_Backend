@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.beggar.entity;
+package com.example.apoorpoor_backend.entity;
 
 import com.example.apoorpoor_backend.entity.Timestamped;
 import jakarta.persistence.Entity;

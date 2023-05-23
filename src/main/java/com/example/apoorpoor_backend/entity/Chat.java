@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.chat.entity;
+package com.example.apoorpoor_backend.entity;
 
 import com.example.apoorpoor_backend.entity.Timestamped;
 import jakarta.persistence.*;
@@ -9,8 +9,8 @@ public class Chat extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private MessageType messageType;
+    @Enumerated(EnumType.STRING)
+    private MessageType type;
 
     @Column
     private String sender;
@@ -18,13 +18,27 @@ public class Chat extends Timestamped {
     @Column
     private String message;
 
-    @Column
+    @Column(nullable = true)
     private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_Id")
+    private ChatRoom room;
+
+
+    public Chat (ChatDto chatDto, ChatRoom room, User user, MessageType type, String imageUrl) {
+        this.sender = chatDto.getSender();
+        this.message = chatDto.getMessage();
+        this.room = room;
+        this.user = user;
+        this.userid = user.getUserid();
+        this.type = type;
+        this.profile_image = profile_image;
+    }
 
 
 

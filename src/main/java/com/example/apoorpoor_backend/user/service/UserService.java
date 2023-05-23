@@ -30,14 +30,10 @@ public class UserService {
 
         User user = User.builder()
                 .email(userSignUpDto.getEmail())
-                .password(userSignUpDto.getPassword())
                 .nickname(userSignUpDto.getNickname())
-                .age(userSignUpDto.getAge())
-                .city(userSignUpDto.getCity())
                 .role(Role.USER)
                 .build();
 
-        user.passwordEncode(passwordEncoder);
         userRepository.save(user);
     }
 }

@@ -2,14 +2,11 @@ package com.example.apoorpoor_backend.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Getter
-public class UserSignUpDto {
-
+@Setter
+public class UserLogOutDto {
     private String memberId;
-    private String password;
-    private String nickname;
-    private int age;
-    private String city;
 }

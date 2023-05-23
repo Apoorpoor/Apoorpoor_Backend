@@ -18,7 +18,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    private String email; // 이메일
+    private String memberId; // 이메일
     private String password; // 비밀번호
     private String nickname; // 닉네임
 

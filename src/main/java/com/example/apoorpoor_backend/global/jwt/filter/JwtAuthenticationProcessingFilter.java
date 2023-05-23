@@ -2,7 +2,7 @@ package com.example.apoorpoor_backend.global.jwt.filter;
 
 import com.example.apoorpoor_backend.global.jwt.service.JwtService;
 import com.example.apoorpoor_backend.global.jwt.util.PasswordUtil;
-import com.example.apoorpoor_backend.user.User;
+import com.example.apoorpoor_backend.entity.User;
 import com.example.apoorpoor_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

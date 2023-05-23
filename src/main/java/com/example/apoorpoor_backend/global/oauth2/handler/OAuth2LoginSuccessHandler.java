@@ -2,7 +2,6 @@ package com.example.apoorpoor_backend.global.oauth2.handler;
 
 import com.example.apoorpoor_backend.global.jwt.service.JwtService;
 import com.example.apoorpoor_backend.global.oauth2.CustomOAuth2User;
-import com.example.apoorpoor_backend.user.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

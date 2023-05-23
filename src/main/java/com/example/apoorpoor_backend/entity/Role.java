@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.user;
+package com.example.apoorpoor_backend.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

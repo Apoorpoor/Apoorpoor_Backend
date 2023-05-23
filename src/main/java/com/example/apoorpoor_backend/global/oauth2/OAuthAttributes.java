@@ -4,9 +4,9 @@ import com.example.apoorpoor_backend.global.oauth2.userinfo.GoogleOAuth2UserInfo
 import com.example.apoorpoor_backend.global.oauth2.userinfo.KakaoOAuth2UserInfo;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.NaverOAuth2UserInfo;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.OAuth2UserInfo;
-import com.example.apoorpoor_backend.user.Role;
-import com.example.apoorpoor_backend.user.SocialType;
-import com.example.apoorpoor_backend.user.User;
+import com.example.apoorpoor_backend.entity.Role;
+import com.example.apoorpoor_backend.entity.SocialType;
+import com.example.apoorpoor_backend.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 

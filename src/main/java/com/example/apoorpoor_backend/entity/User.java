@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.user;
+package com.example.apoorpoor_backend.entity;
 
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Builder
-@Table(name = "USERS")
+@Table(name = "TB_USER")
 @AllArgsConstructor
 public class User {
 

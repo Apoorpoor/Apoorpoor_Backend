@@ -31,4 +31,14 @@ public class User extends Timestamped{
     @Column(name = "provider")
     private String provider;
 
+    @ManyToOne
+    private ChatRoom room;
+
+    public void enterRoom(ChatRoom room){
+        this.room = room;
+    }
+    public void exitRoom(ChatRoom room){
+        this.room = null;
+    }
+
 }

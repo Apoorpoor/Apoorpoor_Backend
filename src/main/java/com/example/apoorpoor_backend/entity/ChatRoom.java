@@ -13,6 +13,7 @@ public class ChatRoom {
     private String userid;
 
     public ChatRoom(String roomName, String host, String userid) {
+
         this.userid = userid;
     }
 }

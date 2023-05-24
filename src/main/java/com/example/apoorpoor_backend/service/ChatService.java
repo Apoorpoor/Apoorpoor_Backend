@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -11,8 +12,9 @@ import com.example.apoorpoor_backend.entity.MessageType;
 import com.example.apoorpoor_backend.entity.User;
 import com.example.apoorpoor_backend.repository.ChatRepository;
 import com.example.apoorpoor_backend.repository.ChatRoomRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,68 +38,51 @@ import java.util.List;
 public class ChatService {
     private static final String S3_BUCKET_PREFIX = "S3";
 
+    private String bucketName;
+    private final AmazonS3Client amazonS3Client;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
-    private final ChatRoomRepository chatRoomRepository;
+
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor){
-        User user = userIDCheck(chatDto.getUserId());
+        headerAccessor.getSessionAttributes().put("nickname", chatDto.getSender());
+        headerAccessor.getSessionAttributes().put("roomId", chatDto.getRoomId());
+        headerAccessor.getSessionAttributes().put("userId", chatDto.getUserId());
+
+        User user = userNameCheck(chatDto.getUserId());
         ChatRoom room = roomIdCheck(chatDto.getRoomId());
         user.enterRoom(room);
-
-        chatDto.setMessage(chatDto.getSender() + "님 입장!! ο(=•ω＜=)ρ⌒☆");
-
-        Long headCount = userRepository.countAllByRoom_Id(chatRoom.getId());
-        chatRoom.updateCount(headCount);
-        return chatDto;
-    }
-    public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String nickName = (String) headerAccessor.getSessionAttributes().get("nickName");
-        String userId = (String) headerAccessor.getSessionAttributes().get("userId");
-        User user = userNameCheck(nickName);
-        ChatRoom room = roomIdCheck(roomId);
-        user.exitRoom(room);
-
-        ChatDto chatDto = ChatDto.builder()
-                .type(MessageType.LEAVE)
-                .userId(userId)
-                .roomId(roomId)
-                .sender(nickName)
-                .userId(userId)
-                .message(nickName + "님 퇴장!! ヽ(*。>Д<)o゜")
-                .build();
-
-        Long headCount = userRepository.countAllByRoom_Id(room.getId());
-        room.updateCount(headCount);
-        if(headCount == 0){
-            chatRoomRepository.deleteByRoomId(roomId);
-        }
+        chatDto.setMessage(chatDto.getSender() + "님 입장!");
 
         return chatDto;
     }
-    public ChatRoom roomIdCheck(String roomId) {
-        return chatRoomRepository.findByRoomId(roomId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 채팅방입니다.")
-        );
-    }
-
     public User userNameCheck(String userName) {
         return userRepository.findByUsername(userName).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
     }
+    public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
+        String userId = (String) headerAccessor.getSessionAttributes().get("userId");
+        String nickName = (String) headerAccessor.getSessionAttributes().get("nickname");
+        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
 
-    public User userIDCheck(String userId) {
-        return userRepository.findByUserid(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
-        );
+        ChatDto chatDto = ChatDto.builder()
+                .type(MessageType.LEAVE)
+                .roomId(roomId)
+                .userId(userId)
+                .sender(nickName)
+                .message(nickName + "님이 채팅방을 나가셨습니다!")
+                .build();
+
+        return chatDto;
     }
+
+
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
 
         ChatRoom room = roomIdCheck(chatDto.getRoomId());
         User user = userIDCheck(chatDto.getUserId());
-        String profile_image = chatDto.getProfile_image();
+        String imageUrl = chatDto.getImage();
         MessageType type = MessageType.TALK;
 
         Date date = new Date();
@@ -104,7 +91,7 @@ public class ChatService {
         chatDto.setDate(dateformat);
         chatDto.setProfile_image(user.getProfile_image());
 
-        Chat chat = new Chat(chatDto, room, user, type, profile_image);
+        Chat chat = new Chat(chatDto, room, user, type, imageUrl);
         chatRepository.save(chat);
     }
 
@@ -140,9 +127,9 @@ public class ChatService {
 
             InputStream inputStream = image.getInputStream();
 
-            amazonS3.putObject(new PutObjectRequest(bucketName, imageName, inputStream, objectMetadata)
+            amazonS3Client.putObject(new PutObjectRequest(bucketName, imageName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            image_url = amazonS3.getUrl(bucketName, imageName).toString();
+            image_url = amazonS3Client.getUrl(bucketName, imageName).toString();
         }
         return image_url;
     }

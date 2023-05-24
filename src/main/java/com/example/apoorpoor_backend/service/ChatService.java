@@ -58,6 +58,12 @@ public class ChatService {
         return chatDto;
     }
 
+    private ChatRoom roomIdCheck(String roomId) {
+        return chatRepository.findByRoomId(roomId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 채팅방입니다.")
+        );
+    }
+
     public Beggar beggarCheck(Long beggarId){
         return userRepository.findByBeggarId(beggarId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 거지입니다.")

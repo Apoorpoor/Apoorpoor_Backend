@@ -19,6 +19,7 @@ public class ChatDto {
     private String date;
     private String message;
     private String image;
+    private String roomId;
 
     public ChatDto (Chat chat){
         this.type = chat.getType();
@@ -26,5 +27,6 @@ public class ChatDto {
         this.beggar_id = chat.getBeggar().getId();
         this.message = chat.getMessage();
         this.image = chat.getImageUrl();
+        this.roomId = chat.getRoom().getRoomId();
     }
 }

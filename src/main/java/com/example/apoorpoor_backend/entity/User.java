@@ -1,44 +1,57 @@
 package com.example.apoorpoor_backend.entity;
 
-import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
-@Entity(name ="TB_MEMBER")
 @Getter
-public class User extends Timestamped{
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Builder
+@Table(name = "TB_USER")
+@AllArgsConstructor
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String userId;
+    private String memberId; // 이메일
+    private String password; // 비밀번호
+    private String nickname; // 닉네임
 
-    @Column(nullable = false)
-    private String memberName;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @Column(nullable = false)
-    private String password;
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType; // KAKAO, NAVER, GOOGLE
 
-    @Column(nullable = false)
-    private String email;
+    private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
-    @Column
-    @ColumnDefault("0")
-    private Long point;
+    private String refreshToken; // 리프레시 토큰
 
-    @Column(name = "provider")
-    private String provider;
-
-    @ManyToOne
-    private ChatRoom room;
-
-    public void enterRoom(ChatRoom room){
-        this.room = room;
-    }
-    public void exitRoom(ChatRoom room){
-        this.room = null;
+    // 유저 권한 설정 메소드
+    public void authorizeUser() {
+        this.role = Role.USER;
     }
 
+    // 비밀번호 암호화 메소드
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    //== 유저 필드 업데이트 ==//
+    public void updateNickname(String updateNickname) {
+        this.nickname = updateNickname;
+    }
+
+    public void updatePassword(String updatePassword, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(updatePassword);
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
+    }
 }

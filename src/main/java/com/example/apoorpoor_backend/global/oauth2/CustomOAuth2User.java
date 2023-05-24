@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.global.oauth2;
 
-import com.example.apoorpoor_backend.user.Role;
+import com.example.apoorpoor_backend.entity.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;

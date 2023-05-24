@@ -2,7 +2,7 @@ package com.example.apoorpoor_backend.global.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.apoorpoor_backend.user.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

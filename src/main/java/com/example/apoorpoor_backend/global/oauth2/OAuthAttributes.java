@@ -6,7 +6,6 @@ import com.example.apoorpoor_backend.global.oauth2.userinfo.NaverOAuth2UserInfo;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.OAuth2UserInfo;
 import com.example.apoorpoor_backend.entity.Role;
 import com.example.apoorpoor_backend.entity.SocialType;
-import com.example.apoorpoor_backend.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 

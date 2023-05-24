@@ -3,8 +3,6 @@ package com.example.apoorpoor_backend.global.oauth2.service;
 import com.example.apoorpoor_backend.global.oauth2.CustomOAuth2User;
 import com.example.apoorpoor_backend.global.oauth2.OAuthAttributes;
 import com.example.apoorpoor_backend.entity.SocialType;
-import com.example.apoorpoor_backend.entity.User;
-import com.example.apoorpoor_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,7 +1,7 @@
-package com.example.apoorpoor_backend.user.controller;
+package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.user.dto.UserSignUpDto;
-import com.example.apoorpoor_backend.user.service.UserService;
+
+import com.example.apoorpoor_backend.dto.UserSignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.dto;
 
+import com.example.apoorpoor_backend.entity.Beggar;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

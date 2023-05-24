@@ -1,33 +1,33 @@
-package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.ChatDto;
-import com.example.apoorpoor_backend.service.ChatService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import java.io.IOException;
-
-
-@RestController
-@RequiredArgsConstructor
-@Slf4j
-public class ChatController {
-    private final ChatService chatService;
-    private final SimpMessagingTemplate msgOperation;
-
+//package com.example.apoorpoor_backend.controller;
+//
+//import com.example.apoorpoor_backend.dto.ChatDto;
+//import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
+//import org.springframework.context.event.EventListener;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.SendTo;
+//import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+//import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+//
+//import java.io.IOException;
+//
+//
+//@RestController
+//@RequiredArgsConstructor
+//@Slf4j
+//public class ChatController {
+//    private final ChatService chatService;
+//    private final SimpMessagingTemplate msgOperation;
+//
 //    @MessageMapping("/pub/chat/enter")
 //    @SendTo("/sub/chat/room")
 //    public void enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
@@ -53,5 +53,5 @@ public class ChatController {
 //        String image_url = chatService.uploadImage(image);
 //        return image_url;
 //    }
+//}
 
-}

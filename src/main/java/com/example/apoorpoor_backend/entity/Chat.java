@@ -20,6 +20,12 @@ import javax.persistence.*;
     @Column
     private String message;
 
+    @Column
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    private MessageType type;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "beggar_id")
     private Beggar beggar;

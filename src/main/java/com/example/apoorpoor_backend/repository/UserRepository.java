@@ -1,15 +1,17 @@
 package com.example.apoorpoor_backend.repository;
 
 
+import com.example.apoorpoor_backend.entity.Beggar;
 import com.example.apoorpoor_backend.entity.SocialType;
 import com.example.apoorpoor_backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByMemberId(String memberId);
+
+    Optional<Beggar>findByBeggarId(Long beggarId);
 
     Optional<User> findByNickname(String nickname);
 

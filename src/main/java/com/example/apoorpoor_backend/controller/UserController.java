@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.dto.UserSignUpDto;
 import com.example.apoorpoor_backend.user.dto.UserLogOutDto;
-import com.example.apoorpoor_backend.user.dto.UserSignUpDto;
 import com.example.apoorpoor_backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,11 +15,11 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
-        userService.signUp(userSignUpDto);
-        return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
-    }
+//    @PostMapping("/sign-up")
+//    public ResponseEntity<String> signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
+//        userService.signUp(userSignUpDto);
+//        return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
+//    }
 
     @GetMapping("/jwt-test")
     public ResponseEntity<String> jwtTest() {

@@ -1,5 +1,7 @@
 package com.example.apoorpoor_backend.global.login.service;
 
+import com.example.apoorpoor_backend.entity.User;
+import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

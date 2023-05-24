@@ -1,7 +1,9 @@
 package com.example.apoorpoor_backend.global.jwt.filter;
 
+import com.example.apoorpoor_backend.entity.User;
 import com.example.apoorpoor_backend.global.jwt.service.JwtService;
 import com.example.apoorpoor_backend.global.jwt.util.PasswordUtil;
+import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

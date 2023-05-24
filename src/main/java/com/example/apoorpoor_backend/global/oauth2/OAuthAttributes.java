@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.global.oauth2;
 
+import com.example.apoorpoor_backend.entity.User;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.GoogleOAuth2UserInfo;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.KakaoOAuth2UserInfo;
 import com.example.apoorpoor_backend.global.oauth2.userinfo.NaverOAuth2UserInfo;

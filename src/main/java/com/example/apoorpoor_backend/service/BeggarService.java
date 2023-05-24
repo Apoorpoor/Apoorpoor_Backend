@@ -3,14 +3,10 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
 import com.example.apoorpoor_backend.dto.BeggarResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
-<<<<<<< HEAD
+import com.example.apoorpoor_backend.entity.User;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
-=======
 import com.example.apoorpoor_backend.entity.Beggar;
-import com.example.apoorpoor_backend.repository.BeggarRepository;
-import com.example.apoorpoor_backend.user.User;
-import com.example.apoorpoor_backend.user.repository.UserRepository;
->>>>>>> beggars
+import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

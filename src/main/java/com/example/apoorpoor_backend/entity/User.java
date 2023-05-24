@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.user;
+package com.example.apoorpoor_backend.entity;
 
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

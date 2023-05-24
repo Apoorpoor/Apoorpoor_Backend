@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.entity;
 
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
-import com.example.apoorpoor_backend.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;

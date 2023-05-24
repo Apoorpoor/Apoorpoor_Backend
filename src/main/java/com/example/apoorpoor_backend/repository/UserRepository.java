@@ -1,8 +1,8 @@
-package com.example.apoorpoor_backend.user.repository;
+package com.example.apoorpoor_backend.repository;
 
 
-import com.example.apoorpoor_backend.user.SocialType;
-import com.example.apoorpoor_backend.user.User;
+import com.example.apoorpoor_backend.entity.SocialType;
+import com.example.apoorpoor_backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

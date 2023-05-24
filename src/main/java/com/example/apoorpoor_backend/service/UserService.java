@@ -1,10 +1,10 @@
 package com.example.apoorpoor_backend.user.service;
 
-import com.example.apoorpoor_backend.user.Role;
-import com.example.apoorpoor_backend.user.User;
+import com.example.apoorpoor_backend.dto.UserSignUpDto;
+import com.example.apoorpoor_backend.entity.Role;
+import com.example.apoorpoor_backend.entity.User;
+import com.example.apoorpoor_backend.repository.UserRepository;
 import com.example.apoorpoor_backend.user.dto.UserLogOutDto;
-import com.example.apoorpoor_backend.user.dto.UserSignUpDto;
-import com.example.apoorpoor_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

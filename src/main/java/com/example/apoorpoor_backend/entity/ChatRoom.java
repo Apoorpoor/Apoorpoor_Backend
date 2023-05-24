@@ -1,19 +1,19 @@
 package com.example.apoorpoor_backend.entity;
 
+import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.UUID;
 
-@Entity(name = "TB_CHATROOM")
+@Entity
+@Getter
 public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String userid;
+    @Column(nullable = false)
+    private String roomId;
 
-    public ChatRoom(String roomName, String host, String userid) {
-
-        this.userid = userid;
-    }
 }

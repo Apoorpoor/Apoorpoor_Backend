@@ -6,16 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity(name = "TB_Chat")
 @Getter
 @NoArgsConstructor
-@Entity(name = "TB_CHAT")
-public class Chat extends Timestamped {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+ public class Chat {
 
-    @Enumerated(EnumType.STRING)
-    private MessageType type;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private String sender;
@@ -23,23 +20,19 @@ public class Chat extends Timestamped {
     @Column
     private String message;
 
-    @Column(nullable = true)
-    private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "beggar_id")
+    private Beggar beggar;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_Id")
     private ChatRoom room;
 
-    public Chat (ChatDto chatDto, ChatRoom room, User user, MessageType type, String imageUrl) {
-        this.sender = chatDto.getSender();
-        this.message = chatDto.getMessage();
-        this.room = room;
-        this.type = type;
-        this.imageUrl = imageUrl;
-        this.user = user;
+    public Chat (ChatDto chatDto, Beggar beggar, MessageType type) {
+       this.sender = chatDto.getSender();
+       this.message = chatDto.getMessage();
+       this.beggar = beggar;
+       this.type = type;
     }
+
 }

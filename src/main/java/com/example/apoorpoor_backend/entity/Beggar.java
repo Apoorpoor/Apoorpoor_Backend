@@ -36,6 +36,10 @@ public class Beggar extends Timestamped{
     @Column
     private String mention;
 
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private ChatRoom room;
+
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
         this.user = user;
@@ -46,4 +50,6 @@ public class Beggar extends Timestamped{
     public void update(BeggarRequestDto beggarRequestDto) {
         this.nickname = beggarRequestDto.getNickname();
     }
+    public void  enterRoom(ChatRoom room){
+        this.room = room;}
 }

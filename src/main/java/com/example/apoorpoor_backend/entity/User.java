@@ -32,6 +32,9 @@ public class User {
 
     private String refreshToken; // 리프레시 토큰
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Beggar beggar;
+
     // 유저 권한 설정 메소드
     public void authorizeUser() {
         this.role = Role.USER;
@@ -54,4 +57,5 @@ public class User {
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
 }

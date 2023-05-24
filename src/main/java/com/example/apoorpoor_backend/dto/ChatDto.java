@@ -7,23 +7,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
+
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class ChatDto {
     private MessageType type;
     private String sender;
-    private String userId;
-    private String roomId;
+    private Long beggar_id;
     private String date;
     private String message;
     private String image;
 
-    public ChatDto(Chat chat){
+    public ChatDto (Chat chat){
         this.type = chat.getType();
         this.sender = chat.getSender();
-        this.userId = chat.getUser().getUserId();
+        this.beggar_id = chat.getBeggar().getId();
         this.message = chat.getMessage();
         this.image = chat.getImageUrl();
     }

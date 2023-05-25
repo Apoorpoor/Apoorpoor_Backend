@@ -1,14 +1,11 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.BeggarResponseDto;
-import com.example.apoorpoor_backend.dto.UserSignUpDto;
-import com.example.apoorpoor_backend.user.dto.UserLogOutDto;
-import com.example.apoorpoor_backend.user.service.UserService;
+import com.example.apoorpoor_backend.dto.UserLogOutDto;
+import com.example.apoorpoor_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 

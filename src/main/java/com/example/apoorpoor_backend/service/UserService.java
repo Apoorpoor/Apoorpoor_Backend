@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.user.service;
+package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.UserSignUpDto;
 import com.example.apoorpoor_backend.entity.Beggar;

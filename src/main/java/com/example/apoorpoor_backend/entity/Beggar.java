@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@Entity
+@Entity(name = "TB_BEGGAR")
 @NoArgsConstructor
-@Table(name = "TB_BEGGAR")
+@Table
 public class Beggar extends Timestamped{
 
     @Id
@@ -36,9 +38,9 @@ public class Beggar extends Timestamped{
     @Column
     private String mention;
 
-//    @ManyToOne
-//    @JoinColumn(name = "room_id")
-//    private ChatRoom room;
+    @OneToMany
+    @JoinColumn(name = "beggar_id")
+    private List<Balance> balanceList = new ArrayList<>();
 
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
@@ -50,6 +52,8 @@ public class Beggar extends Timestamped{
     public void update(BeggarRequestDto beggarRequestDto) {
         this.nickname = beggarRequestDto.getNickname();
     }
-//    public void  enterRoom(ChatRoom room){
-//        this.room = room;}
+
+    public void addBalanceList(Balance balance) {
+        this.balanceList.add(balance);
+    }
 }

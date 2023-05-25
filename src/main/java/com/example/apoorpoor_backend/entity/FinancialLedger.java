@@ -25,17 +25,14 @@ public class FinancialLedger extends Timestamped{
     private Long expenditure;
 
     @Column
-    private Long totalAmount;
-
-    @Column
     private LocalDateTime dateTime;
 
     @Column
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
 }

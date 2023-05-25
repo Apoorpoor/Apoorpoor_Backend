@@ -1,11 +1,15 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.dto.BeggarResponseDto;
 import com.example.apoorpoor_backend.dto.UserSignUpDto;
 import com.example.apoorpoor_backend.user.dto.UserLogOutDto;
 import com.example.apoorpoor_backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,5 +34,12 @@ public class UserController {
     public ResponseEntity<String> logOut(@RequestBody UserLogOutDto userLogOutDto) {
         userService.logOut(userLogOutDto);
         return new ResponseEntity<>("로그아웃 완료", HttpStatus.OK);
+    }
+
+    // 로그인 한 유저가 메인페이지를 요청할 때 유저의 이름 반환
+    @GetMapping("/user-info")
+    public String getUserName(Authentication authentication) {
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        return userService.getBeggarName(user.getUsername());
     }
 }

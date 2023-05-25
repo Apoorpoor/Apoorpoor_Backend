@@ -37,7 +37,7 @@ cloud:
       accessKey: AKIA6BJV2PX4JZTXKNLG
       secretKey: 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
     s3:
-      bucket: myapoorpoor
+
     stack:
       auto-: 'false'
     region:

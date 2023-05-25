@@ -1,8 +1,10 @@
 package com.example.apoorpoor_backend.user.service;
 
 import com.example.apoorpoor_backend.dto.UserSignUpDto;
+import com.example.apoorpoor_backend.entity.Beggar;
 import com.example.apoorpoor_backend.entity.Role;
 import com.example.apoorpoor_backend.entity.User;
+import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import com.example.apoorpoor_backend.user.dto.UserLogOutDto;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BeggarRepository beggarRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
@@ -52,6 +55,13 @@ public class UserService {
         );
     }
 
+    public String getBeggarName(String memberId) {
+        Optional<User> findUser = userRepository.findByMemberId(memberId);
+        if(findUser.isEmpty())
+            throw new IllegalStateException("거지 조회 실패");
+        Beggar beggar = beggarRepository.findByUserId(findUser.get().getId());
+        return beggar.getNickname();
+    }
 }
 
 

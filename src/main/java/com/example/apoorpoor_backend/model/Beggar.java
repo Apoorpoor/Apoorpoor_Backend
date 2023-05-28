@@ -35,10 +35,6 @@ public class Beggar extends Timestamped{
     @Column
     private String mention;
 
-//    @OneToMany
-//    @JoinColumn(name = "beggar_id")
-//    private List<Balance> balanceList = new ArrayList<>();
-
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
         this.user = user;
@@ -50,7 +46,4 @@ public class Beggar extends Timestamped{
         this.nickname = beggarRequestDto.getNickname();
     }
 
-//    public void addBalanceList(Balance balance) {
-//        this.balanceList.add(balance);
-//    }
 }

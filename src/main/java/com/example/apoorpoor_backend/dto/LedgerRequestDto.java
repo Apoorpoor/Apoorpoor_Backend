@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 public class LedgerRequestDto {
-
     private String ledgerTitle;
     private String incomeType;
     private String expenditureType;

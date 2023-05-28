@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class LedgerResponseDto {
-
     private String username;
     private String ledgerTitle;
     private String incomeType;

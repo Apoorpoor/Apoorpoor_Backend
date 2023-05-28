@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Balance {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "balance_id")

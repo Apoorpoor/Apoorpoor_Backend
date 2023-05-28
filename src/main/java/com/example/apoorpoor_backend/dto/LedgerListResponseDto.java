@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.dto;
 
-import com.example.apoorpoor_backend.entity.Balance;
+
+import com.example.apoorpoor_backend.model.Balance;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

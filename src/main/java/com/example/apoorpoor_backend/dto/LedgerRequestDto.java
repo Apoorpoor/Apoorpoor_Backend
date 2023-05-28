@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.dto;
 
-import com.example.apoorpoor_backend.entity.AccountType;
+import com.example.apoorpoor_backend.model.AccountType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

@@ -3,15 +3,16 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
 import com.example.apoorpoor_backend.dto.BeggarResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
-import com.example.apoorpoor_backend.entity.User;
+import com.example.apoorpoor_backend.model.Beggar;
+import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
-import com.example.apoorpoor_backend.entity.Beggar;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,30 +22,37 @@ public class BeggarService {
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
 
-    public StatusResponseDto createBeggar(BeggarRequestDto beggarRequestDto, String memberId) {
-        Optional<User> findUser = userRepository.findByMemberId(memberId);
-        if(findUser.isEmpty())
-            throw new IllegalStateException("거지가 되지 못했어요..");
-        beggarRepository.save(new Beggar(beggarRequestDto, findUser.get()));
-        return new StatusResponseDto("거지가 되었어요...");
+    public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
+        User findUser = userCheck(username);
+        beggarRepository.save(new Beggar(beggarRequestDto, findUser));
+        return new ResponseEntity<>(new StatusResponseDto("거지가 되었어요..."), HttpStatus.OK );
     }
 
-    public BeggarResponseDto updateBeggar(BeggarRequestDto beggarRequestDto, String memberId) {
-        Optional<User> findUser = userRepository.findByMemberId(memberId);
-        if(findUser.isEmpty())
-            throw new IllegalStateException("거지를 찾을 수 없습니다.");
+    public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
+        User findUser = userCheck(username);
+        Long userId = findUser.getId();
+        Beggar beggar = beggarCheck(userId);
+        return new ResponseEntity<>(new BeggarResponseDto(beggar), HttpStatus.OK);
+    }
 
-        Beggar beggar = beggarRepository.findByUserId(findUser.get().getId());
+    public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
+        User findUser = userCheck(username);
+        Long userId = findUser.getId();
+        Beggar beggar = beggarCheck(userId);
         beggar.update(beggarRequestDto);
-        return new BeggarResponseDto(beggar);
+        return new ResponseEntity<>(new BeggarResponseDto(beggar), HttpStatus.OK);
     }
 
-    public BeggarResponseDto findBeggar(String memberId) {
-        Optional<User> findUser = userRepository.findByMemberId(memberId);
-        if(findUser.isEmpty())
-            throw new IllegalStateException("거지 조회 실패");
-        Beggar beggar = beggarRepository.findByUserId(findUser.get().getId());
-        return new BeggarResponseDto(beggar);
+    public User userCheck(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
+    }
+
+    public Beggar beggarCheck(Long userId) {
+        return beggarRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("거지를 찾을 수 없습니다.")
+        );
     }
 
 }

@@ -1,18 +1,20 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.auth.PrincipalDetails;
 import com.example.apoorpoor_backend.dto.LedgerListResponseDto;
 import com.example.apoorpoor_backend.dto.LedgerRequestDto;
 import com.example.apoorpoor_backend.dto.LedgerResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
-import com.example.apoorpoor_backend.entity.AccountType;
-import com.example.apoorpoor_backend.entity.Balance;
-import com.example.apoorpoor_backend.entity.FinancialLedger;
+import com.example.apoorpoor_backend.model.AccountType;
+import com.example.apoorpoor_backend.model.Balance;
+import com.example.apoorpoor_backend.model.FinancialLedger;
 import com.example.apoorpoor_backend.repository.BalanceRepository;
 import com.example.apoorpoor_backend.repository.FinancialLedgerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +30,8 @@ public class FinancialLedgerService {
     private final FinancialLedgerRepository financialLedgerRepository;
     private final BalanceRepository balanceRepository;
 
-    public ResponseEntity<LedgerResponseDto> createLedger(LedgerRequestDto ledgerRequestDto, Authentication authentication) {
-        String memberId = authentication.getName();
+    public ResponseEntity<LedgerResponseDto> createLedger(LedgerRequestDto ledgerRequestDto, PrincipalDetails principalDetails) {
+        String username = principalDetails.getUsername();
         String ledgerTitle = ledgerRequestDto.getLedgerTitle();
         String incomeType = ledgerRequestDto.getIncomeType();
         String expenditureType = ledgerRequestDto.getExpenditureType();
@@ -41,7 +43,7 @@ public class FinancialLedgerService {
 
         if(accountType.equals(AccountType.INCOME)) {
             ledgerResponseDto = LedgerResponseDto.builder()
-                    .memberId(memberId)
+                    .username(username)
                     .ledgerTitle(ledgerTitle)
                     .incomeType(incomeType)
                     .expenditureType(null)
@@ -51,7 +53,7 @@ public class FinancialLedgerService {
                     .build();
         } else {
             ledgerResponseDto = LedgerResponseDto.builder()
-                    .memberId(memberId)
+                    .username(username)
                     .ledgerTitle(ledgerTitle)
                     .incomeType(null)
                     .expenditureType(expenditureType)
@@ -79,17 +81,16 @@ public class FinancialLedgerService {
         return new ResponseEntity<>(ledgerResponseDto, HttpStatus.OK);
     }
 
-
-    public ResponseEntity<LedgerListResponseDto> getAllLedger(String searchLedgerTitle, Authentication authentication) {
-        String memberId = authentication.getName();
-        List<FinancialLedger> financialLedgerList = financialLedgerRepository.findAllByMemberIdAndLedgerTitleOrderByCreatedAt(memberId, searchLedgerTitle);
+    public ResponseEntity<LedgerListResponseDto> getAllLedger(String ledgerTitle, PrincipalDetails principalDetails) {
+        String username = principalDetails.getUsername();
+        List<FinancialLedger> financialLedgerList = financialLedgerRepository.findAllByUsernameAndLedgerTitleOrderByCreatedAt(username, ledgerTitle);
 
         List<LedgerResponseDto> ledgerResponseDtoList = new ArrayList<>();
         LedgerResponseDto ledgerResponseDto;
         for (FinancialLedger financialLedger : financialLedgerList) {
             ledgerResponseDto = LedgerResponseDto.builder()
-                    .memberId(memberId)
-                    .ledgerTitle(searchLedgerTitle)
+                    .username(username)
+                    .ledgerTitle(ledgerTitle)
                     .accountType(financialLedger.getAccountType())
                     .incomeType(financialLedger.getIncomeType())
                     .income(financialLedger.getIncome())
@@ -99,7 +100,7 @@ public class FinancialLedgerService {
             ledgerResponseDtoList.add(ledgerResponseDto);
         }
 
-        Optional<Balance> balance = balanceRepository.findByLedgerTitle(searchLedgerTitle);
+        Optional<Balance> balance = balanceRepository.findByLedgerTitle(ledgerTitle);
 
         if(balance.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 balance 입니다.");
@@ -110,14 +111,15 @@ public class FinancialLedgerService {
 
     }
 
-    public ResponseEntity<LedgerResponseDto> getLedger(Long account_id, Authentication authentication){
-        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findById(account_id);
+    public ResponseEntity<LedgerResponseDto> getLedger(String ledgerTitle, PrincipalDetails principalDetails){
+        String username = principalDetails.getUsername();
+        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findByUsernameAndLedgerTitle(username, ledgerTitle);
 
         if(financialLedger.isEmpty()){
             throw new IllegalArgumentException("해당 가계부가 존재하지 않습니다.");
         }
         LedgerResponseDto ledgerResponseDto = LedgerResponseDto.builder()
-                .memberId(authentication.getName())
+                .username(username)
                 .ledgerTitle(financialLedger.get().getLedgerTitle())
                 .incomeType(financialLedger.get().getIncomeType())
                 .expenditureType(financialLedger.get().getExpenditureType())
@@ -129,15 +131,14 @@ public class FinancialLedgerService {
         return new ResponseEntity<>(ledgerResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<LedgerResponseDto> updateLedger(Long account_id, LedgerRequestDto ledgerRequestDto, Authentication authentication){
-        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findById(account_id);
+    public ResponseEntity<LedgerResponseDto> updateLedger(String ledgerTitle, LedgerRequestDto ledgerRequestDto, PrincipalDetails principalDetails){
+        String username = principalDetails.getUsername();
+        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findByUsernameAndLedgerTitle(username, ledgerTitle);
 
         if(financialLedger.isEmpty()){
             throw new IllegalArgumentException("해당 가계부가 존재하지 않습니다.");
         }
 
-        String memberId = authentication.getName();
-        String ledgerTitle = ledgerRequestDto.getLedgerTitle();
         String incomeType = ledgerRequestDto.getIncomeType();
         String expenditureType = ledgerRequestDto.getExpenditureType();
         Long income = ledgerRequestDto.getIncome();
@@ -148,7 +149,7 @@ public class FinancialLedgerService {
 
         if(accountType.equals(AccountType.INCOME)) {
             ledgerResponseDto = LedgerResponseDto.builder()
-                    .memberId(memberId)
+                    .username(username)
                     .ledgerTitle(ledgerTitle)
                     .incomeType(incomeType)
                     .expenditureType(null)
@@ -158,7 +159,7 @@ public class FinancialLedgerService {
                     .build();
         } else {
             ledgerResponseDto = LedgerResponseDto.builder()
-                    .memberId(memberId)
+                    .username(username)
                     .ledgerTitle(ledgerTitle)
                     .incomeType(null)
                     .expenditureType(expenditureType)
@@ -171,12 +172,13 @@ public class FinancialLedgerService {
         return new ResponseEntity<>(ledgerResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<StatusResponseDto> deleteLedger(Long account_id, Authentication authentication){
-        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findById(account_id);
+    public ResponseEntity<StatusResponseDto> deleteLedger(String ledgerTitle, PrincipalDetails principalDetails){
+        String username = principalDetails.getUsername();
+        Optional<FinancialLedger> financialLedger = financialLedgerRepository.findByUsernameAndLedgerTitle(username, ledgerTitle);
         if(financialLedger.isEmpty()){
             throw new IllegalArgumentException("해당 가계부가 존재하지 않습니다.");
         }
-        financialLedgerRepository.deleteById(account_id);
+        financialLedgerRepository.deleteAllByUsernameAndLedgerTitle(username, ledgerTitle);
         return new ResponseEntity<>(new StatusResponseDto("가계부 삭제 성공"), HttpStatus.OK);
     }
 

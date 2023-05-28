@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.controller;
 import com.example.apoorpoor_backend.auth.PrincipalDetails;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,13 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller //View를 return
+@RequiredArgsConstructor
 public class IndexController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/test/login")
     public @ResponseBody String testLogin(

@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
-@Entity
+@Entity(name = "USERS")
 @Data
 @NoArgsConstructor
 public class User {

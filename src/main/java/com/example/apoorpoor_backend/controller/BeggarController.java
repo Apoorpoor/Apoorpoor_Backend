@@ -24,6 +24,8 @@ public class BeggarController {
     @GetMapping("/beggars")
     public BeggarResponseDto findBeggar(Authentication authentication){
         UserDetails user = (UserDetails) authentication.getPrincipal();
+        System.out.println("user.getUsername() : "+user.getUsername());
+        System.out.println("authentication.getName() : "+authentication.getName());
         return beggarService.findBeggar(user.getUsername());
     }
 

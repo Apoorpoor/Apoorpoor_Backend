@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller //View를 return
@@ -58,8 +59,9 @@ public class IndexController {
     public String index() {
         // 머스테치 기본폴더 src/main/resources/
         // 뷰리졸버 설정 : templates (prefix), .mustache (suffix) 생략가능
-        //return "index"; // src/main/resources/templates/index.mustache
-        return "redirect:http://localhost:3000/nickname";
+        return "index"; // src/main/resources/templates/index.mustache
+        //return "redirect:http://localhost:3000/nickname";
+
     }
 
     //OAuth 로그인을 해도 PrincipalDetails
@@ -120,5 +122,12 @@ public class IndexController {
     public @ResponseBody String data() {
         return "데이터정보";
     }
+
+    @GetMapping("login/oauth2/code/kakao")
+    public void kakaoLogin(@RequestParam String code) {
+        System.out.println("code : " + code);
+        //return kakaoUserService.kakaoLogin(code, response);
+    }
+
 
 }

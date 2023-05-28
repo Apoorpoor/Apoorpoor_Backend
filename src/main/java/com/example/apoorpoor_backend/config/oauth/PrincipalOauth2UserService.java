@@ -28,6 +28,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         System.out.println("getClientRegistration : " + userRequest.getClientRegistration());
         //registration으로 어떤 Oauth로 로그인했는지 확인가능
         System.out.println("getAccessToken : " + userRequest.getAccessToken().getTokenValue());
+        System.out.println("userRequest = " + userRequest);
 
         /*
         구글 로그인 버튼 클릭 -> 구글 로그인 창 -> 로그인을 완료 -> code를 리턴(Oauth-Clinet 라이브러리)
@@ -43,17 +44,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             System.out.println("구글 로그인 요청");
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
 
-        } else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")) {
-            System.out.println("페이스북 로그인 요청");
-            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
-
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
             System.out.println("네이버 로그인 요청");
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
 
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
             System.out.println("카카오 로그인 요청");
-            oAuth2UserInfo = new KakaoUserInfo((Map)oAuth2User.getAttributes().get("kakao_account"));
+            oAuth2UserInfo = new KakaoUserInfo((Map)oAuth2User.getAttributes().get("kakao_account"),
+                    String.valueOf(oAuth2User.getAttributes().get("id")));
 
         }else {
             System.out.println("구글과 페이스북, 네이버 로그인만 가능합니다.");
@@ -65,20 +63,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email =oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
-        //User userEntity = userRepository.findByUsername(username);
-        Optional<User> findUser = userRepository.findByUsername(username);
-        User user =findUser.get();
-        if(findUser.isEmpty()) {
+        User user;
+        if(!userRepository.existsByUsername(username)) {
             System.out.println("Oauth인이 최초입니다.");
-//            userEntity = User.builder()
-//                    .username(username)
-//                    .email(email)
-//                    .role(role)
-//                    .provider(provider)
-//                    .providerId(providerId)
-//                    .build();
 
-             user = User.builder()
+              user = User.builder()
                     .username(username)
                     .email(email)
                     .role(role)
@@ -88,7 +77,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(user);
         } else {
-            System.out.println("로그인을 이미 한 적이 있습니다.");
+             user = userRepository.findByUsername(username).get();
         }
 
         return new PrincipalDetails(user, oAuth2User.getAttributes());

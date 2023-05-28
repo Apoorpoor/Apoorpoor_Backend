@@ -1,6 +1,8 @@
 package com.example.apoorpoor_backend.config;
 
 import com.example.apoorpoor_backend.config.oauth.PrincipalOauth2UserService;
+import com.example.apoorpoor_backend.config.oauth.handler.OAuth2LoginFailureHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +16,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @Configuration
 @EnableWebSecurity  // 스프링 시큐리티 필터(SecurityConfig)가 스프링 필터체인에 등록이 된다.
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)  //secured 어노테이션 활성화, preAuthorize, postAuthorize 어노테이션 활성화
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private PrincipalOauth2UserService principalOauth2UserService;
+    private final PrincipalOauth2UserService principalOauth2UserService;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     @Bean //해당 메서드의 리턴되는 오브젝트를 IoC로 등록해 준다.
     public BCryptPasswordEncoder encodePwd() {
@@ -56,6 +59,7 @@ public class SecurityConfig {
         5. 정보가 부족한 경우 ex) 쇼핑몰(이메일, 전화번호, 이름, 아이디)  -> (집주소), 백화점몰 -> (vip등급, 일반등급)
         6. 추가적인 정보가 필요한 경우가 아니라면 4번이 가능하다.
          */
+                .failureHandler(oAuth2LoginFailureHandler)
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService);
 

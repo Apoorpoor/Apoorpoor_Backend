@@ -25,6 +25,7 @@ public class BeggarController {
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 생성 완료" )})
     @PostMapping("/beggars")
     public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal PrincipalDetails principalDetails){
+        //String username = authentication.getName();
         return beggarService.createBeggar(beggarRequestDto, principalDetails.getUsername());
     }
 

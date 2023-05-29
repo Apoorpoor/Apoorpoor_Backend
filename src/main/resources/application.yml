@@ -14,11 +14,17 @@ spring:
     console:
       enabled: true
 
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://hanghae66.c0q7tdzdm5qz.ap-northeast-2.rds.amazonaws.com:3306/hanghae66
+#    username: hh66
+#    password: leehyeongyu
+
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://hanghae66.c0q7tdzdm5qz.ap-northeast-2.rds.amazonaws.com:3306/hanghae66
-    username: hh66
-    password: leehyeongyu
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test
+    username: sa
+    password:
 
   #  jpa:
   #    show-sql: true
@@ -32,7 +38,7 @@ spring:
   #      ddl-auto: create
   jpa:
     hibernate:
-      ddl-auto: update #create update none
+      ddl-auto: create #create update none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true

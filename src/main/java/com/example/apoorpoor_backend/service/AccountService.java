@@ -1,14 +1,15 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.controller.AccountController;
-import com.example.apoorpoor_backend.dto.AccountRequestDto;
-import com.example.apoorpoor_backend.dto.AccountResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.model.Account;
+import com.example.apoorpoor_backend.model.Balance;
 import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.repository.AccountRepository;
+import com.example.apoorpoor_backend.repository.BalanceRepository;
+import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +29,8 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final BalanceRepository balanceRepository;
+    private final LedgerHistoryRepository ledgerHistoryRepository;
 
     public ResponseEntity<StatusResponseDto> createAccount(AccountRequestDto requestDto, String username) {
         User user = userCheck(username);
@@ -36,15 +41,21 @@ public class AccountService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<AccountResponseDto>> getAllAccounts(String username){
         User user = userCheck(username);
-        List<Account>accountList = accountRepository.findByAllOrderByCreatedDesc();
-        List<AccountResponseDto> accountResponseDtoList = accountList
-                .stream()
-                .map(AccountResponseDto::new)
-                .collect(Collectors.toList());
+        List<Account> accountList = accountRepository.findAllByOrderByCreatedAtDesc();
+
+        List<AccountResponseDto> accountResponseDtoList = new ArrayList<>();
+
+        for (Account account : accountList) {
+            List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
+
+            for (LedgerHistory ledgerHistory : account.getLedgerHistories()) {
+                ledgerHistoryResponseDtoList.add(LedgerHistoryResponseDto.of(ledgerHistory));
+            }
+            accountResponseDtoList.add(new AccountResponseDto(account, ledgerHistoryResponseDtoList));
+        }
+
         return ResponseEntity.ok(accountResponseDtoList);
     }
-
-
 
     @Transactional(readOnly = true)
     public ResponseEntity<AccountResponseDto> getAccount(Long id, String username) {
@@ -53,12 +64,18 @@ public class AccountService {
                 () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
         );
 
-        AccountResponseDto accountResponseDto = AccountResponseDto.builder()
-                .id(account.getId())
-                .title(account.getTitle())
-                .userId(account.getUser().getId())
-                .ledgerHistories(account.getLedgerHistories())
-                .build();
+        Optional<Balance> findBalance = balanceRepository.findByAccountId(id);
+
+        List<LedgerHistory> ledgerHistoryList = account.getLedgerHistories();
+
+        List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
+
+        for (LedgerHistory ledgerHistory : ledgerHistoryList) {
+            ledgerHistoryResponseDtoList.add(LedgerHistoryResponseDto.of(ledgerHistory));
+        }
+
+        AccountResponseDto accountResponseDto = new AccountResponseDto(account.getId(), account.getTitle(),
+                account.getUser().getId(), ledgerHistoryResponseDtoList, findBalance.get());
         return new ResponseEntity<>(accountResponseDto, HttpStatus.OK);
     }
 
@@ -82,7 +99,6 @@ public class AccountService {
         return new ResponseEntity<>(new StatusResponseDto("가계부 삭제 성공"), HttpStatus.OK);
 
     }
-
 
     public User userCheck(String username) {
         return userRepository.findByUsername(username).orElseThrow(

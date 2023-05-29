@@ -26,7 +26,7 @@ public class User {
     private String email;
 
     @Column
-    private String role;
+    private UserRole role;
 
     @Column
     private String provider;
@@ -39,7 +39,7 @@ public class User {
 
 
     @Builder
-    public User(String username, String password, String email, String role, String provider, String providerId, Timestamp createDate) {
+    public User(String username, String password, String email, UserRole role, String provider, String providerId, Timestamp createDate) {
         this.username = username;
         this.password = password;
         this.email = email;

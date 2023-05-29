@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Balance {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "balance_id")
     private Long id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
@@ -26,12 +29,6 @@ public class Balance {
     @Column
     private Long expenditureTotal;
 
-
-
-//    public void addLedgerList(FinancialLedger financialLedger) {
-//        this.financialLedgerList.add(financialLedger);
-//    }
-//
     public Balance(Long incomeTotal, Long expenditureTotal, Account account) {
         this.incomeTotal = incomeTotal;
         this.expenditureTotal = expenditureTotal;

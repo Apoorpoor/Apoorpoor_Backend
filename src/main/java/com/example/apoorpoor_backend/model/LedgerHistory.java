@@ -6,13 +6,15 @@ import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Getter
 @Entity(name = "LEDGER_HISTORY")
+@NoArgsConstructor
 @Table
 public class LedgerHistory extends Timestamped{
 
@@ -21,6 +23,7 @@ public class LedgerHistory extends Timestamped{
     @Column(name = "ledgerhistory_id", unique = true, nullable = false)
     private Long id;
 
+    //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
@@ -47,10 +50,10 @@ public class LedgerHistory extends Timestamped{
     private Long expenditure;
 
     @Column
-    private LocalDate date;
+    private String date;
 
     public LedgerHistory(Account account, String title, AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType,
-                         PaymentMethod paymentMethod, Long income, Long expenditure, LocalDate date){
+                         PaymentMethod paymentMethod, Long income, Long expenditure, String date){
         this.account = account;
         this.title = title;
         this.accountType = accountType;
@@ -63,15 +66,15 @@ public class LedgerHistory extends Timestamped{
 
     }
 
-    public void update(LedgerHistoryRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.accountType = requestDto.getAccountType();
-        this.incomeType = requestDto.getIncomeType();
-        this.expenditureType = requestDto.getExpenditureType();
-        this.paymentMethod = requestDto.getPaymentMethod();
-        this.income = requestDto.getIncome();
-        this.expenditure = requestDto.getExpenditure();
-        this.date = LocalDate.parse(requestDto.getDatetime());
+    public void update(LedgerHistoryResponseDto responseDto) {
+        this.title = responseDto.getTitle();
+        this.accountType = responseDto.getAccountType();
+        this.incomeType = responseDto.getIncomeType();
+        this.expenditureType = responseDto.getExpenditureType();
+        this.paymentMethod = responseDto.getPaymentMethod();
+        this.income = responseDto.getIncome();
+        this.expenditure = responseDto.getExpenditure();
+        this.date = responseDto.getDate();
     }
 
 }

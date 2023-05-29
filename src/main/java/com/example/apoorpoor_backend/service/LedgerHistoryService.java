@@ -47,7 +47,8 @@ public class LedgerHistoryService {
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
-        LocalDate localDate = LocalDate.parse(requestDto.getDatetime()); // 2022-10-23
+        //LocalDate localDate = LocalDate.parse(requestDto.getDatetime()); // 2022-10-23
+        String localDate = requestDto.getDatetime();
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
@@ -77,7 +78,7 @@ public class LedgerHistoryService {
 
     }
 
-    public ResponseEntity<LedgerHistoryResponseDto>updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {
+    public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {
         User user = userCheck(username);
         Account account = accountCheck(requestDto.getAccountId());
 
@@ -87,29 +88,30 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         AccountType accountType = requestDto.getAccountType();
-        LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
+        String localDate = requestDto.getDatetime();
+        // LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
         if (accountType.equals(AccountType.INCOME)){
             expenditureType = null;
             expenditure = 0L;
         } else if (accountType.equals(AccountType.EXPENDITURE)) {
-            incomeType =null;
+            incomeType = null;
             income = 0L;
         }
-        LedgerHistory ledgerHistory = new LedgerHistory(account, title, accountType, incomeType, expenditureType, paymentMethod, income, expenditure, localDate);//이거 뭐하셨어요? //오류요?? 로컬데이트 타임을 로컬데이트로 바꿨어요!!
-        ledgerHistory.update(requestDto);
+        Optional<LedgerHistory> ledgerHistory = ledgerHistoryRepository.findById(id);
         LedgerHistoryResponseDto responseDto = LedgerHistoryResponseDto.builder()
-                .accountId(ledgerHistory.getAccount().getId())
-                .title(ledgerHistory.getTitle())
-                .accountType(ledgerHistory.getAccountType())
-                .incomeType(ledgerHistory.getIncomeType())
-                .expenditureType(ledgerHistory.getExpenditureType())
-                .paymentMethod(ledgerHistory.getPaymentMethod())
-                .income(ledgerHistory.getIncome())
-                .expenditure(ledgerHistory.getExpenditure())
-                .date(ledgerHistory.getDate())
+                .title(title)
+                .accountType(accountType)
+                .incomeType(incomeType)
+                .expenditureType(expenditureType)
+                .paymentMethod(paymentMethod)
+                .income(income)
+                .expenditure(expenditure)
+                .date(localDate)
                 .build();
+        ledgerHistory.get().update(responseDto);
+
         return ResponseEntity.ok(responseDto);
     }
 
@@ -123,12 +125,12 @@ public class LedgerHistoryService {
 
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(Long id, String username){
         User user = userCheck(username);
-        accountRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
-        );
+//        accountRepository.findById(id).orElseThrow(
+//                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
+//        );
 
-        accountRepository.deleteById(id);
-        return new ResponseEntity<>(new StatusResponseDto("가계부 삭제 성공"), HttpStatus.OK);
+        ledgerHistoryRepository.deleteById(id);
+        return new ResponseEntity<>(new StatusResponseDto("거래내역 삭제 성공"), HttpStatus.OK);
     }
 
 

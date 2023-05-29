@@ -3,7 +3,6 @@ package com.example.apoorpoor_backend.controller;
 import com.example.apoorpoor_backend.auth.PrincipalDetails;
 import com.example.apoorpoor_backend.dto.LedgerHistoryRequestDto;
 import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.LedgerResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
 import com.example.apoorpoor_backend.service.LedgerHistoryService;
 import lombok.RequiredArgsConstructor;

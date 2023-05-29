@@ -8,11 +8,8 @@ import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Getter
 public class LedgerHistoryResponseDto {
-    private Long accountId;
     private String title;
     private AccountType accountType;
     private IncomeType incomeType;
@@ -20,12 +17,11 @@ public class LedgerHistoryResponseDto {
     private PaymentMethod paymentMethod;
     private Long income;
     private Long expenditure;
-    private LocalDate date;
+    private String date;
 
     @Builder
-    private LedgerHistoryResponseDto(Long accountId, String title, AccountType accountType, IncomeType incomeType,
-                                     ExpenditureType expenditureType, PaymentMethod paymentMethod, Long income, Long expenditure, LocalDate date) {
-        this.accountId = accountId;
+    private LedgerHistoryResponseDto(String title, AccountType accountType, IncomeType incomeType,
+                                     ExpenditureType expenditureType, PaymentMethod paymentMethod, Long income, Long expenditure, String date) {
         this.title = title;
         this.accountType = accountType;
         this.incomeType = incomeType;
@@ -38,7 +34,6 @@ public class LedgerHistoryResponseDto {
 
     public static LedgerHistoryResponseDto of(LedgerHistory ledgerHistory){
         return LedgerHistoryResponseDto.builder()
-                .accountId(ledgerHistory.getAccount().getId())
                 .title(ledgerHistory.getTitle())
                 .accountType(ledgerHistory.getAccountType())
                 .incomeType(ledgerHistory.getIncomeType())
@@ -48,5 +43,16 @@ public class LedgerHistoryResponseDto {
                 .expenditure(ledgerHistory.getExpenditure())
                 .date(ledgerHistory.getDate())
                 .build();
+    }
+
+    public LedgerHistoryResponseDto(LedgerHistory ledgerHistory){
+        this.title = ledgerHistory.getTitle();
+        this.accountType = ledgerHistory.getAccountType();
+        this.incomeType = ledgerHistory.getIncomeType();
+        this.expenditureType = ledgerHistory.getExpenditureType();
+        this.paymentMethod = ledgerHistory.getPaymentMethod();
+        this.income = ledgerHistory.getIncome();
+        this.expenditure = ledgerHistory.getExpenditure();
+        this.date = ledgerHistory.getDate();
     }
 }

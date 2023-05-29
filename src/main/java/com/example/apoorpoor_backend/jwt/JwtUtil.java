@@ -33,14 +33,14 @@ public class JwtUtil {
     private String secretKey; // 암호화/복호화에 필요
     // Access or Refresh 토큰 확인 키
     public static final String ACCESS_KEY = "Authorization";
-    public static final String REFRESH_KEY = "Authorization-Refresh";
+    public static final String REFRESH_KEY = "Authorization_Refresh";
     // Header 의 Key 값
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String AUTHORIZATION_KEY = "auth";
+    //public static final String AUTHORIZATION_HEADER = "Authorization";
+    //public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private static final long ACCESS_TIME = 60 * 60 * 1000L;
+    private static final long ACCESS_TIME = 10*1000L;//60 * 60 * 1000L;
     private static final long REFRESH_TIME = 24 * 60 * 60 * 1000L;
 
     private final PrincipalDetailsService principalDetailsService;
@@ -64,7 +64,7 @@ public class JwtUtil {
 
     // Request Header 에서 토큰 가져오기
     public String resolveToken(jakarta.servlet.http.HttpServletRequest request, String token) {
-        String tokenName = token.equals("ACCESS_KEY") ? ACCESS_KEY : REFRESH_KEY;
+        String tokenName = token.equals("Authorization") ? ACCESS_KEY : REFRESH_KEY;
         String bearerToken = request.getHeader(tokenName);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
@@ -123,7 +123,7 @@ public class JwtUtil {
         // DB에 저장한 토큰 비교
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(token));
 
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
+        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken().split(" ")[1].trim());
     }
 
     //액세스 토큰 헤더 설정

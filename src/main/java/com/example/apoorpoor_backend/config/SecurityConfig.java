@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() //.permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

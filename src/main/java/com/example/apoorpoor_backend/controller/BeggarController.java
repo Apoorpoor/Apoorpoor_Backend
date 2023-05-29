@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.auth.PrincipalDetails;
-import com.example.apoorpoor_backend.auth.PrincipalDetailsService;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
 import com.example.apoorpoor_backend.dto.BeggarResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
@@ -12,9 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "BeggarController", description = "거지 캐릭터 controller")

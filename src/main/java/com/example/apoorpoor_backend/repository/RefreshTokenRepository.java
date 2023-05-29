@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.repository;
 
-import com.example.apoorpoor_backend.model.FinancialLedger;
 import com.example.apoorpoor_backend.model.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 

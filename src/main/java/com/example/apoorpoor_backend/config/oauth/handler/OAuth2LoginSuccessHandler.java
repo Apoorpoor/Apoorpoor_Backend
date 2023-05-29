@@ -35,16 +35,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
-        String username = extractUsername(authentication); // 인증 정보에서 Username(email) 추출
-        TokenDto tokenDto = jwtUtil.createAllToken(username);//ateAccessToken(email); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
-        //String refreshToken = jwtUtil.createRefreshToken(); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급
+        String username = extractUsername(authentication);
+        TokenDto tokenDto = jwtUtil.createAllToken(username);
         String accessToken = tokenDto.getAccessToken();
         String newRefreshToken = tokenDto.getRefreshToken();
-        //jwtUtil.sendAccessAndRefreshToken(response, accessToken, refreshToken); // 응답 헤더에 AccessToken, RefreshToken 실어서 응답
         jwtUtil.setHeaderAccessToken(response, accessToken);
         jwtUtil.setHeaderRefreshToken(response, newRefreshToken);
-
-        //userRepository.findByUsername(username)
 
         refreshTokenRepository.findByUsername(username)
                 .ifPresent(refresh -> {

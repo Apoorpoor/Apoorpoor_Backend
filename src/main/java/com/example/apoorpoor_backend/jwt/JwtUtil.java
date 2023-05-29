@@ -32,8 +32,8 @@ public class JwtUtil {
     @Value("${jwt.secretkey}")
     private String secretKey; // 암호화/복호화에 필요
     // Access or Refresh 토큰 확인 키
-    public static final String ACCESS_KEY = "ACCESS_KEY";
-    public static final String REFRESH_KEY = "REFRESH_KEY";
+    public static final String ACCESS_KEY = "Authorization";
+    public static final String REFRESH_KEY = "Authorization-Refresh";
     // Header 의 Key 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";

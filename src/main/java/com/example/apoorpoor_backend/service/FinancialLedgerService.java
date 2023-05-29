@@ -171,9 +171,9 @@ public class FinancialLedgerService {
         return new ResponseEntity<>(ledgerResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<StatusResponseDto> deleteLedger(Long account_id, Authentication authentication){
+    public ResponseEntity<StatusResponseDto> deleteLedger(Long account_id, Authentication authentication) {
         Optional<FinancialLedger> financialLedger = financialLedgerRepository.findById(account_id);
-        if(financialLedger.isEmpty()){
+        if (financialLedger.isEmpty()) {
             throw new IllegalArgumentException("해당 가계부가 존재하지 않습니다.");
         }
         financialLedgerRepository.deleteById(account_id);

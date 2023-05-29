@@ -28,7 +28,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
             loginSuccess(response, oAuth2User);
-            response.sendRedirect("http://localhost:8080/chat.html");
+            response.sendRedirect("http://localhost:3000");
 
         } catch (Exception e) {
             throw e;

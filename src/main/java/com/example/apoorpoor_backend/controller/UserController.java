@@ -16,11 +16,6 @@ public class UserController {
 
     private final UserService userService;
 
-//    @PostMapping("/sign-up")
-//    public ResponseEntity<String> signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
-//        userService.signUp(userSignUpDto);
-//        return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
-//    }
 
     @GetMapping("/jwt-test")
     public ResponseEntity<String> jwtTest() {

@@ -33,7 +33,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     //websocket
-    compileOnly "org.springframework.boot:spring-boot-starter-websocket"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
     compileOnly "org.springframework.boot:spring-boot-starter-amqp"
     compileOnly "org.springframework.boot:spring-boot-starter-reactor-netty"
 

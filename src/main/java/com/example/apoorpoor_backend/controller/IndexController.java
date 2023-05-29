@@ -93,23 +93,23 @@ public class IndexController {
         return "joinForm";
     }
 
-    @PostMapping("/join")
-    public String join(User user) {
-        user.setRole("ROLE_USER");
-        System.out.println(user);
-
-        /* 회원가입은 잘되지만 비밀번호는 1234
-        => 시큐리티로 로그인 할 수 없다.
-        이유는 패스워드가 암호화가 안되었기 때문이다.
-         */
-        String rawPassword = user.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        user.setPassword(encPassword);
-
-        userRepository.save(user);
-        return "redirect:/login";
-        //redirect: 를 붙이면 /loginForm이라는 함수를 호출한다.
-    }
+//    @PostMapping("/join")
+//    public String join(User user) {
+//        user.setRole("ROLE_USER");
+//        System.out.println(user);
+//
+//        /* 회원가입은 잘되지만 비밀번호는 1234
+//        => 시큐리티로 로그인 할 수 없다.
+//        이유는 패스워드가 암호화가 안되었기 때문이다.
+//         */
+//        String rawPassword = user.getPassword();
+//        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+//        user.setPassword(encPassword);
+//
+//        userRepository.save(user);
+//        return "redirect:/login";
+//        //redirect: 를 붙이면 /loginForm이라는 함수를 호출한다.
+//    }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/info")

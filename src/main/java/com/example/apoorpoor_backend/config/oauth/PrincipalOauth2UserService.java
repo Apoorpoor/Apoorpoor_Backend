@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.config.oauth;
 import com.example.apoorpoor_backend.auth.PrincipalDetails;
 import com.example.apoorpoor_backend.config.oauth.provider.*;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.UserRole;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String providerId = oAuth2UserInfo.getProviderId();
         String username = provider+"_"+providerId; //google_000000000000000000
         String email =oAuth2UserInfo.getEmail();
-        String role = "ROLE_USER";
+        UserRole role = UserRole.USER;
 
         User user;
         if(!userRepository.existsByUsername(username)) {

@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.dto;
 
-import com.example.apoorpoor_backend.entity.AccountType;
+import com.example.apoorpoor_backend.model.enumType.AccountType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class LedgerResponseDto {
 
-    private String memberId;
+    private String username;
     private String ledgerTitle;
     private String incomeType;
     private String expenditureType;

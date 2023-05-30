@@ -2,10 +2,13 @@ package com.example.apoorpoor_backend.config.oauth.handler;
 
 import com.example.apoorpoor_backend.dto.TokenDto;
 import com.example.apoorpoor_backend.jwt.JwtUtil;
+import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.RefreshToken;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.RefreshTokenRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -27,6 +31,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final BeggarRepository beggarRepository;
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
@@ -34,7 +39,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Transactional
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException, ServletException {
         String username = extractUsername(authentication);
         TokenDto tokenDto = jwtUtil.createAllToken(username);
         String accessToken = tokenDto.getAccessToken();
@@ -56,6 +61,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);
         log.info("로그인에 성공하였습니다. RefreshToken: {}", newRefreshToken);
         log.info("발급된 AccessToken 만료 기간 : {}", accessTokenExpiration);
+
+        Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
+        if(findBeggar.isPresent()) {
+            response.sendRedirect("http://localhost:3000");
+        } else {
+            response.sendRedirect("http://localhost:3000/nickname");
+        }
+
     }
 
     private String extractUsername(Authentication authentication) {

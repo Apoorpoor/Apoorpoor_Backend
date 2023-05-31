@@ -30,6 +30,12 @@ public class User extends Timestamped{
     @Column(nullable = true)
     private Long kakaoId;
 
+    @Column
+    private Long age;
+
+    @Column
+    private String gender;
+
     @CreationTimestamp
     private Timestamp createDate;
 
@@ -47,4 +53,11 @@ public class User extends Timestamped{
         return this;
     }
 
+    public void updateAge(Long age) {
+        this.age = age;
+    }
+
+    public void updateGender(String gender) {
+        this.gender = gender;
+    }
 }

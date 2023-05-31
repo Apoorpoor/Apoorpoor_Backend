@@ -5,30 +5,32 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity(name = "REFRESH_TOKEN")
+@NoArgsConstructor
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     private String refreshToken;
+
     @NotBlank
     private String username;
 
-
-    public RefreshToken(String token, String username) {
-        this.refreshToken = token;
+    public RefreshToken(String tokenDto, String username) {
+        this.refreshToken = tokenDto;
         this.username = username;
     }
 
-    public RefreshToken updateToken(String token) {
-        this.refreshToken = token;
+    public RefreshToken updateToken(String tokenDto) {
+        this.refreshToken = tokenDto;
         return this;
     }
+
 }
+

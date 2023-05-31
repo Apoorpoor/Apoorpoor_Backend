@@ -3,7 +3,6 @@ package com.example.apoorpoor_backend.dto;
 import com.example.apoorpoor_backend.model.Beggar;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class BeggarResponseDto {

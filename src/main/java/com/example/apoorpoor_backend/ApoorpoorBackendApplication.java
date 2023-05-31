@@ -22,9 +22,9 @@ public class ApoorpoorBackendApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry){
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:3000", "http://13.125.6.183:8080", "http://192.168.25.2:3000", "https://team15clone.vercel.app/", "https://hang-hae99-clone-week-o69l.vercel.app/")
+                        .allowedOrigins("http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:3000", "http://3.34.85.5:8080", "http://192.168.25.2:3000")
                         .allowedOriginPatterns("*")
-                        .exposedHeaders("Authorization", "Authorization_Refresh", "Authorization", "Set-Cookie", "USER_ROLE")
+                        .exposedHeaders("Authorization", "Authorization_Refresh", "Authorization", "Set-Cookie", "USER_ROLE", "ACCESS_KEY", "REFRESH_KEY", "NICKNAME_FLAG")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
                         //.allowedHeaders()
                         .allowCredentials(true)

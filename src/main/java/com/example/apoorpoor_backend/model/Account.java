@@ -1,8 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.dto.AccountRequestDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

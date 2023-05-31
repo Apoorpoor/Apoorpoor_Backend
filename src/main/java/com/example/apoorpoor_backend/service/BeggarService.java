@@ -30,15 +30,13 @@ public class BeggarService {
 
     public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
         User findUser = userCheck(username);
-        Long userId = findUser.getId();
-        Beggar beggar = beggarCheck(userId);
+        Beggar beggar = beggarCheck(username);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
     }
 
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
-        Long userId = findUser.getId();
-        Beggar beggar = beggarCheck(userId);
+        Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
     }
@@ -49,8 +47,8 @@ public class BeggarService {
         );
     }
 
-    public Beggar beggarCheck(Long userId) {
-        return beggarRepository.findByUserId(userId).orElseThrow(
+    public Beggar beggarCheck(String username) {
+        return beggarRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("거지를 찾을 수 없습니다.")
         );
     }

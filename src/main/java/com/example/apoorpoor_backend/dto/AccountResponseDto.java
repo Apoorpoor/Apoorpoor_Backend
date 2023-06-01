@@ -2,8 +2,6 @@ package com.example.apoorpoor_backend.dto;
 
 import com.example.apoorpoor_backend.model.Account;
 import com.example.apoorpoor_backend.model.Balance;
-import com.example.apoorpoor_backend.model.LedgerHistory;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;

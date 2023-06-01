@@ -1,12 +1,13 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.controller.AccountController;
-import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.dto.AccountRequestDto;
+import com.example.apoorpoor_backend.dto.AccountResponseDto;
+import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
+import com.example.apoorpoor_backend.dto.StatusResponseDto;
 import com.example.apoorpoor_backend.model.Account;
 import com.example.apoorpoor_backend.model.Balance;
 import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.repository.AccountRepository;
 import com.example.apoorpoor_backend.repository.BalanceRepository;
 import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

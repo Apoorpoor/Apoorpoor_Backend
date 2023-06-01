@@ -4,66 +4,64 @@ import com.example.apoorpoor_backend.dto.SecurityExceptionDto;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.example.apoorpoor_backend.jwt.JwtUtil.ACCESS_KEY;
-import static com.example.apoorpoor_backend.jwt.JwtUtil.REFRESH_KEY;
-
 @Slf4j
-@Component
+@Configuration
 @RequiredArgsConstructor
+@WebFilter(urlPatterns = "/api/read/**")
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String access_token = jwtUtil.resolveToken(request, ACCESS_KEY);
-        String refresh_token = jwtUtil.resolveToken(request, REFRESH_KEY);
-
-
-        if (access_token != null) {
+        String access_token = jwtUtil.resolveToken(request, jwtUtil.ACCESS_KEY);
+        String refresh_token = jwtUtil.resolveToken(request, jwtUtil.REFRESH_KEY);
+        if(access_token == null){
+            filterChain.doFilter(request, response);
+        } else {
             if (jwtUtil.validateToken(access_token)) {
                 setAuthentication(jwtUtil.getUserInfoFromToken(access_token));
-            }
-            else if (refresh_token != null && jwtUtil.refreshTokenValidation(refresh_token)) {
+            } else if (refresh_token != null && jwtUtil.refreshTokenValid(refresh_token)) {
                 String username = jwtUtil.getUserInfoFromToken(refresh_token);
-                //User user = userRepository.findByUsername(username).get();
-                String newAccessToken = jwtUtil.createToken(username, "Access");
+                User user = userRepository.findByUsername(username).get();
+                String newAccessToken = jwtUtil.createToken(username, user.getRole(), "Access");
                 jwtUtil.setHeaderAccessToken(response, newAccessToken);
                 setAuthentication(username);
             } else if (refresh_token == null) {
-                jwtExceptionHandler(response, "AccessToken has Expired. Please send your RefreshToken together.", HttpStatus.BAD_REQUEST.value());
-            }
-            else {
-                jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST.value());
+                jwtExceptionHandler(response, "AccessToken Expired.", HttpStatus.BAD_REQUEST.value());
+                return;
+            } else {
+                jwtExceptionHandler(response, "RefreshToken Expired.", HttpStatus.BAD_REQUEST.value());
                 return;
             }
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
     }
 
-
-    public void setAuthentication(String username) {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
+    public void setAuthentication (String username){
         Authentication authentication = jwtUtil.createAuthentication(username);
-        context.setAuthentication(authentication);
 
-        SecurityContextHolder.setContext(context);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    public void jwtExceptionHandler(jakarta.servlet.http.HttpServletResponse response, String msg, int statusCode) {
+    public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try {
@@ -74,3 +72,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
     }
 }
+

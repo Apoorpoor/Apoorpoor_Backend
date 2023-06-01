@@ -2,18 +2,19 @@ package com.example.apoorpoor_backend.model;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
 @Entity(name = "USERS")
-@Data
+@Getter
 @NoArgsConstructor
-public class User {
+public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column
@@ -22,30 +23,41 @@ public class User {
     @Column
     private String password;
 
-    @Column
-    private String email;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
+    @Column(nullable = true)
+    private Long kakaoId;
 
     @Column
-    private UserRole role;
+    private Long age;
 
     @Column
-    private String provider;
-
-    @Column
-    private String providerId;
+    private String gender;
 
     @CreationTimestamp
     private Timestamp createDate;
 
 
     @Builder
-    public User(String username, String password, String email, UserRole role, String provider, String providerId, Timestamp createDate) {
+    public User(String username, String password, UserRoleEnum role, Long kakaoId) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.createDate = createDate;
+        this.kakaoId = kakaoId;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public void updateAge(Long age) {
+        this.age = age;
+    }
+
+    public void updateGender(String gender) {
+        this.gender = gender;
     }
 }

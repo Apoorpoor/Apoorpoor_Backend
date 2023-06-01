@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.auth;
+package com.example.apoorpoor_backend.security;
 
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.UserRepository;
@@ -8,20 +8,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class PrincipalDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userEntity = userRepository.findByUsername(username);
-        if(userEntity.isPresent()) {
-            return new PrincipalDetails(userEntity.get());
-        }
-        return null;
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return new UserDetailsImpl(user, user.getUsername());
     }
+//스프링시큐리 session -> Authentication -> userDetails, Oauth2User
+    //username
+    //user_id
+    //userId
+
 }

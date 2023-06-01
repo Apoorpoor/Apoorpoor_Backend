@@ -124,10 +124,6 @@ public class LedgerHistoryService {
 
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(Long id, String username){
         User user = userCheck(username);
-//        accountRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
-//        );
-
         ledgerHistoryRepository.deleteById(id);
         return new ResponseEntity<>(new StatusResponseDto("거래내역 삭제 성공"), HttpStatus.OK);
     }

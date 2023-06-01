@@ -3,8 +3,6 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.UserRoleEnum;
 import com.example.apoorpoor_backend.repository.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")

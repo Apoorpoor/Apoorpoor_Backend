@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +26,13 @@ public class BeggarService {
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
+
+        Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
+        if(findBeggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
+
         beggarRepository.save(new Beggar(beggarRequestDto, findUser));
-        return new ResponseEntity<>(new StatusResponseDto("거지가 되었어요..."), HttpStatus.OK );
+        return new ResponseEntity<>(new StatusResponseDto("푸어가 생성되었어요..."), HttpStatus.OK );
     }
 
     public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
@@ -49,7 +56,7 @@ public class BeggarService {
 
     public Beggar beggarCheck(String username) {
         return beggarRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("거지를 찾을 수 없습니다.")
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
 

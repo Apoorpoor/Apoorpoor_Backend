@@ -51,9 +51,16 @@ public class LedgerHistoryService {
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
+            paymentMethod = null;
             expenditure = 0L;
         }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;
+            income = 0L;
+        }else {
+            paymentMethod = null;
+            expenditureType = null;
+            incomeType = null;
+            expenditure = 0L;
             income = 0L;
         }
 
@@ -91,11 +98,18 @@ public class LedgerHistoryService {
         // LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
-        if (accountType.equals(AccountType.INCOME)){
+        if(accountType == AccountType.INCOME){
             expenditureType = null;
+            paymentMethod = null;
             expenditure = 0L;
-        } else if (accountType.equals(AccountType.EXPENDITURE)) {
+        }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;
+            income = 0L;
+        }else {
+            paymentMethod = null;
+            expenditureType = null;
+            incomeType = null;
+            expenditure = 0L;
             income = 0L;
         }
         Optional<LedgerHistory> ledgerHistory = ledgerHistoryRepository.findById(id);
@@ -124,10 +138,6 @@ public class LedgerHistoryService {
 
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(Long id, String username){
         User user = userCheck(username);
-//        accountRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
-//        );
-
         ledgerHistoryRepository.deleteById(id);
         return new ResponseEntity<>(new StatusResponseDto("거래내역 삭제 성공"), HttpStatus.OK);
     }

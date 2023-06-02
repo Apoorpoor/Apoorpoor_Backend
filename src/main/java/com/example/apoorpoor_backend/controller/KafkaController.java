@@ -1,29 +1,37 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.config.KafkaConstants;
+import com.example.apoorpoor_backend.dto.ChattingMessage;
+import com.example.apoorpoor_backend.repository.ChatMessageHistoryRepository;
 import com.example.apoorpoor_backend.service.kafka.KafkaProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/kafka")
 @Slf4j
 public class KafkaController {
-
-    private final KafkaProducer producer;
+    private final ChatMessageHistoryRepository chatMessageHistoryRepository;
+    private final KafkaTemplate<String, ChattingMessage> kafkaTemplate;
+    private final KafkaProducer kafkaProducer;
 
     @Autowired
-    KafkaController(KafkaProducer producer){
-        this.producer = producer;
+    public KafkaController(ChatMessageHistoryRepository chatMessageHistoryRepository,
+                           KafkaTemplate<String, ChattingMessage> kafkaTemplate,
+                           KafkaProducer kafkaProducer) {
+        this.chatMessageHistoryRepository = chatMessageHistoryRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.kafkaProducer = kafkaProducer;
     }
-
 
     @PostMapping
     @ResponseBody
-    public String sendMessage(@RequestParam String message) {
+    public void message(@RequestBody ChattingMessage message) {
+        log.info(message.getMessage());
+        chatMessageHistoryRepository.save(message);
+        kafkaProducer.send(KafkaConstants.KAFKA_TOPIC, message);
         log.info("message : {}", message);
-        this.producer.sendMessage(message);
-
-        return "success";
     }
 }

@@ -81,7 +81,7 @@ class BeggarServiceTest {
 
         Long exp = beggar.getExp() + ExpType.FILL_LEDGER.getAmount();
         Long level = beggar.getLevel();
-        Long nextExp = LevelType.getNextExpByLevel(level);
+        Long point = beggar.getPoint() + ExpType.FILL_LEDGER.getAmount();
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;
@@ -91,13 +91,14 @@ class BeggarServiceTest {
         beggar.updateExp(BeggarExpUpResponseDto.builder()
                         .exp(exp)
                         .level(level)
-                        //.point(point)
+                        .point(point)
                         .build());
 
         //then
         assertEquals(10L, exp);
         assertEquals(10L, beggar.getExp());
         assertEquals(1L, beggar.getLevel());
+        assertEquals(10L, beggar.getPoint());
 
     }
 
@@ -121,6 +122,7 @@ class BeggarServiceTest {
 
         Long exp = beggar.getExp() + ExpType.FILL_LEDGER.getAmount();
         Long level = beggar.getLevel();
+        Long point = beggar.getPoint() + ExpType.FILL_LEDGER.getAmount();
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;
@@ -130,20 +132,22 @@ class BeggarServiceTest {
         beggar.updateExp(BeggarExpUpResponseDto.builder()
                 .exp(exp)
                 .level(level)
-                //.point(point)
+                .point(point)
                 .build());
 
         Long exp2 = beggar.getExp() + ExpType.FILL_LEDGER.getAmount();
+        Long point2 = beggar.getPoint() + ExpType.FILL_LEDGER.getAmount();
 
         beggar.updateExp(BeggarExpUpResponseDto.builder()
                 .exp(exp2)
                 .level(level)
-                //.point(point)
+                .point(point2)
                 .build());
 
         //then
         assertEquals(10L, exp);
         assertEquals(20L, beggar.getExp());
+        assertEquals(20L, beggar.getPoint());
         assertEquals(1L, beggar.getLevel());
 
     }

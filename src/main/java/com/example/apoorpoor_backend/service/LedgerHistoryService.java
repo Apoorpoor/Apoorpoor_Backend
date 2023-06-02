@@ -51,9 +51,16 @@ public class LedgerHistoryService {
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
+            paymentMethod = null;
             expenditure = 0L;
         }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;
+            income = 0L;
+        }else {
+            paymentMethod = null;
+            expenditureType = null;
+            incomeType = null;
+            expenditure = 0L;
             income = 0L;
         }
 
@@ -91,11 +98,18 @@ public class LedgerHistoryService {
         // LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
-        if (accountType.equals(AccountType.INCOME)){
+        if(accountType == AccountType.INCOME){
             expenditureType = null;
+            paymentMethod = null;
             expenditure = 0L;
-        } else if (accountType.equals(AccountType.EXPENDITURE)) {
+        }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;
+            income = 0L;
+        }else {
+            paymentMethod = null;
+            expenditureType = null;
+            incomeType = null;
+            expenditure = 0L;
             income = 0L;
         }
         Optional<LedgerHistory> ledgerHistory = ledgerHistoryRepository.findById(id);

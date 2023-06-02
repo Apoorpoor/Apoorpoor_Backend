@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
+import com.example.apoorpoor_backend.model.GetBadge;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.BadgeType;
 import com.example.apoorpoor_backend.model.enumType.ExpType;
@@ -90,8 +91,16 @@ public class BeggarService {
     public void saveBadge(BadgeType badgeType, Beggar beggar) {
         Long badgeNum = badgeType.getBadgeNum();
         String badgeTitle = badgeType.getBadgeTitle();
-        Badge badge = new Badge(badgeNum, badgeTitle);
-        badgeRepository.save(badge);
-    }
 
+        boolean hasBadge = beggar.getGetBadgeList().stream()
+                .map(GetBadge::getBadge)
+                .anyMatch(b -> b.getBadgeNum().equals(badgeNum));
+
+        if(!hasBadge) {
+            Badge badge = new Badge(badgeNum, badgeTitle);
+            badgeRepository.save(badge);
+        } else {
+            throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
+        }
+    }
 }

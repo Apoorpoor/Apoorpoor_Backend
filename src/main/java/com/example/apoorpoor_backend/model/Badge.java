@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.model;
 import com.example.apoorpoor_backend.model.enumType.BadgeType;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity(name = "BADGE")
 @NoArgsConstructor
+@Getter
 public class Badge extends Timestamped {
 
     @Id

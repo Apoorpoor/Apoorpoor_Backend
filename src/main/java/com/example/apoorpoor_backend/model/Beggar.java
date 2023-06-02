@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+
 @Getter
 @Entity(name = "BEGGAR")
 @NoArgsConstructor
@@ -29,7 +30,7 @@ public class Beggar extends Timestamped{
     @Column(nullable = false)
     private Long point;
 
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     @Column(nullable = false)
     private Long level;
 
@@ -44,7 +45,7 @@ public class Beggar extends Timestamped{
         this.nickname = requestDto.getNickname();
         this.user = user;
         this.point = 0L;
-        this.level = 0L;
+        this.level = 1L;
         this.exp = 0L;
     }
 
@@ -55,5 +56,6 @@ public class Beggar extends Timestamped{
     public void updateExp(BeggarExpUpResponseDto responseDto) {
         this.nickname = responseDto.getNickname();
         this.exp = responseDto.getExp();
+        this.level = responseDto.getLevel();
     }
 }

@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.enumType.LevelType;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +50,16 @@ public class BeggarService {
     public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
+        Long level = beggar.getLevel();
+
+        if (LevelType.getNextExpByLevel(level) <= exp) {
+            level ++;
+        }
         //Long levelup 추가 할 것
         //Long point 추가 할 것
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .exp(exp)
-                //.level(level) 추가 할 것
+                .level(level)
                 //.point(point)추가 할 것
                 .build();
         beggar.updateExp(beggarExpUpResponseDto);

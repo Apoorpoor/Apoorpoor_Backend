@@ -8,6 +8,7 @@ import com.example.apoorpoor_backend.model.UserRoleEnum;
 import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class BeggarServiceTest {
     @Autowired
     private BeggarRepository beggarRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        beggarRepository.deleteAll();
+    }
 
     @Test
     void createBeggar() {
@@ -75,6 +81,7 @@ class BeggarServiceTest {
 
         Long exp = beggar.getExp() + ExpType.FILL_LEDGER.getAmount();
         Long level = beggar.getLevel();
+        Long nextExp = LevelType.getNextExpByLevel(level);
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;

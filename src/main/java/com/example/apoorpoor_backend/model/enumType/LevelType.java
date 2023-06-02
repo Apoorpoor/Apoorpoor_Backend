@@ -1,9 +1,9 @@
 package com.example.apoorpoor_backend.model.enumType;
 
 public enum LevelType {
-    LV1(1L, 0L),
-    LV2(2L, 500L),
-    LV3(3L, 1200L);
+    LV1(1L, 500L),
+    LV2(2L, 1000L),
+    LV3(3L, 1600L);
 
     private final Long level;
     private final Long nextExp;

@@ -50,17 +50,17 @@ public class BeggarService {
     public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
+        Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
         Long level = beggar.getLevel();
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;
         }
-        //Long levelup 추가 할 것
-        //Long point 추가 할 것
+
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .exp(exp)
                 .level(level)
-                //.point(point)추가 할 것
+                .point(point)
                 .build();
         beggar.updateExp(beggarExpUpResponseDto);
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);

@@ -57,5 +57,6 @@ public class Beggar extends Timestamped{
         this.nickname = responseDto.getNickname();
         this.exp = responseDto.getExp();
         this.level = responseDto.getLevel();
+        this.point = responseDto.getPoint();
     }
 }

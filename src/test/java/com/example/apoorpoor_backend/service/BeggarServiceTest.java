@@ -198,7 +198,7 @@ class BeggarServiceTest {
     }
 
     @Test
-    @DisplayName("Badge N대 M 단방향 테스트")
+    @DisplayName("Badge 저장 N대 M  테스트")
     void saveBade() {
         //given
         Badge badge = new Badge(1L, "티끌 모아 태산");
@@ -233,9 +233,6 @@ class BeggarServiceTest {
 
         Beggar beggar2 = new Beggar(beggarRequestDto2, user2);
         beggarRepository.save(beggar2);
-
-        badge.addBeggarList(beggar1);
-        badge.addBeggarList(beggar2);
 
     }
 }

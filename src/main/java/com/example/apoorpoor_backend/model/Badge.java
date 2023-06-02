@@ -23,18 +23,11 @@ public class Badge extends Timestamped {
     @Column
     private String badgeTitle;
 
-    @ManyToMany
-    @JoinTable(name = "GET_BADGE",
-    joinColumns = @JoinColumn(name = "beggar_id"),
-    inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<Beggar> beggarList = new ArrayList<>();
+    @OneToMany(mappedBy = "badge")
+    private List<GetBadge> getBadgeList = new ArrayList<>();
 
     public Badge(Long badgeNum, String badgeTitle) {
         this.badgeNum = badgeNum;
         this.badgeTitle = badgeTitle;
-    }
-
-    public void addBeggarList(Beggar beggar) {
-        this.beggarList.add(beggar);
     }
 }

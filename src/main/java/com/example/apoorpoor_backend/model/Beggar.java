@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Entity(name = "BEGGAR")
@@ -40,6 +43,9 @@ public class Beggar extends Timestamped{
     @ColumnDefault("0")
     @Column
     private Long exp;
+
+    @OneToMany(mappedBy = "beggar")
+    private List<GetBadge> getBadgeList = new ArrayList<>();
 
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();

@@ -92,8 +92,6 @@ public class BeggarService {
         String badgeTitle = badgeType.getBadgeTitle();
         Badge badge = new Badge(badgeNum, badgeTitle);
         badgeRepository.save(badge);
-
-        badge.addBeggarList(beggar);
     }
 
 }

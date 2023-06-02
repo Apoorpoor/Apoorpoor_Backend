@@ -40,9 +40,9 @@ public class BeggarController {
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
-    @Operation(summary = "거지 캐릭터 경험치 획득 API" , description = "거지 경험치 획득캐릭터")
-    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
-    @PatchMapping("/beggar/exp")
+    @Operation(summary = "거지 캐릭터 경험치, 포인트 획득 API" , description = "거지 경험치, 포인트 획득")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "획득 완료" )})
+    @PatchMapping("/beggar/point")
     public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
     }

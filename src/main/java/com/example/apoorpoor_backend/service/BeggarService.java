@@ -1,9 +1,14 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
+import com.example.apoorpoor_backend.model.GetBadge;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.enumType.BadgeType;
+import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
+import com.example.apoorpoor_backend.repository.BadgeRepository;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,7 @@ public class BeggarService {
 
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
+    private final BadgeRepository badgeRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
@@ -50,17 +56,21 @@ public class BeggarService {
     public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
+        Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
         Long level = beggar.getLevel();
+
+        if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
+            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
+        }
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;
         }
-        //Long levelup 추가 할 것
-        //Long point 추가 할 것
+
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .exp(exp)
                 .level(level)
-                //.point(point)추가 할 것
+                .point(point)
                 .build();
         beggar.updateExp(beggarExpUpResponseDto);
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
@@ -78,4 +88,19 @@ public class BeggarService {
         );
     }
 
+    public void saveBadge(BadgeType badgeType, Beggar beggar) {
+        Long badgeNum = badgeType.getBadgeNum();
+        String badgeTitle = badgeType.getBadgeTitle();
+
+        boolean hasBadge = beggar.getGetBadgeList().stream()
+                .map(GetBadge::getBadge)
+                .anyMatch(b -> b.getBadgeNum().equals(badgeNum));
+
+        if(!hasBadge) {
+            Badge badge = new Badge(badgeNum, badgeTitle);
+            badgeRepository.save(badge);
+        } else {
+            throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
+        }
+    }
 }

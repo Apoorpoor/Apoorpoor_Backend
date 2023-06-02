@@ -1,8 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
-import com.example.apoorpoor_backend.dto.BeggarResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.BeggarService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +38,13 @@ public class BeggarController {
     @PatchMapping("/beggar")
     public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
+    }
+
+    @Operation(summary = "거지 캐릭터 경험치 획득 API" , description = "거지 경험치 획득캐릭터")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
+    @PatchMapping("/beggar/exp")
+    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
     }
 
 }

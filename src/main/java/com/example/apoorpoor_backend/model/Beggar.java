@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
+import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,15 +36,24 @@ public class Beggar extends Timestamped{
     @Column
     private String description;
 
+    @ColumnDefault("0")
+    @Column
+    private Long exp;
+
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
         this.user = user;
         this.point = 0L;
         this.level = 0L;
+        this.exp = 0L;
     }
 
     public void update(BeggarRequestDto beggarRequestDto) {
         this.nickname = beggarRequestDto.getNickname();
     }
 
+    public void updateExp(BeggarExpUpResponseDto responseDto) {
+        this.nickname = responseDto.getNickname();
+        this.exp = responseDto.getExp();
+    }
 }

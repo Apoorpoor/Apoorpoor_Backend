@@ -1,8 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
-import com.example.apoorpoor_backend.dto.BeggarResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
@@ -46,6 +44,20 @@ public class BeggarService {
         Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
+    }
+
+    public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
+        Beggar beggar = beggarCheck(username);
+        Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
+        //Long levelup 추가 할 것
+        //Long point 추가 할 것
+        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+                .exp(exp)
+                //.level(level) 추가 할 것
+                //.point(point)추가 할 것
+                .build();
+        beggar.updateExp(beggarExpUpResponseDto);
+        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }
 
     public User userCheck(String username) {

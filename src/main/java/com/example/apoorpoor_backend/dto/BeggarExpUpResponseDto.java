@@ -5,6 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class BeggarRequestDto {
+public class BeggarExpUpResponseDto {
     private String nickname;
+
+    private Long level;
+
+    private Long exp;
+
+    private Long point;
 }

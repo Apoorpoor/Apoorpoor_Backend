@@ -59,7 +59,7 @@ public class BeggarService {
         Long level = beggar.getLevel();
 
         if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
-            saveBadge(beggarExpUpRequestDto.getBadgeType());
+            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
         }
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
@@ -87,11 +87,13 @@ public class BeggarService {
         );
     }
 
-    public void saveBadge(BadgeType badgeType) {
+    public void saveBadge(BadgeType badgeType, Beggar beggar) {
         Long badgeNum = badgeType.getBadgeNum();
         String badgeTitle = badgeType.getBadgeTitle();
         Badge badge = new Badge(badgeNum, badgeTitle);
         badgeRepository.save(badge);
+
+        badge.addBeggarList(beggar);
     }
 
 }

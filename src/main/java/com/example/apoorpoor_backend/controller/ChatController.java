@@ -21,21 +21,32 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
+    private final ChatService chatService;
+    private final SimpMessagingTemplate msgOperation;
     private final S3Uploader s3Uploader;
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
-    public ChatMessage register(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+    public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+        Thread.sleep(500); // simulated delay
+        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room", newchatdto);
     }
 
     @MessageMapping("/chat/send")
     @SendTo("/sub/chat/room")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+        Thread.sleep(500); // simulated delay
+        chatService.sendChatRoom(chatDto, headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
+    @EventListener
+    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        ChatDto chatDto = chatService.disconnectChatRoom(headerAccessor);
+        msgOperation.convertAndSend("/sub/chat/room", chatDto);
+    }
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

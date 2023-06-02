@@ -40,6 +40,3 @@ out/
 
 /src/main/resources/application-oauth.yml
 /src/main/resources/application.yml
-
-### 민감정보 ###
-/src/main/resources/application-security.properties

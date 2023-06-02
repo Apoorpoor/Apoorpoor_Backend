@@ -28,6 +28,7 @@ public class UserService {
         return new ResponseEntity<>(gender, HttpStatus.OK);
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<UserResponseDto> userInfo(String username) {
         User findUser = userCheck(username);
         return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class BeggarResponseDto {
-    private Long id;
+    private Long beggar_id;
     private Long user_id;
     private String nickname;
     private Long point;
@@ -14,8 +14,8 @@ public class BeggarResponseDto {
     private String description;
 
     @Builder
-    private BeggarResponseDto(Long id, Long user_id, String nickname, Long point, Long level, String description){
-        this.id = id;
+    private BeggarResponseDto(Long beggar_id, Long user_id, String nickname, Long point, Long level, String description){
+        this.beggar_id = beggar_id;
         this.user_id = user_id;
         this.nickname = nickname;
         this.point = point;
@@ -25,7 +25,7 @@ public class BeggarResponseDto {
 
     public static BeggarResponseDto of(Beggar beggar){
         return BeggarResponseDto.builder()
-                .id(beggar.getId())
+                .beggar_id(beggar.getId())
                 .user_id(beggar.getUser().getId())
                 .nickname(beggar.getNickname())
                 .point(beggar.getPoint())

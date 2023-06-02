@@ -1,9 +1,13 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.enumType.BadgeType;
+import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
+import com.example.apoorpoor_backend.repository.BadgeRepository;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ public class BeggarService {
 
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
+    private final BadgeRepository badgeRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
@@ -53,6 +58,10 @@ public class BeggarService {
         Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
         Long level = beggar.getLevel();
 
+        if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
+            saveBadge(beggarExpUpRequestDto.getBadgeType());
+        }
+
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level ++;
         }
@@ -76,6 +85,13 @@ public class BeggarService {
         return beggarRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
+    }
+
+    public void saveBadge(BadgeType badgeType) {
+        Long badgeNum = badgeType.getBadgeNum();
+        String badgeTitle = badgeType.getBadgeTitle();
+        Badge badge = new Badge(badgeNum, badgeTitle);
+        badgeRepository.save(badge);
     }
 
 }

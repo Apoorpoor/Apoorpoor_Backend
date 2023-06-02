@@ -1,5 +1,8 @@
 package com.example.apoorpoor_backend.model.enumType;
 
+import lombok.Getter;
+
+@Getter
 public enum LevelType {
     LV1(1L, 100L),
     LV2(2L, 300L),
@@ -27,10 +30,6 @@ public enum LevelType {
             }
         }
         return null; // 예외 처리 필요 (존재하지 않는 레벨일 경우)
-    }
-
-    public Long getNextExp() {
-        return nextExp;
     }
 
 }

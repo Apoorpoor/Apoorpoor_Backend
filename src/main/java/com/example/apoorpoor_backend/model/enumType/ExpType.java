@@ -1,5 +1,8 @@
 package com.example.apoorpoor_backend.model.enumType;
 
+import lombok.Getter;
+
+@Getter
 public enum ExpType {
     FILL_LEDGER(10L),
     GET_BADGE(20L);
@@ -8,10 +11,6 @@ public enum ExpType {
 
     ExpType(Long amount) {
         this.amount = amount;
-    }
-
-    public Long getAmount() {
-        return amount;
     }
 
 }

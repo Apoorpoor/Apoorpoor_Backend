@@ -2,11 +2,13 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
+import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.UserRoleEnum;
 import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
+import com.example.apoorpoor_backend.repository.BadgeRepository;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,13 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
 class BeggarServiceTest {
     @Autowired
     private BeggarRepository beggarRepository;
+
+    @Autowired
+    private BadgeRepository badgeRepository;
 
     @BeforeEach
     void beforeEach() {
@@ -192,4 +197,45 @@ class BeggarServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Badge N대 M 단방향 테스트")
+    void saveBade() {
+        //given
+        Badge badge = new Badge(1L, "티끌 모아 태산");
+        badgeRepository.save(badge);
+
+        //beggar객체 1 생성
+        User user1 = User.builder()
+                .username("kakao21232212258")
+                .kakaoId(21232212258L)
+                .role(UserRoleEnum.USER)
+                .build();
+
+        String nickname1 = "TestBeggar1";
+        BeggarRequestDto beggarRequestDto1 = BeggarRequestDto.builder()
+                .nickname(nickname1)
+                .build();
+
+        Beggar beggar1 = new Beggar(beggarRequestDto1, user1);
+        beggarRepository.save(beggar1);
+
+        //beggar객체2 생성
+        User user2 = User.builder()
+                .username("kakao21232212254")
+                .kakaoId(21232212254L)
+                .role(UserRoleEnum.USER)
+                .build();
+
+        String nickname2 = "TestBeggar2";
+        BeggarRequestDto beggarRequestDto2 = BeggarRequestDto.builder()
+                .nickname(nickname2)
+                .build();
+
+        Beggar beggar2 = new Beggar(beggarRequestDto2, user2);
+        beggarRepository.save(beggar2);
+
+        badge.addBeggarList(beggar1);
+        badge.addBeggarList(beggar2);
+
+    }
 }

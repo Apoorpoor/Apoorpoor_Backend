@@ -2,16 +2,14 @@ package com.example.apoorpoor_backend.repository;
 
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.UserRoleEnum;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -19,6 +17,11 @@ class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAllInBatch();
+    }
 
     @DisplayName("유저네임으로 유저를 조회한다.")
     @Test
@@ -34,7 +37,6 @@ class UserRepositoryTest {
         assertThat(findUser.get())
                 .extracting("username", "password", "role", "kakaoId")
                 .containsExactly("kakao111222", "yumin4970", UserRoleEnum.USER, 121212L);
-
 
     }
 

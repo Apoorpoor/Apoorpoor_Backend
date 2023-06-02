@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.dto;
 
 import com.example.apoorpoor_backend.model.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +23,11 @@ public class UserResponseDto {
         this.gender = user.getGender();
     }
 
+    public UserResponseDto(Long id, String username, Long kakaoId, Long age, String gender) {
+        this.id = id;
+        this.username = username;
+        this.kakaoId = kakaoId;
+        this.age = age;
+        this.gender = gender;
+    }
 }

@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.UserRoleEnum;
 import com.example.apoorpoor_backend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAllInBatch();
+    }
+
     @DisplayName("나이를 설정한다.")
     @Test
     void setAge() throws Exception {
@@ -30,10 +36,10 @@ class UserServiceTest {
         User user = createUser("kakao111222", "yumin4970", UserRoleEnum.USER, 121212L);
 
         //when
-        user.updateAge(28L);
+        user.updateGender("female");
 
         //then
-        assertThat(user.getAge()).isEqualTo(28L);
+        assertThat(user.getGender()).isEqualTo("female");
     }
 
     @DisplayName("성별을 설정한다.")
@@ -76,3 +82,4 @@ class UserServiceTest {
     }
 
 }
+

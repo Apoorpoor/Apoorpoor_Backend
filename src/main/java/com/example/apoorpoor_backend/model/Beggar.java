@@ -26,16 +26,16 @@ public class Beggar extends Timestamped{
     @Column(nullable = false)
     private String nickname;
 
-    @ColumnDefault("0")
-    @Column(nullable = false)
-    private Long point;
-
     @ColumnDefault("1")
     @Column(nullable = false)
     private Long level;
 
     @Column
     private String description;
+
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private Long point;
 
     @ColumnDefault("0")
     @Column

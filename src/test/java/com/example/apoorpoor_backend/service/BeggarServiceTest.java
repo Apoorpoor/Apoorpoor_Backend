@@ -95,8 +95,8 @@ class BeggarServiceTest {
                         .build());
 
         //then
-        assertEquals(100L, exp);
-        assertEquals(100L, beggar.getExp());
+        assertEquals(10L, exp);
+        assertEquals(10L, beggar.getExp());
         assertEquals(1L, beggar.getLevel());
 
     }
@@ -142,8 +142,8 @@ class BeggarServiceTest {
                 .build());
 
         //then
-        assertEquals(100L, exp);
-        assertEquals(200L, beggar.getExp());
+        assertEquals(10L, exp);
+        assertEquals(20L, beggar.getExp());
         assertEquals(1L, beggar.getLevel());
 
     }
@@ -166,7 +166,7 @@ class BeggarServiceTest {
         Beggar beggar = new Beggar(beggarRequestDto, user);
         beggarRepository.save(beggar);
 
-        Long exp = 500L;
+        Long exp = 100L;
         Long level = beggar.getLevel();
 
 
@@ -183,7 +183,7 @@ class BeggarServiceTest {
                 .build());
 
         //then
-        assertEquals(500L, beggar.getExp());
+        assertEquals(100L, beggar.getExp());
         assertEquals(2L, beggar.getLevel());
 
     }

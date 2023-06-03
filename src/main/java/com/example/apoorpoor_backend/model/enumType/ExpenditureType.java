@@ -12,6 +12,5 @@ public enum ExpenditureType {
     HEALTH, //건강
     FOOD_EXPENSES, //식비
     SHOPPING, //쇼핑
-    LEISURE_ACTIVITIES, //여가활동
     OTHER // 기타
 }

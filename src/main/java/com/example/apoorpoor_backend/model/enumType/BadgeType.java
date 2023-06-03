@@ -26,5 +26,4 @@ public enum BadgeType {
         this.badgeNum = badgeNum;
         this.badgeTitle = badgeTitle;
     }
-
 }

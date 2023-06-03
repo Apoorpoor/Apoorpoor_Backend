@@ -1,6 +1,8 @@
 package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
+import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
+import com.example.apoorpoor_backend.dto.shop.PayResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.ShopService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "ShopController", description = "상점 controller")
 @RestController
@@ -25,8 +25,13 @@ public class ShopController {
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 리스트 조회 완료" )})
     @GetMapping("/shop")
     public ResponseEntity<ItemListResponseDto> getItemList(
-            @RequestParam String itemType,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            @RequestParam String itemType) {
         return shopService.getItemList(itemType);
+    }
+
+    @PutMapping("/pay")
+    public ResponseEntity<PayResponseDto> buyItem(@RequestBody
+    PayRequestDto payRequestDto,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return shopService.buyItem(payRequestDto, userDetails.getUsername());
     }
 }

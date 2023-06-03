@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
 import com.example.apoorpoor_backend.repository.BadgeRepository;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
+import com.example.apoorpoor_backend.repository.GetBadgeRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class BeggarService {
 
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
+    private final GetBadgeRepository getBadgeRepository;
     private final BadgeRepository badgeRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
@@ -55,6 +57,7 @@ public class BeggarService {
 
     public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
+        String nickname = beggar.getNickname();
         Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
         Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
         Long level = beggar.getLevel();
@@ -68,6 +71,7 @@ public class BeggarService {
         }
 
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+                .nickname(nickname)
                 .exp(exp)
                 .level(level)
                 .point(point)
@@ -98,7 +102,13 @@ public class BeggarService {
 
         if(!hasBadge) {
             Badge badge = new Badge(badgeNum, badgeTitle);
+
             badgeRepository.save(badge);
+
+            GetBadge getBadge = new GetBadge(badge, beggar);
+            badge.getGetBadgeList().add(getBadge); // Badge 엔티티의 getGetBadgeList에 추가
+            getBadgeRepository.save(getBadge);
+
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
         }

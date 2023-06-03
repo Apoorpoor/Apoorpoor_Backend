@@ -41,7 +41,7 @@ public class LedgerHistoryResponseDto {
                 .paymentMethod(ledgerHistory.getPaymentMethod())
                 .income(ledgerHistory.getIncome())
                 .expenditure(ledgerHistory.getExpenditure())
-                .date(ledgerHistory.getDate())
+                .date(ledgerHistory.getDate().toString())
                 .build();
     }
 
@@ -53,6 +53,6 @@ public class LedgerHistoryResponseDto {
         this.paymentMethod = ledgerHistory.getPaymentMethod();
         this.income = ledgerHistory.getIncome();
         this.expenditure = ledgerHistory.getExpenditure();
-        this.date = ledgerHistory.getDate();
+        this.date = ledgerHistory.getDate().toString();
     }
 }

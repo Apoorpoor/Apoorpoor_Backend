@@ -43,13 +43,13 @@ public class BeggarService {
     }
 
     public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
-        User findUser = userCheck(username);
+        //User findUser = userCheck(username);
         Beggar beggar = beggarCheck(username);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
     }
 
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
-        User findUser = userCheck(username);
+        //User findUser = userCheck(username);
         Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
@@ -76,6 +76,7 @@ public class BeggarService {
                 .level(level)
                 .point(point)
                 .build();
+
         beggar.updateExp(beggarExpUpResponseDto);
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }

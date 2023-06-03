@@ -66,6 +66,10 @@ public class AccountService {
 
         Optional<Balance> findBalance = balanceRepository.findByAccountId(id);
 
+        Balance balance = null;
+
+        if(findBalance.isPresent()) balance = findBalance.get();
+
         List<LedgerHistory> ledgerHistoryList = account.getLedgerHistories();
 
         List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
@@ -75,7 +79,7 @@ public class AccountService {
         }
 
         AccountResponseDto accountResponseDto = new AccountResponseDto(account.getId(), account.getTitle(),
-                account.getUser().getId(), ledgerHistoryResponseDtoList, findBalance.get());
+                account.getUser().getId(), ledgerHistoryResponseDtoList, balance);
         return new ResponseEntity<>(accountResponseDto, HttpStatus.OK);
     }
 

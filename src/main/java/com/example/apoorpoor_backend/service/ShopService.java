@@ -6,28 +6,34 @@ import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
 import com.example.apoorpoor_backend.dto.shop.PayResponseDto;
 import com.example.apoorpoor_backend.model.Beggar;
-import com.example.apoorpoor_backend.model.enumType.Item;
+import com.example.apoorpoor_backend.model.Item;
+import com.example.apoorpoor_backend.model.enumType.ItemType;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
+import com.example.apoorpoor_backend.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ShopService {
 
     private final BeggarRepository beggarRepository;
 
+    private final ItemRepository itemRepository;
+
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType) {
         List<ItemResponseDto> itemList;
 
         if(!itemType.equals("total")) {
-            itemList = Item.getEnumItemListByType(itemType);
+            itemList = ItemType.getEnumItemListByType(itemType);
         } else {
-            itemList = Item.getEnumItemList();
+            itemList = ItemType.getEnumItemList();
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
@@ -36,8 +42,9 @@ public class ShopService {
 
     public ResponseEntity<PayResponseDto> buyItem(PayRequestDto payRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
-        Long itemPrice = payRequestDto.getItem().getItemPrice();
+        Long itemPrice = payRequestDto.getItemType().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
+        ItemType itemType = payRequestDto.getItemType();
 
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .point(updatePoint)
@@ -46,12 +53,15 @@ public class ShopService {
         beggar.updateExp(beggarExpUpResponseDto);
 
         ItemResponseDto itemResponseDto = ItemResponseDto.builder()
-                .itemNum(payRequestDto.getItem().getItemNum())
-                .itemName(payRequestDto.getItem().getItemName())
-                .itemPrice(payRequestDto.getItem().getItemPrice())
-                .levelLimit(payRequestDto.getItem().getLevelLimit())
-                .itemType(payRequestDto.getItem().getItemType())
+                .itemNum(payRequestDto.getItemType().getItemNum())
+                .itemName(payRequestDto.getItemType().getItemName())
+                .itemPrice(payRequestDto.getItemType().getItemPrice())
+                .levelLimit(payRequestDto.getItemType().getLevelLimit())
+                .itemType(payRequestDto.getItemType().getItemType())
                 .build();
+
+        Item item = new Item(itemType, beggar);
+        itemRepository.save(item);
 
         PayResponseDto payResponseDto = PayResponseDto.builder()
                 .itemResponseDto(itemResponseDto)

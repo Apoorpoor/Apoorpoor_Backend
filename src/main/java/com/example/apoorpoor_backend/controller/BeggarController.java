@@ -23,8 +23,12 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 생성 API" , description = "거지 캐릭터 생성")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 생성 완료" )})
     @PostMapping("/beggar")
-    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
+//    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
+//    }
+    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto){
+        String username = "user";
+        return beggarService.createBeggar(beggarRequestDto, username);
     }
 
     @Operation(summary = "거지 캐릭터 검색 API" , description = "거지 캐릭터 검색")
@@ -44,8 +48,15 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 경험치, 포인트 획득 API" , description = "거지 경험치, 포인트 획득")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "획득 완료" )})
     @PatchMapping("/beggar/point")
-    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
+//    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
+//    }
+    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto) {
+        String username = "user";
+        return beggarService.updateExp(beggarExpUpRequestDto, username);
     }
+
+//    @PatchMapping("/beggar/equip")
+//    public ResponseEntity<>
 
 }

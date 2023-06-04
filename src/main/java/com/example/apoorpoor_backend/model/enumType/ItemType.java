@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public enum Item {
+public enum ItemType {
     ITEM_1(1L, "빨간 조끼", 50L, 1L, "tops"),
     ITEM_2(2L, "흰 셔츠", 100L, 2L, "tops"),
     ITEM_3(3L, "파란 반 바지", 50L, 1L, "bottoms"),
@@ -28,7 +28,7 @@ public enum Item {
 
     private final String itemType;
 
-    Item(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType) {
+    ItemType(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType) {
         this.itemNum = itemNum;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -39,13 +39,13 @@ public enum Item {
     public static List<ItemResponseDto> getEnumItemList() {
         List<ItemResponseDto> itemList = new ArrayList<>();
 
-        for (Item item : Item.values()) {
+        for (ItemType itemType : ItemType.values()) {
             ItemResponseDto dto = ItemResponseDto.builder()
-                    .itemNum(item.getItemNum())
-                    .itemName(item.getItemName())
-                    .itemPrice(item.getItemPrice())
-                    .levelLimit(item.getLevelLimit())
-                    .itemType(item.getItemType())
+                    .itemNum(itemType.getItemNum())
+                    .itemName(itemType.getItemName())
+                    .itemPrice(itemType.getItemPrice())
+                    .levelLimit(itemType.getLevelLimit())
+                    .itemType(itemType.getItemType())
                     .build();
 
             itemList.add(dto);
@@ -57,7 +57,7 @@ public enum Item {
     public static List<ItemResponseDto> getEnumItemListByType(String itemType) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
-        for (Item item : Item.values()) {
+        for (ItemType item : ItemType.values()) {
             if (item.getItemType().equals(itemType)) {
                 ItemResponseDto dto = ItemResponseDto.builder()
                         .itemNum(item.getItemNum())

@@ -79,4 +79,20 @@ public class Beggar extends Timestamped{
         this.level = responseDto.getLevel();
         this.point = responseDto.getPoint();
     }
+
+    public void updateCustomTops(ItemListEnum itemListEnum) {
+        this.tops = itemListEnum;
+    }
+
+    public void updateCustomBottoms(ItemListEnum itemListEnum) {
+        this.bottoms = itemListEnum;
+    }
+
+    public void updateCustomShoes(ItemListEnum itemListEnum) {
+        this.shoes = itemListEnum;
+    }
+
+    public void updateCustomAccessories(ItemListEnum itemListEnum) {
+        this.accessories = itemListEnum;
+    }
 }

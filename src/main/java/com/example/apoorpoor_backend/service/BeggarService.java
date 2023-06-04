@@ -2,22 +2,16 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.dto.beggar.BeggarCustomRequestDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarCustomResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpRequestDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarResponseDto;
-import com.example.apoorpoor_backend.model.Badge;
-import com.example.apoorpoor_backend.model.Beggar;
-import com.example.apoorpoor_backend.model.GetBadge;
-import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.BadgeType;
 import com.example.apoorpoor_backend.model.enumType.ExpType;
+import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
 import com.example.apoorpoor_backend.model.enumType.LevelType;
-import com.example.apoorpoor_backend.repository.BadgeRepository;
-import com.example.apoorpoor_backend.repository.BeggarRepository;
-import com.example.apoorpoor_backend.repository.GetBadgeRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +30,7 @@ public class BeggarService {
     private final UserRepository userRepository;
     private final GetBadgeRepository getBadgeRepository;
     private final BadgeRepository badgeRepository;
+    private final ItemRepository itemRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
@@ -49,13 +44,11 @@ public class BeggarService {
     }
 
     public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
-        //User findUser = userCheck(username);
         Beggar beggar = beggarCheck(username);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
     }
 
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
-        //User findUser = userCheck(username);
         Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
@@ -107,7 +100,7 @@ public class BeggarService {
             badgeRepository.save(badge);
 
             GetBadge getBadge = new GetBadge(badge, beggar);
-            badge.getGetBadgeList().add(getBadge); // Badge 엔티티의 getGetBadgeList에 추가
+            badge.getGetBadgeList().add(getBadge);
             getBadgeRepository.save(getBadge);
 
         } else {
@@ -115,10 +108,32 @@ public class BeggarService {
         }
     }
 
-    public ResponseEntity<BeggarCustomResponseDto> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
+    public ResponseEntity<String> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
+        ItemListEnum itemListEnum = beggarCustomRequestDto.getItemListEnum();
 
-        return null;
+        Item findItem = itemRepository.findItemByBeggar_IdAndItemNum(beggar.getId(),itemListEnum.getItemNum())
+                .orElseThrow(() -> new IllegalArgumentException("가지고 있지 않은 아이템 입니다.")
+                );
+
+        String itemType = findItem.getItemType();
+
+        switch (itemType) {
+            case "tops" :
+                beggar.updateCustomTops(itemListEnum);
+                break;
+            case "bottoms" :
+                beggar.updateCustomBottoms(itemListEnum);
+                break;
+            case "shoes" :
+                beggar.updateCustomShoes(itemListEnum);
+            case "accessories" :
+                beggar.updateCustomAccessories(itemListEnum);
+            default:
+                System.out.println("해당 아이템은 사용 할 수 없습니다.");
+        }
+
+        return new ResponseEntity<>("착용 완료", HttpStatus.OK);
     }
 
     public Beggar beggarCheck(String username) {

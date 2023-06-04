@@ -51,7 +51,7 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 커스텀 API" , description = "거지캐릭터에게 구매한 옷 입히기")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 와료" )})
     @PatchMapping("/beggar/custom")
-    public ResponseEntity<BeggarCustomResponseDto> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customBeggar(beggarCustomRequestDto, userDetails.getUsername());
     }
 

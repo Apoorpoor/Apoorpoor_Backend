@@ -21,7 +21,7 @@ public class ShopController {
 
     private final ShopService shopService;
 
-    @Operation(summary = "상점 물품 목록 조회 API" , description = "상점 물품 조회")
+    @Operation(summary = "상점 물품 목록 조회 API" , description = "상점 Beggar 레벨에 따라 물품 조회")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 리스트 조회 완료" )})
     @GetMapping("/shop")
     public ResponseEntity<ItemListResponseDto> getItemList(
@@ -29,6 +29,8 @@ public class ShopController {
         return shopService.getItemList(itemType, userDetails.getUsername());
     }
 
+    @Operation(summary = "상점 물품 구매 API" , description = "상점 물품 구매")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 구매 완료" )})
     @PatchMapping("/pay")
     public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(
             @RequestBody PayRequestDto payRequestDto,

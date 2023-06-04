@@ -30,9 +30,15 @@ public class ShopController {
     }
 
     @PatchMapping("/pay")
+//    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
+//    PayRequestDto payRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
+//    }
+
     public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
-    PayRequestDto payRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
+                                                                 PayRequestDto payRequestDto) {
+        String username = "user";
+        return shopService.buyPointUpdate(payRequestDto, username);
     }
 
 }

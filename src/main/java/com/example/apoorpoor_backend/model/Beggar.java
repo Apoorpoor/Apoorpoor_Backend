@@ -95,4 +95,5 @@ public class Beggar extends Timestamped{
     public void updateCustomAccessories(ItemListEnum itemListEnum) {
         this.accessories = itemListEnum;
     }
+
 }

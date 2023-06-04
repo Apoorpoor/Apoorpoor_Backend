@@ -7,10 +7,7 @@ import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarResponseDto;
 import com.example.apoorpoor_backend.model.*;
-import com.example.apoorpoor_backend.model.enumType.BadgeType;
-import com.example.apoorpoor_backend.model.enumType.ExpType;
-import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
-import com.example.apoorpoor_backend.model.enumType.LevelType;
+import com.example.apoorpoor_backend.model.enumType.*;
 import com.example.apoorpoor_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -111,26 +108,40 @@ public class BeggarService {
     public ResponseEntity<String> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         ItemListEnum itemListEnum = beggarCustomRequestDto.getItemListEnum();
+        UnWearEnum unWearEnum = beggarCustomRequestDto.getUnWearEnum();
 
-        Item findItem = itemRepository.findItemByBeggar_IdAndItemNum(beggar.getId(),itemListEnum.getItemNum())
-                .orElseThrow(() -> new IllegalArgumentException("가지고 있지 않은 아이템 입니다.")
-                );
+        if(unWearEnum != null) {
+            String unWear = unWearEnum.getUnWearPart();
 
-        String itemType = findItem.getItemType();
+            switch (unWear) {
+                case "tops" -> beggar.updateCustomTops(null);
+                case "bottoms" -> beggar.updateCustomBottoms(null);
+                case "shoes" -> beggar.updateCustomShoes(null);
+                case "accessories" -> beggar.updateCustomAccessories(null);
+                default -> System.out.println("옳지 못한 행동 입니다.");
+            }
+        } else {
 
-        switch (itemType) {
-            case "tops" :
-                beggar.updateCustomTops(itemListEnum);
-                break;
-            case "bottoms" :
-                beggar.updateCustomBottoms(itemListEnum);
-                break;
-            case "shoes" :
-                beggar.updateCustomShoes(itemListEnum);
-            case "accessories" :
-                beggar.updateCustomAccessories(itemListEnum);
-            default:
-                System.out.println("해당 아이템은 사용 할 수 없습니다.");
+            Item findItem = itemRepository.findItemByBeggar_IdAndItemNum(beggar.getId(),itemListEnum.getItemNum())
+                    .orElseThrow(() -> new IllegalArgumentException("가지고 있지 않은 아이템 입니다.")
+                    );
+
+            String itemType = findItem.getItemType();
+
+            switch (itemType) {
+                case "tops" :
+                    beggar.updateCustomTops(itemListEnum);
+                    break;
+                case "bottoms" :
+                    beggar.updateCustomBottoms(itemListEnum);
+                    break;
+                case "shoes" :
+                    beggar.updateCustomShoes(itemListEnum);
+                case "accessories" :
+                    beggar.updateCustomAccessories(itemListEnum);
+                default:
+                    System.out.println("해당 아이템은 사용 할 수 없습니다.");
+            }
         }
 
         return new ResponseEntity<>("착용 완료", HttpStatus.OK);

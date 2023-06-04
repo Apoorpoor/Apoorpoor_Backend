@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findItemByBeggar_IdAndItemNum(Long beggarId, Long itemNum);
+
+    boolean existsDistinctByBeggar_IdAndItemNum(Long beggarId, Long itemNum);
 }

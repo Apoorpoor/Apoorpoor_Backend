@@ -47,6 +47,19 @@ public class ShopService {
         Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
 
+        Long itemNum = payRequestDto.getItemListEnum().getItemNum();
+        String itemName = payRequestDto.getItemListEnum().getItemName();
+        Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
+        String itemType = payRequestDto.getItemListEnum().getItemType();
+
+        if(itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
+            throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
+        }
+
+        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
+        itemRepository.save(item);
+
+
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .nickname(nickname)
                 .exp(exp)
@@ -56,13 +69,7 @@ public class ShopService {
 
         beggar.updateExp(beggarExpUpResponseDto);
 
-        Long itemNum = payRequestDto.getItemListEnum().getItemNum();
-        String itemName = payRequestDto.getItemListEnum().getItemName();
-        Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
-        String itemType = payRequestDto.getItemListEnum().getItemType();
 
-        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
-        itemRepository.save(item);
 
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }

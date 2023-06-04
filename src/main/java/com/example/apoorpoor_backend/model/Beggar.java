@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -79,4 +79,21 @@ public class Beggar extends Timestamped{
         this.level = responseDto.getLevel();
         this.point = responseDto.getPoint();
     }
+
+    public void updateCustomTops(ItemListEnum itemListEnum) {
+        this.tops = itemListEnum;
+    }
+
+    public void updateCustomBottoms(ItemListEnum itemListEnum) {
+        this.bottoms = itemListEnum;
+    }
+
+    public void updateCustomShoes(ItemListEnum itemListEnum) {
+        this.shoes = itemListEnum;
+    }
+
+    public void updateCustomAccessories(ItemListEnum itemListEnum) {
+        this.accessories = itemListEnum;
+    }
+
 }

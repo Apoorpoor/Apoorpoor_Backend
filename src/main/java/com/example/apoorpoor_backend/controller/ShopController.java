@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
@@ -25,13 +25,14 @@ public class ShopController {
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 리스트 조회 완료" )})
     @GetMapping("/shop")
     public ResponseEntity<ItemListResponseDto> getItemList(
-            @RequestParam("itemType") String itemType) {
-        return shopService.getItemList(itemType);
+            @RequestParam("itemType") String itemType, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return shopService.getItemList(itemType, userDetails.getUsername());
     }
 
     @PatchMapping("/pay")
-    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
-    PayRequestDto payRequestDto,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(
+            @RequestBody PayRequestDto payRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
     }
 

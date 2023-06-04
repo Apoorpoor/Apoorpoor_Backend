@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
@@ -26,13 +26,15 @@ public class ShopService {
 
     private final ItemRepository itemRepository;
 
-    public ResponseEntity<ItemListResponseDto> getItemList(String itemType) {
+    public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
+        Beggar beggar = beggarCheck(username);
+        Long beggarLevel = beggar.getLevel();
         List<ItemResponseDto> itemList;
 
         if(itemType.equals("total")) {
-            itemList = ItemListEnum.getEnumItemList();
+            itemList = ItemListEnum.getEnumItemList(beggarLevel);
         } else {
-            itemList = ItemListEnum.getEnumItemListByType(itemType);
+            itemList = ItemListEnum.getEnumItemListByType(itemType, beggarLevel);
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
@@ -47,6 +49,19 @@ public class ShopService {
         Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
 
+        Long itemNum = payRequestDto.getItemListEnum().getItemNum();
+        String itemName = payRequestDto.getItemListEnum().getItemName();
+        Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
+        String itemType = payRequestDto.getItemListEnum().getItemType();
+
+        if(itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
+            throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
+        }
+
+        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
+        itemRepository.save(item);
+
+
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
                 .nickname(nickname)
                 .exp(exp)
@@ -56,13 +71,7 @@ public class ShopService {
 
         beggar.updateExp(beggarExpUpResponseDto);
 
-        Long itemNum = payRequestDto.getItemListEnum().getItemNum();
-        String itemName = payRequestDto.getItemListEnum().getItemName();
-        Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
-        String itemType = payRequestDto.getItemListEnum().getItemType();
 
-        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
-        itemRepository.save(item);
 
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }

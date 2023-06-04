@@ -57,14 +57,14 @@ public enum ItemListEnum {
     public static List<ItemResponseDto> getEnumItemListByType(String itemType) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
-        for (ItemListEnum item : ItemListEnum.values()) {
-            if (item.getItemType().equals(itemType)) {
+        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
+            if (itemListEnum.getItemType().equals(itemType)) {
                 ItemResponseDto dto = ItemResponseDto.builder()
-                        .itemNum(item.getItemNum())
-                        .itemName(item.getItemName())
-                        .itemPrice(item.getItemPrice())
-                        .levelLimit(item.getLevelLimit())
-                        .itemType(item.getItemType())
+                        .itemNum(itemListEnum.getItemNum())
+                        .itemName(itemListEnum.getItemName())
+                        .itemPrice(itemListEnum.getItemPrice())
+                        .levelLimit(itemListEnum.getLevelLimit())
+                        .itemType(itemListEnum.getItemType())
                         .build();
 
                 filteredItemList.add(dto);

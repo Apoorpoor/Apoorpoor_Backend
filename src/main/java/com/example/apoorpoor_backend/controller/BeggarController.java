@@ -23,13 +23,8 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 생성 API" , description = "거지 캐릭터 생성")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 생성 완료" )})
     @PostMapping("/beggar")
-//    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
-//    }
-
-    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto){
-        String username = "user";
-        return beggarService.createBeggar(beggarRequestDto, username);
+    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
     @Operation(summary = "거지 캐릭터 검색 API" , description = "거지 캐릭터 검색")
@@ -49,26 +44,15 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 경험치, 포인트 획득 API" , description = "거지 경험치, 포인트 획득")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "획득 완료" )})
     @PatchMapping("/beggar/point")
-//    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
-//    }
-
-    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto) {
-        String username = "user";
-        return beggarService.updateExp(beggarExpUpRequestDto, username);
+    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
     }
-
 
     @Operation(summary = "거지 캐릭터 커스텀 API" , description = "거지캐릭터에게 구매한 옷 입히기")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 와료" )})
     @PatchMapping("/beggar/custom")
-//    public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return beggarService.customBeggar(beggarCustomRequestDto, userDetails.getUsername());
-//    }
-
-    public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto) {
-        String username = "user";
-        return beggarService.customBeggar(beggarCustomRequestDto, username);
+    public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.customBeggar(beggarCustomRequestDto, userDetails.getUsername());
     }
 
 }

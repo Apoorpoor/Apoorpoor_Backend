@@ -36,10 +36,11 @@ public enum ItemListEnum {
         this.itemType = itemType;
     }
 
-    public static List<ItemResponseDto> getEnumItemList() {
+    public static List<ItemResponseDto> getEnumItemList(Long beggarLevel) {
         List<ItemResponseDto> itemList = new ArrayList<>();
 
         for (ItemListEnum itemListEnum : ItemListEnum.values()) {
+            if(itemListEnum.getLevelLimit() <= beggarLevel) {
                 ItemResponseDto dto = ItemResponseDto.builder()
                         .itemNum(itemListEnum.getItemNum())
                         .itemName(itemListEnum.getItemName())
@@ -49,25 +50,28 @@ public enum ItemListEnum {
                         .build();
 
                 itemList.add(dto);
+            }
         }
 
         return itemList;
     }
 
-    public static List<ItemResponseDto> getEnumItemListByType(String itemType) {
+    public static List<ItemResponseDto> getEnumItemListByType(String itemType, Long beggarLevel) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
         for (ItemListEnum itemListEnum : ItemListEnum.values()) {
             if (itemListEnum.getItemType().equals(itemType)) {
-                ItemResponseDto dto = ItemResponseDto.builder()
-                        .itemNum(itemListEnum.getItemNum())
-                        .itemName(itemListEnum.getItemName())
-                        .itemPrice(itemListEnum.getItemPrice())
-                        .levelLimit(itemListEnum.getLevelLimit())
-                        .itemType(itemListEnum.getItemType())
-                        .build();
+                if(itemListEnum.getLevelLimit() <= beggarLevel) {
+                    ItemResponseDto dto = ItemResponseDto.builder()
+                            .itemNum(itemListEnum.getItemNum())
+                            .itemName(itemListEnum.getItemName())
+                            .itemPrice(itemListEnum.getItemPrice())
+                            .levelLimit(itemListEnum.getLevelLimit())
+                            .itemType(itemListEnum.getItemType())
+                            .build();
 
-                filteredItemList.add(dto);
+                    filteredItemList.add(dto);
+                }
             }
         }
 

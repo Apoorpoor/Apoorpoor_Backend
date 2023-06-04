@@ -26,13 +26,15 @@ public class ShopService {
 
     private final ItemRepository itemRepository;
 
-    public ResponseEntity<ItemListResponseDto> getItemList(String itemType) {
+    public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
+        Beggar beggar = beggarCheck(username);
+        Long beggarLevel = beggar.getLevel();
         List<ItemResponseDto> itemList;
 
         if(itemType.equals("total")) {
-            itemList = ItemListEnum.getEnumItemList();
+            itemList = ItemListEnum.getEnumItemList(beggarLevel);
         } else {
-            itemList = ItemListEnum.getEnumItemListByType(itemType);
+            itemList = ItemListEnum.getEnumItemListByType(itemType, beggarLevel);
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);

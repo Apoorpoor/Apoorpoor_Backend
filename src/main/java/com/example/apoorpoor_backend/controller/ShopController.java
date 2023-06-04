@@ -25,20 +25,15 @@ public class ShopController {
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 리스트 조회 완료" )})
     @GetMapping("/shop")
     public ResponseEntity<ItemListResponseDto> getItemList(
-            @RequestParam("itemType") String itemType) {
-        return shopService.getItemList(itemType);
+            @RequestParam("itemType") String itemType, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return shopService.getItemList(itemType, userDetails.getUsername());
     }
 
     @PatchMapping("/pay")
-//    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
-//    PayRequestDto payRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
-//    }
-
-    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
-                                                                 PayRequestDto payRequestDto) {
-        String username = "user";
-        return shopService.buyPointUpdate(payRequestDto, username);
+    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(
+            @RequestBody PayRequestDto payRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
     }
 
 }

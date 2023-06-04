@@ -118,7 +118,7 @@ public class BeggarService {
                 case "bottoms" -> beggar.updateCustomBottoms(null);
                 case "shoes" -> beggar.updateCustomShoes(null);
                 case "accessories" -> beggar.updateCustomAccessories(null);
-                default -> System.out.println("옳지 못한 행동 입니다.");
+                default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         } else {
 
@@ -140,7 +140,7 @@ public class BeggarService {
                 case "accessories" :
                     beggar.updateCustomAccessories(itemListEnum);
                 default:
-                    System.out.println("해당 아이템은 사용 할 수 없습니다.");
+                    throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }
 

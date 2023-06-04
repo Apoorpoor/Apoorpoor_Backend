@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;

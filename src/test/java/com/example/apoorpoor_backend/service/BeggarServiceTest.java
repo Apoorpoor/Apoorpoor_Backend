@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;

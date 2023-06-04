@@ -1,6 +1,12 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.dto.beggar.BeggarCustomRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarCustomResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarResponseDto;
 import com.example.apoorpoor_backend.model.Badge;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.GetBadge;
@@ -87,12 +93,6 @@ public class BeggarService {
         );
     }
 
-    public Beggar beggarCheck(String username) {
-        return beggarRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
-        );
-    }
-
     public void saveBadge(BadgeType badgeType, Beggar beggar) {
         Long badgeNum = badgeType.getBadgeNum();
         String badgeTitle = badgeType.getBadgeTitle();
@@ -113,5 +113,17 @@ public class BeggarService {
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
         }
+    }
+
+    public ResponseEntity<BeggarCustomResponseDto> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
+        Beggar beggar = beggarCheck(username);
+
+        return null;
+    }
+
+    public Beggar beggarCheck(String username) {
+        return beggarRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
     }
 }

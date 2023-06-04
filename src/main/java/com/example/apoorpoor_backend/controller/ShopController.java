@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
@@ -31,7 +31,7 @@ public class ShopController {
 
     @PatchMapping("/pay")
     public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(@RequestBody
-    PayRequestDto payRequestDto,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    PayRequestDto payRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
     }
 

@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
 import jakarta.persistence.*;
 import lombok.Getter;

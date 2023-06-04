@@ -1,13 +1,9 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
-import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
-import com.example.apoorpoor_backend.dto.shop.PayResponseDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Item;
-import com.example.apoorpoor_backend.model.enumType.ItemType;
 import com.example.apoorpoor_backend.repository.BeggarRepository;
 import com.example.apoorpoor_backend.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -27,48 +21,45 @@ public class ShopService {
 
     private final ItemRepository itemRepository;
 
-    public ResponseEntity<ItemListResponseDto> getItemList(String itemType) {
-        List<ItemResponseDto> itemList;
+//    public ResponseEntity<ItemListResponseDto> getItemList(String itemType) {
+//        List<ItemResponseDto> itemList;
+//
+//        if(itemType.equals("total")) {
+//            itemList = ItemListEnum.getEnumItemList();
+//        } else {
+//            itemList = ItemListEnum.getEnumItemListByType(itemType);
+//        }
+//
+//        ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
+//        return new ResponseEntity<>(itemListResponseDto, HttpStatus.OK);
+//    }
 
-        if(!itemType.equals("total")) {
-            itemList = ItemType.getEnumItemListByType(itemType);
-        } else {
-            itemList = ItemType.getEnumItemList();
-        }
-
-        ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
-        return new ResponseEntity<>(itemListResponseDto, HttpStatus.OK);
-    }
-
-    public ResponseEntity<PayResponseDto> buyItem(PayRequestDto payRequestDto, String username) {
+    public ResponseEntity<BeggarExpUpResponseDto> buyPointUpdate(PayRequestDto payRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
-        Long itemPrice = payRequestDto.getItemType().getItemPrice();
+        String nickname = beggar.getNickname();
+        Long exp = beggar.getExp();
+        Long level = beggar.getLevel();
+        Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
-        ItemType itemType = payRequestDto.getItemType();
 
         BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+                .nickname(nickname)
+                .exp(exp)
+                .level(level)
                 .point(updatePoint)
                 .build();
 
         beggar.updateExp(beggarExpUpResponseDto);
 
-        ItemResponseDto itemResponseDto = ItemResponseDto.builder()
-                .itemNum(payRequestDto.getItemType().getItemNum())
-                .itemName(payRequestDto.getItemType().getItemName())
-                .itemPrice(payRequestDto.getItemType().getItemPrice())
-                .levelLimit(payRequestDto.getItemType().getLevelLimit())
-                .itemType(payRequestDto.getItemType().getItemType())
-                .build();
+        Long itemNum = payRequestDto.getItemListEnum().getItemNum();
+        String itemName = payRequestDto.getItemListEnum().getItemName();
+        Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
+        String itemType = payRequestDto.getItemListEnum().getItemType();
 
-        Item item = new Item(itemType, beggar);
+        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
         itemRepository.save(item);
 
-        PayResponseDto payResponseDto = PayResponseDto.builder()
-                .itemResponseDto(itemResponseDto)
-                .point(updatePoint)
-                .build();
-
-        return new ResponseEntity<>(payResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }
 
     public Beggar beggarCheck(String username) {

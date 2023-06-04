@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class BeggarExpUpRequestDto {
-    private String nickname;
 
     private ExpType expType;
 

@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.model.enumType.ItemType;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -13,13 +12,25 @@ public class Item {
     private Long id;
 
     @Column
-    private ItemType itemType;
+    private Long itemNum;
+
+    @Column
+    private String itemName;
+
+    @Column
+    private Long levelLimit;
+
+    @Column
+    private String itemType;
 
     @ManyToOne
     @JoinColumn(name ="beggar_id")
     private Beggar beggar;
 
-    public Item(ItemType itemType, Beggar beggar) {
+    public Item(Long itemNum, String itemName, Long levelLimit, String itemType, Beggar beggar) {
+        this.itemNum = itemNum;
+        this.itemName = itemName;
+        this.levelLimit = levelLimit;
         this.itemType = itemType;
         this.beggar = beggar;
     }

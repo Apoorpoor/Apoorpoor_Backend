@@ -2,7 +2,7 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.dto.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.BeggarRequestDto;
-import com.example.apoorpoor_backend.model.enumType.ItemType;
+import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,16 +49,16 @@ public class Beggar extends Timestamped{
     private List<GetBadge> getBadgeList = new ArrayList<>();
 
     @Column
-    private ItemType tops;
+    private ItemListEnum tops;
 
     @Column
-    private ItemType bottoms;
+    private ItemListEnum bottoms;
 
     @Column
-    private ItemType shoes;
+    private ItemListEnum shoes;
 
     @Column
-    private ItemType accessories;
+    private ItemListEnum accessories;
 
 
     public Beggar(BeggarRequestDto requestDto, User user){

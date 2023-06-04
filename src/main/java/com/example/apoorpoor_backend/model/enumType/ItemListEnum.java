@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public enum ItemType {
+public enum ItemListEnum {
     ITEM_1(1L, "빨간 조끼", 50L, 1L, "tops"),
     ITEM_2(2L, "흰 셔츠", 100L, 2L, "tops"),
     ITEM_3(3L, "파란 반 바지", 50L, 1L, "bottoms"),
@@ -28,7 +28,7 @@ public enum ItemType {
 
     private final String itemType;
 
-    ItemType(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType) {
+    ItemListEnum(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType) {
         this.itemNum = itemNum;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -39,13 +39,13 @@ public enum ItemType {
     public static List<ItemResponseDto> getEnumItemList() {
         List<ItemResponseDto> itemList = new ArrayList<>();
 
-        for (ItemType itemType : ItemType.values()) {
+        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
             ItemResponseDto dto = ItemResponseDto.builder()
-                    .itemNum(itemType.getItemNum())
-                    .itemName(itemType.getItemName())
-                    .itemPrice(itemType.getItemPrice())
-                    .levelLimit(itemType.getLevelLimit())
-                    .itemType(itemType.getItemType())
+                    .itemNum(itemListEnum.getItemNum())
+                    .itemName(itemListEnum.getItemName())
+                    .itemPrice(itemListEnum.getItemPrice())
+                    .levelLimit(itemListEnum.getLevelLimit())
+                    .itemType(itemListEnum.getItemType())
                     .build();
 
             itemList.add(dto);
@@ -57,7 +57,7 @@ public enum ItemType {
     public static List<ItemResponseDto> getEnumItemListByType(String itemType) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
-        for (ItemType item : ItemType.values()) {
+        for (ItemListEnum item : ItemListEnum.values()) {
             if (item.getItemType().equals(itemType)) {
                 ItemResponseDto dto = ItemResponseDto.builder()
                         .itemNum(item.getItemNum())

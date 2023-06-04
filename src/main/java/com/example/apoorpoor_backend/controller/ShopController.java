@@ -25,8 +25,8 @@ public class ShopController {
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "상품 리스트 조회 완료" )})
     @GetMapping("/shop")
     public ResponseEntity<ItemListResponseDto> getItemList(
-            @RequestParam String itemType) {
-        return shopService.getItemList(itemType);
+            @RequestParam("itemtype") String itemtype) {
+        return shopService.getItemList(itemtype);
     }
 
     @PutMapping("/pay")

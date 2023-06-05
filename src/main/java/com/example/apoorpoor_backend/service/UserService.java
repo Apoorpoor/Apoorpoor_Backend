@@ -1,7 +1,10 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.MyPageResponseDto;
+import com.example.apoorpoor_backend.dto.MyPageSearchCondition;
 import com.example.apoorpoor_backend.dto.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,12 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LedgerHistoryRepository ledgerHistoryRepository;
 
     public ResponseEntity<Long> setAge(Long age, String username) {
         User finduser = userCheck(username);
@@ -34,9 +40,27 @@ public class UserService {
         return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<MyPageResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
+        User findUser = userCheck(username);
+        List<MyPageResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
+        return new ResponseEntity<>(mypageStatus, HttpStatus.OK);
+
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<MyPageResponseDto>> getRecentStatus(String username) {
+        User findUser = userCheck(username);
+        List<MyPageResponseDto> recentStatus = ledgerHistoryRepository.getRecentStatus(findUser.getId());
+
+        return new ResponseEntity<>(recentStatus, HttpStatus.OK);
+    }
+
     public User userCheck(String username) {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
         );
     }
+
+
 }

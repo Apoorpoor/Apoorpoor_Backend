@@ -7,5 +7,5 @@ public enum IncomeType {
     INVESTMENT,//투자
     ALLOWANCE, //용돈
     FIXED_DEPOSIT_MATURITY,//적금 만기
-    OTHER //기타:
+    OTHER //기타
 }

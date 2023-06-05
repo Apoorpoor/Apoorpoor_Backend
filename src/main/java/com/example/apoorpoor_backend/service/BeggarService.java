@@ -49,31 +49,31 @@ public class BeggarService {
         return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
     }
 
-    public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
-        Beggar beggar = beggarCheck(username);
-        String nickname = beggar.getNickname();
-        Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
-        Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
-        Long level = beggar.getLevel();
-
-        if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
-            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
-        }
-
-        if (LevelType.getNextExpByLevel(level) <= exp) {
-            level ++;
-        }
-
-        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
-                .nickname(nickname)
-                .exp(exp)
-                .level(level)
-                .point(point)
-                .build();
-
-        beggar.updateExp(beggarExpUpResponseDto);
-        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
-    }
+//    public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
+//        Beggar beggar = beggarCheck(username);
+//        String nickname = beggar.getNickname();
+//        Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
+//        Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
+//        Long level = beggar.getLevel();
+//
+//        if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
+//            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
+//        }
+//
+//        if (LevelType.getNextExpByLevel(level) <= exp) {
+//            level ++;
+//        }
+//
+//        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+//                .nickname(nickname)
+//                .exp(exp)
+//                .level(level)
+//                .point(point)
+//                .build();
+//
+//        beggar.updateExp(beggarExpUpResponseDto);
+//        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
+//    }
 
     public void updateExpNew(String username, Long plusPoint) {
         Beggar beggar = beggarCheck(username);
@@ -83,17 +83,9 @@ public class BeggarService {
         Long level = beggar.getLevel();
 
         if (LevelType.getNextExpByLevel(level) <= exp) {
-            level ++;
+            level++;
+            beggar.updateLevel(level);
         }
-
-//        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
-//                .nickname(nickname)
-//                .exp(exp)
-//                .level(level)
-//                .point(point)
-//                .build();
-//
-//        beggar.updateExp(beggarExpUpResponseDto);
     }
 
     public void saveBadge(BadgeType badgeType, Beggar beggar) {

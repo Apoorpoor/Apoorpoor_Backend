@@ -101,4 +101,7 @@ public class Beggar extends Timestamped{
         this.accessories = itemListEnum;
     }
 
+    public void updateLevel(Long level) {
+        this.level = level;
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.MyPageResponseDto;
+import com.example.apoorpoor_backend.dto.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.MyPageSearchCondition;
 import com.example.apoorpoor_backend.dto.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
@@ -41,17 +41,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MyPageResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
+    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
         User findUser = userCheck(username);
-        List<MyPageResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
+        List<MonthSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
         return new ResponseEntity<>(mypageStatus, HttpStatus.OK);
 
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MyPageResponseDto>> getRecentStatus(String username) {
+    public ResponseEntity<List<MonthSumResponseDto>> getRecentStatus(String username) {
         User findUser = userCheck(username);
-        List<MyPageResponseDto> recentStatus = ledgerHistoryRepository.getRecentStatus(findUser.getId());
+        List<MonthSumResponseDto> recentStatus = ledgerHistoryRepository.getRecentStatus(findUser.getId());
 
         return new ResponseEntity<>(recentStatus, HttpStatus.OK);
     }

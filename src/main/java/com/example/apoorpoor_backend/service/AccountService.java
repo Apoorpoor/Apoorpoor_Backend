@@ -1,9 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.AccountRequestDto;
-import com.example.apoorpoor_backend.dto.AccountResponseDto;
-import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.model.Account;
 import com.example.apoorpoor_backend.model.Balance;
 import com.example.apoorpoor_backend.model.LedgerHistory;
@@ -104,6 +101,34 @@ public class AccountService {
 
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<AccountTotalResponseDto>> getTotalStatus(Long accountId, AccountSearchCondition condition, String username) {
+        User user = userCheck(username);
+        List<AccountTotalResponseDto> totalStatus = ledgerHistoryRepository.getTotalStatus(accountId, condition);
+        return new ResponseEntity<>(totalStatus, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<LedgerHistoryResponseDto>> getStatus(Long accountId, AccountSearchCondition condition, String username) {
+        User user = userCheck(username);
+        List<LedgerHistoryResponseDto> status = ledgerHistoryRepository.getStatus(accountId, condition);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<MonthSumResponseDto>> getStatistics(Long accountId, AccountSearchCondition condition, String username) {
+        User user = userCheck(username);
+        List<MonthSumResponseDto> statistic = ledgerHistoryRepository.getStatistic(accountId, condition);
+        return new ResponseEntity<>(statistic, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<MonthSumResponseDto>> getDifference(Long accountId, String username) {
+        User user = userCheck(username);
+        List<MonthSumResponseDto> difference = ledgerHistoryRepository.getDifference(accountId);
+        return new ResponseEntity<>(difference, HttpStatus.OK);
+    }
+
     public User userCheck(String username) {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
@@ -112,3 +137,6 @@ public class AccountService {
 
 
 }
+
+
+

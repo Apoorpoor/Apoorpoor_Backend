@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.*;
-import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +36,13 @@ public class UserController {
     }
 
     @GetMapping("/mypage/status")
-    public ResponseEntity<List<MyPageResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return userService.getStatus(condition, username);
     }
 
     @GetMapping("/mypage/recentStatus")
-    public ResponseEntity<List<MyPageResponseDto>> getRecentStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<MonthSumResponseDto>> getRecentStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return userService.getRecentStatus(username);
     }

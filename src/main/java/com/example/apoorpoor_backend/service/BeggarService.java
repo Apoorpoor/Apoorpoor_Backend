@@ -38,9 +38,22 @@ public class BeggarService {
         return new ResponseEntity<>(new StatusResponseDto("푸어가 생성되었어요..."), HttpStatus.OK );
     }
 
-    public ResponseEntity<BeggarResponseDto> findBeggar(String username) {
+    public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
+        User user = userCheck(username);
         Beggar beggar = beggarCheck(username);
-        return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
+
+        Long beggarId = beggar.getId();
+        Long userId = user.getId();
+        String nickname = beggar.getNickname();
+        Long point = beggar.getPoint();
+        Long level = beggar.getLevel();
+        String description = beggar.getDescription();
+        String gender = user.getGender();
+        Long age = user.getAge();
+
+        BeggarSearchResponseDto beggarSearchResponseDto = new BeggarSearchResponseDto(beggarId, userId, nickname, point, level, description, gender, age);
+
+        return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
 
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {

@@ -19,11 +19,6 @@ public class ItemResponseDto {
 
     private String itemType;
 
-//    public ItemResponseDto(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType) {
-//        this.itemNum = itemNum;
-//        this.itemName = itemName;
-//        this.itemPrice = itemPrice;
-//        this.levelLimit = levelLimit;
-//        this.itemType = itemType;
-//    }
+    private String itemState;
+
 }

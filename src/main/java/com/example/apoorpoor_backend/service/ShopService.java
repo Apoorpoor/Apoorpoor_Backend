@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.ItemNumDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,13 +30,23 @@ public class ShopService {
 
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
         Beggar beggar = beggarCheck(username);
-        Long beggarLevel = beggar.getLevel();
-        List<ItemResponseDto> itemList;
+        List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
 
+        List<Long> hasItemNumDtoList = new ArrayList<>();
+        for (Item item : hasItemList) {
+            Long itemNum = item.getItemNum();
+
+            //ItemNumDto itemNumDto = new ItemNumDto(itemNum);
+
+           hasItemNumDtoList.add(itemNum);
+        }
+        //Long beggarLevel = beggar.getLevel();
+
+        List<ItemResponseDto> itemList;
         if(itemType.equals("total")) {
-            itemList = ItemListEnum.getEnumItemList(beggarLevel);
+            itemList = ItemListEnum.getEnumItemList(beggar, hasItemNumDtoList);
         } else {
-            itemList = ItemListEnum.getEnumItemListByType(itemType, beggarLevel);
+            itemList = ItemListEnum.getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);

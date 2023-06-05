@@ -14,7 +14,6 @@ env:
   CODE_DEPLOY_APP_NAME: my-codedeploy-app
   DEPLOYMENT_GROUP_NAME: my-codedeploy-deployment-group
 
-permission: write-all
 
 jobs:
   build:

@@ -26,10 +26,9 @@ public class Account extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Balance balance;
 
-    //@JsonManagedReference
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<LedgerHistory> ledgerHistories = new ArrayList<>();
 

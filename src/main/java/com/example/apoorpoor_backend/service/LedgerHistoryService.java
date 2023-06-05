@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -46,8 +47,7 @@ public class LedgerHistoryService {
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
-        //LocalDate localDate = LocalDate.parse(requestDto.getDatetime()); // 2022-10-23
-        String localDate = requestDto.getDatetime();
+        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
@@ -68,7 +68,7 @@ public class LedgerHistoryService {
 
         ledgerHistoryRepository.save(ledgerHistory);
 
-        Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
+        Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
             Long incomeTotal = income + findBalance.get().getIncomeTotal();
@@ -94,8 +94,8 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         AccountType accountType = requestDto.getAccountType();
-        String localDate = requestDto.getDatetime();
-        // LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
+
+        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
         if(accountType == AccountType.INCOME){
@@ -112,7 +112,22 @@ public class LedgerHistoryService {
             expenditure = 0L;
             income = 0L;
         }
-        Optional<LedgerHistory> ledgerHistory = ledgerHistoryRepository.findById(id);
+
+        LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
+
+        Optional<Balance> findBalance = getBalance(account);
+
+        if(findBalance.isPresent()) {
+            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();;
+            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+
+            findBalance.get().update(incomeTotal, expenditureTotal);
+        }else{
+            Balance balance = new Balance(income, expenditure, account);
+            balanceRepository.save(balance);
+        }
+
+
         LedgerHistoryResponseDto responseDto = LedgerHistoryResponseDto.builder()
                 .title(title)
                 .accountType(accountType)
@@ -121,9 +136,9 @@ public class LedgerHistoryService {
                 .paymentMethod(paymentMethod)
                 .income(income)
                 .expenditure(expenditure)
-                .date(localDate)
+                .date(localDate.toString())
                 .build();
-        ledgerHistory.get().update(responseDto);
+        ledgerHistory.update(responseDto);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -159,6 +174,11 @@ public class LedgerHistoryService {
         return ledgerHistoryRepository.findById(ledgerHistoryId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 거래내역입니다.")
         );
+    }
+
+    private Optional<Balance> getBalance(Account account) {
+        Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
+        return findBalance;
     }
 
 

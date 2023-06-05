@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+
+  - source: /
+destination: /home/ubuntu/apoorapoor
+permissions:
+
+  - object: /home/ubuntu/apoorapoor/
+owner: ubuntu
+group: ubuntu
+hooks:
+AfterInstall:
+  - location: scripts/deploy.sh

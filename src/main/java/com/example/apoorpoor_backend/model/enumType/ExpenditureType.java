@@ -7,6 +7,11 @@ public enum ExpenditureType {
     COMMUNICATION_EXPENSES, //통신비
     INSURANCE , //보험
     EDUCATION,//교육
-    SAVINGS, // 저축
+    SAVINGS, //저축
+    CULTURE, //문화
+    HEALTH, //건강
+    FOOD_EXPENSES, //식비
+    SHOPPING, //쇼핑
+    LEISURE_ACTIVITIES, //여가활동
     OTHER // 기타
 }

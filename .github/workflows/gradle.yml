@@ -49,7 +49,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME.zip
+        run: aws s3 cp --region ap-northeast-2 ./$PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME.zip
       # Deploy 설정
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME.zip
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME.zip

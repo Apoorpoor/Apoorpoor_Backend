@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,7 +147,20 @@ public class BeggarService {
 
     public ResponseEntity<BeggarCustomListResponseDto> customList(String username) {
         Beggar beggar = beggarCheck(username);
-        List<Item> itemsCollectionList = itemRepository.findItemsByBeggar_Id(beggar.getId());
+        List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
+        List<ItemDto> itemsCollectionList = new ArrayList<>();
+
+        for (Item item : hasItemList) {
+            Long itemNum = item.getItemNum();
+            String itemName = item.getItemName();
+            Long levelLimit = item.getLevelLimit();
+            String itemType = item.getItemType();
+
+            ItemDto itemDto = new ItemDto(itemNum, itemName, levelLimit, itemType);
+
+            itemsCollectionList.add(itemDto);
+
+        }
         BeggarCustomListResponseDto beggarCustomListResponseDto = new BeggarCustomListResponseDto(itemsCollectionList);
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
     }

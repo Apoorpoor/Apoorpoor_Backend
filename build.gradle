@@ -65,8 +65,11 @@ dependencies {
 
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
+jar {
+    enabled = false
 }
 
 //// ===  QueryDsl 빌드 옵션 (선택) ===

@@ -75,12 +75,6 @@ public class BeggarService {
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }
 
-    public User userCheck(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
-        );
-    }
-
     public void saveBadge(BadgeType badgeType, Beggar beggar) {
         Long badgeNum = badgeType.getBadgeNum();
         String badgeTitle = badgeType.getBadgeTitle();
@@ -163,6 +157,12 @@ public class BeggarService {
         }
         BeggarCustomListResponseDto beggarCustomListResponseDto = new BeggarCustomListResponseDto(itemsCollectionList);
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
+    }
+
+    public User userCheck(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
     }
 
     public Beggar beggarCheck(String username) {

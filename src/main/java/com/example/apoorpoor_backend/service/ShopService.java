@@ -49,6 +49,10 @@ public class ShopService {
         Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
 
+        if(updatePoint < 0) {
+            throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
+        }
+
         Long itemNum = payRequestDto.getItemListEnum().getItemNum();
         String itemName = payRequestDto.getItemListEnum().getItemName();
         Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();

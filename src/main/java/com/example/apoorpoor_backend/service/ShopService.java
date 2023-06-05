@@ -31,19 +31,16 @@ public class ShopService {
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
         Beggar beggar = beggarCheck(username);
         List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
-
         List<Long> hasItemNumDtoList = new ArrayList<>();
+
         for (Item item : hasItemList) {
             Long itemNum = item.getItemNum();
 
-            //ItemNumDto itemNumDto = new ItemNumDto(itemNum);
-
-           hasItemNumDtoList.add(itemNum);
+            hasItemNumDtoList.add(itemNum);
         }
-        //Long beggarLevel = beggar.getLevel();
 
         List<ItemResponseDto> itemList;
-        if(itemType.equals("total")) {
+        if (itemType.equals("total")) {
             itemList = ItemListEnum.getEnumItemList(beggar, hasItemNumDtoList);
         } else {
             itemList = ItemListEnum.getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
@@ -61,7 +58,7 @@ public class ShopService {
         Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
 
-        if(updatePoint < 0) {
+        if (updatePoint < 0) {
             throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
         }
 
@@ -70,11 +67,11 @@ public class ShopService {
         Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
         String itemType = payRequestDto.getItemListEnum().getItemType();
 
-        if(itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
+        if (itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
             throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
         }
 
-        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
+        Item item = new Item(itemNum, itemName, levelLimit, itemType, beggar);
         itemRepository.save(item);
 
 
@@ -86,7 +83,6 @@ public class ShopService {
                 .build();
 
         beggar.updateExp(beggarExpUpResponseDto);
-
 
 
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);

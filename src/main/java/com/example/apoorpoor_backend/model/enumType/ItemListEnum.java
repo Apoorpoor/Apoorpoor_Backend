@@ -1,11 +1,11 @@
 package com.example.apoorpoor_backend.model.enumType;
 
-import com.example.apoorpoor_backend.dto.beggar.ItemNumDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,69 +42,94 @@ public enum ItemListEnum {
 
     public static List<ItemResponseDto> getEnumItemList(Beggar beggar, List<Long> hasItemNumDtoList) {
         List<ItemResponseDto> itemList = new ArrayList<>();
-        Long beggarLevel = beggar.getLevel();
+
+        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
+        Long topsNum = beggar.getTops() == null ? null : beggar.getTops().getItemNum();
+        Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
+        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
+        Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
+
+        String[] matches = new String[itemListEnumCount];
+
+        for (Long aLong : hasItemNumDtoList) {
+            matches[Math.toIntExact(aLong)] = "DONE";
+        }
+
+        int i = 0;
         for (ItemListEnum itemListEnum : ItemListEnum.values()) {
-            if (itemListEnum.getLevelLimit() <= beggarLevel) {
-                for (Long aLong : hasItemNumDtoList) {
-                    ItemResponseDto dto;
-                    if (!Objects.equals(itemListEnum.getItemNum(), aLong)) {
-                        dto = ItemResponseDto.builder()
-                                .itemNum(itemListEnum.getItemNum())
-                                .itemName(itemListEnum.getItemName())
-                                .itemPrice(itemListEnum.getItemPrice())
-                                .levelLimit(itemListEnum.getLevelLimit())
-                                .itemType(itemListEnum.getItemType())
-                                .itemState(true)
-                                .build();
-                    } else {
-                        dto = ItemResponseDto.builder()
-                                .itemNum(itemListEnum.getItemNum())
-                                .itemName(itemListEnum.getItemName())
-                                .itemPrice(itemListEnum.getItemPrice())
-                                .levelLimit(itemListEnum.getLevelLimit())
-                                .itemType(itemListEnum.getItemType())
-                                .itemState(false)
-                                .build();
-                    }
-                    itemList.add(dto);
-                }
-            }
+            Long itemNum = itemListEnum.getItemNum();
+            String itemName = itemListEnum.getItemName();
+            Long itemPrice = itemListEnum.getItemPrice();
+            Long levelLimit = itemListEnum.getLevelLimit();
+            String itemType = itemListEnum.getItemType();
+            String itemState = matches[i];
+
+            if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+
+            ItemResponseDto dto = ItemResponseDto.builder()
+                    .itemNum(itemNum)
+                    .itemName(itemName)
+                    .itemPrice(itemPrice)
+                    .levelLimit(levelLimit)
+                    .itemType(itemType)
+                    .itemState(itemState)
+                    .build();
+            itemList.add(dto);
+
+            i++;
         }
         return itemList;
     }
 
+
     public static List<ItemResponseDto> getEnumItemListByType(String itemType, Beggar beggar, List<Long> hasItemNumDtoList) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
-        Long beggarLevel = beggar.getLevel();
+
+        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
+        Long topsNum = beggar.getTops() == null ? null : beggar.getTops().getItemNum();
+        Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
+        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
+        Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
+
+        String[] matches = new String[itemListEnumCount];
+
+        for (Long aLong : hasItemNumDtoList) {
+            matches[Math.toIntExact(aLong)] = "DONE";
+        }
+
+        int i = 0;
 
         for (ItemListEnum itemListEnum : ItemListEnum.values()) {
             if (itemListEnum.getItemType().equals(itemType)) {
-                if (itemListEnum.getLevelLimit() <= beggarLevel) {
-                    for (Long aLong : hasItemNumDtoList) {
-                        ItemResponseDto dto;
-                        if (!Objects.equals(itemListEnum.getItemNum(), aLong)) {
-                            dto = ItemResponseDto.builder()
-                                    .itemNum(itemListEnum.getItemNum())
-                                    .itemName(itemListEnum.getItemName())
-                                    .itemPrice(itemListEnum.getItemPrice())
-                                    .levelLimit(itemListEnum.getLevelLimit())
-                                    .itemType(itemListEnum.getItemType())
-                                    .itemState(true)
-                                    .build();
-                        } else {
-                            dto = ItemResponseDto.builder()
-                                    .itemNum(itemListEnum.getItemNum())
-                                    .itemName(itemListEnum.getItemName())
-                                    .itemPrice(itemListEnum.getItemPrice())
-                                    .levelLimit(itemListEnum.getLevelLimit())
-                                    .itemType(itemListEnum.getItemType())
-                                    .itemState(false)
-                                    .build();
-                        }
-                        filteredItemList.add(dto);
-                    }
-                }
+
+                Long itemNum = itemListEnum.getItemNum();
+                String itemName = itemListEnum.getItemName();
+                Long itemPrice = itemListEnum.getItemPrice();
+                Long levelLimit = itemListEnum.getLevelLimit();
+                String itemState = matches[i];
+
+
+                if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+
+
+                ItemResponseDto dto = ItemResponseDto.builder()
+                        .itemNum(itemNum)
+                        .itemName(itemName)
+                        .itemPrice(itemPrice)
+                        .levelLimit(levelLimit)
+                        .itemType(itemType)
+                        .itemState(itemState)
+                        .build();
+                filteredItemList.add(dto);
+
             }
+            i++;
         }
         return filteredItemList;
     }

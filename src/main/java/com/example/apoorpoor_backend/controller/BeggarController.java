@@ -1,8 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.BeggarRequestDto;
-import com.example.apoorpoor_backend.dto.BeggarResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.dto.beggar.*;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.BeggarService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +39,20 @@ public class BeggarController {
     @PatchMapping("/beggar")
     public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
+    }
+
+    @Operation(summary = "거지 캐릭터 경험치, 포인트 획득 API" , description = "거지 경험치, 포인트 획득")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "획득 완료" )})
+    @PatchMapping("/beggar/point")
+    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
+    }
+
+    @Operation(summary = "거지 캐릭터 커스텀 API" , description = "거지캐릭터에게 구매한 옷 입히기")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 와료" )})
+    @PatchMapping("/beggar/custom")
+    public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.customBeggar(beggarCustomRequestDto, userDetails.getUsername());
     }
 
 }

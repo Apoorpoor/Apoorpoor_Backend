@@ -16,5 +16,5 @@ public class LedgerHistoryRequestDto {
     private PaymentMethod paymentMethod;
     private Long income;
     private Long expenditure;
-    private String datetime;
+    private String dateTime;
 }

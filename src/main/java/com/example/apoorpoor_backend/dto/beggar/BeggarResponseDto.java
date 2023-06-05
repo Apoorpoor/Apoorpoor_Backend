@@ -1,4 +1,4 @@
-package com.example.apoorpoor_backend.dto;
+package com.example.apoorpoor_backend.dto.beggar;
 
 import com.example.apoorpoor_backend.model.Beggar;
 import lombok.Builder;

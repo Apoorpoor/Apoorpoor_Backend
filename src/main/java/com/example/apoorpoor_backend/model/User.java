@@ -39,7 +39,6 @@ public class User extends Timestamped{
     @CreationTimestamp
     private Timestamp createDate;
 
-
     @Builder
     public User(String username, String password, UserRoleEnum role, Long kakaoId) {
         this.username = username;

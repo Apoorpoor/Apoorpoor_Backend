@@ -38,7 +38,7 @@ public class AccountService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<AccountResponseDto>> getAllAccounts(String username){
         User user = userCheck(username);
-        List<Account> accountList = accountRepository.findAllByOrderByCreatedAtDesc();
+        List<Account> accountList = accountRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
 
         List<AccountResponseDto> accountResponseDtoList = new ArrayList<>();
 

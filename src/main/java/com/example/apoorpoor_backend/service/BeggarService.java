@@ -1,11 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.*;
-import com.example.apoorpoor_backend.dto.beggar.BeggarCustomRequestDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpRequestDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.*;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
 import com.example.apoorpoor_backend.repository.*;
@@ -15,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -75,12 +73,6 @@ public class BeggarService {
 
         beggar.updateExp(beggarExpUpResponseDto);
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
-    }
-
-    public User userCheck(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
-        );
     }
 
     public void saveBadge(BadgeType badgeType, Beggar beggar) {
@@ -145,6 +137,32 @@ public class BeggarService {
         }
 
         return new ResponseEntity<>("착용 완료", HttpStatus.OK);
+    }
+
+    public ResponseEntity<BeggarCustomListResponseDto> customList(String username) {
+        Beggar beggar = beggarCheck(username);
+        List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
+        List<ItemDto> itemsCollectionList = new ArrayList<>();
+
+        for (Item item : hasItemList) {
+            Long itemNum = item.getItemNum();
+            String itemName = item.getItemName();
+            Long levelLimit = item.getLevelLimit();
+            String itemType = item.getItemType();
+
+            ItemDto itemDto = new ItemDto(itemNum, itemName, levelLimit, itemType);
+
+            itemsCollectionList.add(itemDto);
+
+        }
+        BeggarCustomListResponseDto beggarCustomListResponseDto = new BeggarCustomListResponseDto(itemsCollectionList);
+        return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
+    }
+
+    public User userCheck(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
     }
 
     public Beggar beggarCheck(String username) {

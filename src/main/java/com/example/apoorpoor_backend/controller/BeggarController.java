@@ -49,10 +49,17 @@ public class BeggarController {
     }
 
     @Operation(summary = "거지 캐릭터 커스텀 API" , description = "거지캐릭터에게 구매한 옷 입히기")
-    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 와료" )})
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 완료" )})
     @PatchMapping("/beggar/custom")
     public ResponseEntity<String> customBeggar(@RequestBody BeggarCustomRequestDto beggarCustomRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customBeggar(beggarCustomRequestDto, userDetails.getUsername());
+    }
+
+    @Operation(summary = "거지 캐릭터 커스텀 조회 API" , description = "거지캐릭터가 구매한 아이템 조회")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "조회 완료" )})
+    @GetMapping("/beggar/custom")
+    public ResponseEntity<BeggarCustomListResponseDto>  customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return beggarService.customList(userDetails.getUsername());
     }
 
 }

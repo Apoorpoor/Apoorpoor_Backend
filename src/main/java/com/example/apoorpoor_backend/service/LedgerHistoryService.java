@@ -3,18 +3,12 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.LedgerHistoryRequestDto;
 import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
-import com.example.apoorpoor_backend.model.Account;
-import com.example.apoorpoor_backend.model.Balance;
-import com.example.apoorpoor_backend.model.LedgerHistory;
-import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
-import com.example.apoorpoor_backend.repository.AccountRepository;
-import com.example.apoorpoor_backend.repository.BalanceRepository;
-import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.*;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +29,8 @@ public class LedgerHistoryService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final BalanceRepository balanceRepository;
+    private final BeggarRepository beggarRepository;
+    private final BeggarService beggarService;
 
     public ResponseEntity<StatusResponseDto> createLedgerHistory(LedgerHistoryRequestDto requestDto, String username) {
         User user = userCheck(username);
@@ -79,6 +75,9 @@ public class LedgerHistoryService {
             Balance balance = new Balance(income, expenditure, account);
             balanceRepository.save(balance);
         }
+
+        // 1개 등록시 point +10, exp +10 (누적), 레벨업 확인
+        beggarService.updateExpNew(user.getUsername(), 10L);
 
         return new ResponseEntity<>(new StatusResponseDto("거래 내역 저장 성공"), HttpStatus.OK);
 
@@ -179,6 +178,12 @@ public class LedgerHistoryService {
     private Optional<Balance> getBalance(Account account) {
         Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
         return findBalance;
+    }
+
+    public Beggar beggarCheck(String username) {
+        return beggarRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
     }
 
 

@@ -75,6 +75,27 @@ public class BeggarService {
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
     }
 
+    public void updateExpNew(String username, Long plusPoint) {
+        Beggar beggar = beggarCheck(username);
+        beggar.updatePointAndExp(plusPoint);
+
+        Long exp = beggar.getExp();
+        Long level = beggar.getLevel();
+
+        if (LevelType.getNextExpByLevel(level) <= exp) {
+            level ++;
+        }
+
+//        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+//                .nickname(nickname)
+//                .exp(exp)
+//                .level(level)
+//                .point(point)
+//                .build();
+//
+//        beggar.updateExp(beggarExpUpResponseDto);
+    }
+
     public void saveBadge(BadgeType badgeType, Beggar beggar) {
         Long badgeNum = badgeType.getBadgeNum();
         String badgeTitle = badgeType.getBadgeTitle();

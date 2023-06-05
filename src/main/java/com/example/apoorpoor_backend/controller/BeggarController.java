@@ -27,11 +27,11 @@ public class BeggarController {
         return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
-    @Operation(summary = "거지 캐릭터 검색 API" , description = "거지 캐릭터 검색")
+    @Operation(summary = "마이 거지 캐릭터 API" , description = "내 거지 캐릭터 검색")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
     @GetMapping("/beggar")
-    public ResponseEntity<BeggarResponseDto> findBeggar(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return beggarService.findBeggar(userDetails.getUsername());
+    public ResponseEntity<BeggarSearchResponseDto> myBeggar(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.myBeggar(userDetails.getUsername());
     }
 
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
@@ -58,7 +58,7 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 커스텀 조회 API" , description = "거지캐릭터가 구매한 아이템 조회")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "조회 완료" )})
     @GetMapping("/beggar/custom")
-    public ResponseEntity<BeggarCustomListResponseDto>  customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<BeggarCustomListResponseDto> customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customList(userDetails.getUsername());
     }
 

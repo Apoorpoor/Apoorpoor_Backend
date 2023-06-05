@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
+import com.example.apoorpoor_backend.model.enumType.ExpType;
 import com.example.apoorpoor_backend.model.enumType.PointType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class Point extends Timestamped{
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private PointType pointType;
+    private ExpType expType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

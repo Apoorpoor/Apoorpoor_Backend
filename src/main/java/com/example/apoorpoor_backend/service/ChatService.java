@@ -16,14 +16,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 @Slf4j
 public class ChatService {
-    
 
     private final BeggarRepository beggarRepository;
-    private final ChatRepository chatRepository;
+    //private final ChatRepository chatRepository;
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -48,12 +47,11 @@ public class ChatService {
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateformat = format.format(date);
-        chatDto.setDate(dateformat);
-        Chat chat = new Chat(chatDto,beggar, type);
-        chatRepository.save(chat);
+//        Date date = new Date();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateformat = format.format(date);
+//        chatDto.setDate(dateformat);
+//        Chat chat = new Chat(chatDto,beggar, type);
     }
 
     public Beggar beggarCheck(Long beggar_id) {

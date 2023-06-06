@@ -3,8 +3,6 @@ package com.example.apoorpoor_backend.controller;
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
-import com.example.apoorpoor_backend.dto.shop.PointResponseDto;
-import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.ShopService;
 import io.swagger.v3.oas.annotations.Operation;

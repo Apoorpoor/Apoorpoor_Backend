@@ -6,6 +6,7 @@ import com.example.apoorpoor_backend.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -28,6 +29,7 @@ import java.io.IOException;
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
+    private KafkaTemplate<String, ChatDto> kafkaTemplate;
     private final S3Uploader s3Uploader;
 
     @MessageMapping("/chat/enter")
@@ -43,7 +45,8 @@ public class ChatController {
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500); // simulated delay
         chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", chatDto);
+        //msgOperation.convertAndSend("/sub/chat/room", chatDto);
+        kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, chatDto);
     }
 
     @EventListener

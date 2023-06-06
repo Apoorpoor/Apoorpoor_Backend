@@ -21,7 +21,6 @@ public class LedgerHistory extends Timestamped{
     @Column(name = "ledgerhistory_id", unique = true, nullable = false)
     private Long id;
 
-    //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

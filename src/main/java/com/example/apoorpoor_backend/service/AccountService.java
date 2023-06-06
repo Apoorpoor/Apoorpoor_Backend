@@ -63,13 +63,9 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
         );
-
         Optional<Balance> findBalance = balanceRepository.findByAccountId(id);
-
         List<LedgerHistory> ledgerHistoryList = account.getLedgerHistories();
-
         List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
-
         for (LedgerHistory ledgerHistory : ledgerHistoryList) {
             ledgerHistoryResponseDtoList.add(LedgerHistoryResponseDto.of(ledgerHistory));
         }

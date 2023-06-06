@@ -29,7 +29,6 @@ public class Account extends Timestamped{
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private Balance balance;
 
-    //@JsonManagedReference
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<LedgerHistory> ledgerHistories = new ArrayList<>();
 

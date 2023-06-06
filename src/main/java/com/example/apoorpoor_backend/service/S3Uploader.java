@@ -29,8 +29,6 @@ import java.util.Optional;
 @Component
 @Service
 public class S3Uploader {
-    //private final AmazonS3Client amazonS3Client;
-
     private static final String S3_BUCKET_PREFIX = "S3";
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -54,10 +52,6 @@ public class S3Uploader {
             String[] extensionArray = {".png", ".jpeg", ".jpg", ".webp", ".gif", ".mp4"};
 
             List<String> extensionList = new ArrayList<>(Arrays.asList(extensionArray));
-
-
-
-
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(image.getContentType());
             objectMetadata.setContentLength(image.getSize());

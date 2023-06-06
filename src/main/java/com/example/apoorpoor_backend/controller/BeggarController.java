@@ -34,6 +34,13 @@ public class BeggarController {
         return beggarService.myBeggar(userDetails.getUsername());
     }
 
+    @Operation(summary = "마이 거지 캐릭터 API" , description = "내 거지 캐릭터 검색")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
+    @GetMapping("/beggar/{username}")
+    public ResponseEntity<BeggarSearchResponseDto> getUserBeggar(@PathVariable String username, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.myBeggar(username);
+    }
+
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
     @PatchMapping("/beggar")

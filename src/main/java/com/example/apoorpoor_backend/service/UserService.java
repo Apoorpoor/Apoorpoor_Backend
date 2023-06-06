@@ -41,6 +41,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseEntity<UserResponseDto> getUserInfoByUsername(String username) {
+        User findUser = userCheck(username);
+        return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
+    }
+
+
+
+    @Transactional(readOnly = true)
     public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
         User findUser = userCheck(username);
         List<MonthSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
@@ -61,6 +69,9 @@ public class UserService {
                 () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
         );
     }
+
+
+
 
     @Transactional(readOnly = true)
     public List<User> getUserList() {

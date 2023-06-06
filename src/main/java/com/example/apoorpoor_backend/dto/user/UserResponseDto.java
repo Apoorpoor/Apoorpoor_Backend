@@ -23,11 +23,4 @@ public class UserResponseDto {
         this.gender = user.getGender();
     }
 
-    public UserResponseDto(Long id, String username, Long kakaoId, Long age, String gender) {
-        this.id = id;
-        this.username = username;
-        this.kakaoId = kakaoId;
-        this.age = age;
-        this.gender = gender;
-    }
 }

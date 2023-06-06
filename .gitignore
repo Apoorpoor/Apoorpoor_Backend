@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ## .gitignore
-src/main/resources/application-secret.yml
+

@@ -100,13 +100,11 @@ public enum ItemListEnum {
         List<ItemResponseDto> itemList = new ArrayList<>();
 
         int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
-        Long topsNum = beggar.getTops() == null ? null : beggar.getTops().getItemNum();
-        Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
+        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
+        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
         Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
-        Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
-        Long shavesNum = beggar.getShaves() == null ? null : beggar.getShaves().getItemNum();
-        Long watchesNum = beggar.getWatches() == null ? null : beggar.getWatches().getItemNum();
-        Long customsNum = beggar.getCustoms() == null? null : beggar.getCustoms().getItemNum();
+        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
+        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
 
 
         String[] matches = new String[itemListEnumCount];
@@ -129,8 +127,6 @@ public enum ItemListEnum {
             if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
             if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
             if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(shavesNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(watchesNum, itemNum)) itemState = "EQUIPPED";
             if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
 
             ItemResponseDto dto = ItemResponseDto.builder()
@@ -154,13 +150,11 @@ public enum ItemListEnum {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
         int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
-        Long topsNum = beggar.getTops() == null ? null : beggar.getTops().getItemNum();
-        Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
+        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
+        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
         Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
-        Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
-        Long shavesNum = beggar.getShaves() == null ? null : beggar.getShaves().getItemNum();
-        Long watchesNum = beggar.getWatches() == null ? null : beggar.getWatches().getItemNum();
-        Long customsNum = beggar.getCustoms() == null? null : beggar.getCustoms().getItemNum();
+        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
+        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
 
         String[] matches = new String[itemListEnumCount];
 
@@ -185,8 +179,6 @@ public enum ItemListEnum {
                 if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
                 if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
                 if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(shavesNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(watchesNum, itemNum)) itemState = "EQUIPPED";
                 if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
 
 

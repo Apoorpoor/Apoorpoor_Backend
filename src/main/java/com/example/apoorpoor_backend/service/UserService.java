@@ -41,6 +41,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseEntity<UserResponseDto> getUserInfoByUsername(String username) {
+        User findUser = userCheck(username);
+        return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
     public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
         User findUser = userCheck(username);
         List<MonthSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());

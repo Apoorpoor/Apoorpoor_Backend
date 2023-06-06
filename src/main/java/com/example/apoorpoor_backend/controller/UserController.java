@@ -39,6 +39,11 @@ public class UserController {
         return userService.userInfo(username);
     }
 
+    @GetMapping("/mypage/{username}")
+    public ResponseEntity<UserResponseDto> getUserInfoByUsername(@PathVariable("username") String username) {
+        return userService.getUserInfoByUsername(username);
+    }
+
     @GetMapping("/mypage/status")
     public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();

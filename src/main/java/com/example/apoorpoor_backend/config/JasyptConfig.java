@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -29,4 +28,6 @@ public class JasyptConfig {
         encryptor.setConfig(config);
         return encryptor;
     }
-}
+
+  
+  

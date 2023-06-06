@@ -1,9 +1,9 @@
 package com.example.apoorpoor_backend.dto.shop;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class PointSearchCondition {
     private String dateType;
-    private String totalPoint;
+    private String kind;
 }

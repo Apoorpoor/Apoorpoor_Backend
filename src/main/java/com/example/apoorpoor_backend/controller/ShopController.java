@@ -47,6 +47,4 @@ public class ShopController {
         return shopService.getPointList(condition, pageable, userDetails.getUsername());
     }
 
-
-
 }

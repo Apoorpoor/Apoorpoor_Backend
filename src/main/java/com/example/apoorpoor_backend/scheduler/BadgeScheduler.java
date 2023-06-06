@@ -32,8 +32,9 @@ public class BadgeScheduler {
         // 해당 월의 지출내역에 따른 뱃지 부여
         List<User> userList = userService.getUserList();
 
+        beggarService.resetBadge(); // 가지고 있는 뱃지 모두 리셋
+
         for (User user : userList) {
-            beggarService.resetBadge(); // 가지고 있는 뱃지 모두 리셋
             beggarService.badgeCheck(user); // 새로운 뱃지 부여
             log.info(LocalDate.now()+"cron job 완료");
         }

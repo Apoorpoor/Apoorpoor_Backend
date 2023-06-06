@@ -56,8 +56,19 @@ public class BeggarService {
         String description = beggar.getDescription();
         String gender = user.getGender();
         Long age = user.getAge();
+        String topImage = beggar.getTop().getItemImage();
+        String bottomImage = beggar.getBottom().getItemImage();
+        String shoesImage = beggar.getShoes().getItemImage();
+        String accImage = beggar.getAcc().getItemImage();
 
-        BeggarSearchResponseDto beggarSearchResponseDto = new BeggarSearchResponseDto(beggarId, userId, nickname, point, level, description, gender, age);
+        BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
+                .builder().beggarId(beggarId)
+                .userId(userId).nickname(nickname)
+                .point(point).level(level)
+                .description(description).gender(gender)
+                .age(age).topImage(topImage).bottomImage(bottomImage)
+                .shoesImage(shoesImage).accImage(accImage)
+                .build();
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
@@ -262,14 +273,11 @@ public class BeggarService {
             String unWear = unWearEnum.getUnWearPart();
 
             switch (unWear) {
-                case "tops" -> beggar.updateCustomTops(null);
-                case "bottoms" -> beggar.updateCustomBottoms(null);
+                case "top" -> beggar.updateCustomTops(null);
+                case "bottom" -> beggar.updateCustomBottoms(null);
                 case "shoes" -> beggar.updateCustomShoes(null);
-                case "accessories" -> beggar.updateCustomAccessories(null);
-                case "shaves" -> beggar.updateCustomShaves(null);
-                case "hats" -> beggar.updateCustomHats(null);
-                case "watches" -> beggar.updateCustomWatches(null);
-                case "customs" -> beggar.updateCustoms(null);
+                case "acc" -> beggar.updateCustomAccessories(null);
+                case "custom" -> beggar.updateCustoms(null);
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         } else {
@@ -281,14 +289,11 @@ public class BeggarService {
             String itemType = findItem.getItemType();
 
             switch (itemType) {
-                case "tops" -> beggar.updateCustomTops(itemListEnum);
-                case "bottoms" -> beggar.updateCustomBottoms(itemListEnum);
+                case "top" -> beggar.updateCustomTops(itemListEnum);
+                case "bottom" -> beggar.updateCustomBottoms(itemListEnum);
                 case "shoes" -> beggar.updateCustomShoes(itemListEnum);
-                case "accessories" -> beggar.updateCustomAccessories(itemListEnum);
-                case "shaves" -> beggar.updateCustomShaves(itemListEnum);
-                case "hats" -> beggar.updateCustomHats(itemListEnum);
-                case "watches" -> beggar.updateCustomWatches(itemListEnum);
-                case "customs" -> beggar.updateCustoms(itemListEnum);
+                case "acc" -> beggar.updateCustomAccessories(itemListEnum);
+                case "custom" -> beggar.updateCustoms(itemListEnum);
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }

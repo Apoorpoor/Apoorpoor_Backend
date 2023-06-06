@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class JasyptConfig {
     @Value("${jasypt.password}")
     private String password;
+
     @Bean("jasyptStringEncryptor")
     public StringEncryptor stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
@@ -28,3 +29,4 @@ public class JasyptConfig {
         encryptor.setConfig(config);
         return encryptor;
     }
+}

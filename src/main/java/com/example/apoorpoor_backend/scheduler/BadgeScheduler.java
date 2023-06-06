@@ -1,22 +1,16 @@
 package com.example.apoorpoor_backend.scheduler;
 
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.enumType.AccountType;
-import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
-import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.service.BeggarService;
 import com.example.apoorpoor_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -38,8 +32,9 @@ public class BadgeScheduler {
         // 해당 월의 지출내역에 따른 뱃지 부여
         List<User> userList = userService.getUserList();
 
+        beggarService.resetBadge(); // 가지고 있는 뱃지 모두 리셋
+
         for (User user : userList) {
-            beggarService.resetBadge(); // 가지고 있는 뱃지 모두 리셋
             beggarService.badgeCheck(user); // 새로운 뱃지 부여
             log.info(LocalDate.now()+"cron job 완료");
         }

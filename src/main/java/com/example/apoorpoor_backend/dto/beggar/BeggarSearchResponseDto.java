@@ -1,10 +1,10 @@
 package com.example.apoorpoor_backend.dto.beggar;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class BeggarSearchResponseDto {
     private Long beggarId;
 
@@ -22,14 +22,15 @@ public class BeggarSearchResponseDto {
 
     private Long age;
 
-    public BeggarSearchResponseDto(Long beggarId, Long userId, String nickname, Long point, Long level, String description, String gender, Long age) {
-        this.beggarId = beggarId;
-        this.userId = userId;
-        this.nickname = nickname;
-        this.point = point;
-        this.level = level;
-        this.description = description;
-        this.gender = gender;
-        this.age = age;
-    }
+    private String topImage;
+
+    private String bottomImage;
+
+    private String shoesImage;
+
+    private String accImage;
+
+    private String customImage;
+
+
 }

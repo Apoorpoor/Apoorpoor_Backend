@@ -1,11 +1,12 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.MonthSumResponseDto;
-import com.example.apoorpoor_backend.dto.MyPageSearchCondition;
-import com.example.apoorpoor_backend.dto.UserResponseDto;
+import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
+import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
+import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +42,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
+    public ResponseEntity<UserResponseDto> getUserInfoByUsername(String username) {
         User findUser = userCheck(username);
-        List<MonthSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
+        return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<TotalSumResponseDto>> getStatus(String username) {
+        User findUser = userCheck(username);
+        List<TotalSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(findUser.getId());
         return new ResponseEntity<>(mypageStatus, HttpStatus.OK);
 
     }

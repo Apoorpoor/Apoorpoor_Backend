@@ -4,10 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum UnWearEnum {
-    UN_WEAR_TOPS("tops"),
-    UN_WEAR_BOTTOMS("bottoms"),
+    UN_WEAR_TOP("top"),
+    UN_WEAR_BOTTOM("bottom"),
     UN_WEAR_SHOES("shoes"),
-    UN_WEAR_ACCESSORIES("accessories");
+    UN_WEAR_ACC("acc"),
+    UN_WEAR_CUSTOM("custom");
 
     private final String unWearPart;
 

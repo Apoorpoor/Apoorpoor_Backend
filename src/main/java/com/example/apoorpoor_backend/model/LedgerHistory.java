@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
@@ -23,7 +23,6 @@ public class LedgerHistory extends Timestamped{
     @Column(name = "ledgerhistory_id", unique = true, nullable = false)
     private Long id;
 
-    //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

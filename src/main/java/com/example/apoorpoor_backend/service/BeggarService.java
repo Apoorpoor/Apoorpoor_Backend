@@ -1,10 +1,15 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.dto.beggar.*;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
 import com.example.apoorpoor_backend.repository.*;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.shop.ItemRepository;
+import com.example.apoorpoor_backend.repository.shop.PointRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +33,7 @@ public class BeggarService {
     private final BadgeRepository badgeRepository;
     private final ItemRepository itemRepository;
     private final LedgerHistoryRepository ledgerHistoryRepository;
+    private final PointRepository pointRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
@@ -52,8 +58,19 @@ public class BeggarService {
         String description = beggar.getDescription();
         String gender = user.getGender();
         Long age = user.getAge();
+        String topImage = beggar.getTop() == null ? null : beggar.getTop().getItemImage();
+        String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
+        String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
+        String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
 
-        BeggarSearchResponseDto beggarSearchResponseDto = new BeggarSearchResponseDto(beggarId, userId, nickname, point, level, description, gender, age);
+        BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
+                .builder().beggarId(beggarId)
+                .userId(userId).nickname(nickname)
+                .point(point).level(level)
+                .description(description).gender(gender)
+                .age(age).topImage(topImage).bottomImage(bottomImage)
+                .shoesImage(shoesImage).accImage(accImage)
+                .build();
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
@@ -90,9 +107,34 @@ public class BeggarService {
 //        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
 //    }
 
-    public void updateExpNew(String username, Long plusPoint) {
+    public void updateExpNew(String username, ExpType expType) {
         Beggar beggar = beggarCheck(username);
+
+        ////////////////////////////////////////////////
+        Long plusPoint = expType.getAmount();
+        /////////////////////////////////////////////////
+
         beggar.updatePointAndExp(plusPoint);
+
+        /////////////////////////////////////////////////
+        String pointDescription = expType.getDescription();
+
+//        if(expType.equals(ExpType.GET_BADGE)) {
+//            pointDescription = ExpType.GET_BADGE.getDescription();
+//            //saveBadgeNew(beggarExpUpRequestDto.getBadgeType(), beggar);
+//        }
+
+        if(expType.equals(ExpType.BEST_SAVER)) {
+            pointDescription = ExpType.BEST_SAVER.getDescription();
+        }
+
+        if(expType.equals(ExpType.LEVEL_UP)) {
+            pointDescription = ExpType.LEVEL_UP.getDescription();
+        }
+
+        Point recordPoint = new Point(pointDescription, plusPoint, null, beggar);
+        pointRepository.save(recordPoint);
+        /////////////////////////////////////////////////
 
         Long exp = beggar.getExp();
         Long level = beggar.getLevel();
@@ -100,8 +142,52 @@ public class BeggarService {
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level++;
             beggar.updateLevel(level);
+            updateExpNew(username, ExpType.LEVEL_UP); ////////////////////////////////////////////////
         }
     }
+    /*
+    필요한 파라미터 : ExpType expType; BadgeType badgeType;
+     Beggar beggar = beggarCheck(username);
+        String nickname = beggar.getNickname();
+        ExpType expType = beggarExpUpRequestDto.getExpType();
+
+        Long exp = beggar.getExp() + expType.getAmount();
+        Long point = beggar.getPoint() + expType.getAmount();
+        Long level = beggar.getLevel();
+
+        String pointDescription = expType.getDescription();
+
+        if(expType.equals(ExpType.GET_BADGE)) {
+            pointDescription = ExpType.GET_BADGE.getDescription();
+            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
+        }
+
+        if(expType.equals(ExpType.BEST_SAVER)) {
+            pointDescription = ExpType.BEST_SAVER.getDescription();
+        }
+
+        if(expType.equals(ExpType.LEVEL_UP)) {
+            pointDescription = ExpType.LEVEL_UP.getDescription();
+        }
+
+        if (LevelType.getNextExpByLevel(level) <= exp) {
+            level ++;
+        }
+
+        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+                .nickname(nickname)
+                .exp(exp)
+                .level(level)
+                .point(point)
+                .build();
+
+        Point recordPoint = new Point(pointDescription, point, null, beggar);
+        pointRepository.save(recordPoint);
+
+        beggar.updateExp(beggarExpUpResponseDto);
+
+        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
+     */
 
     public void badgeCheck(User user) {
         Beggar beggar = beggarCheck(user.getUsername());
@@ -128,6 +214,7 @@ public class BeggarService {
             case FOOD_EXPENSES -> ledgerHistoryRepository.checkEXPType10(expenditureType, userId);
             case SHOPPING -> ledgerHistoryRepository.checkEXPType11(expenditureType, userId);
             case LEISURE_ACTIVITIES -> ledgerHistoryRepository.checkEXPType12(expenditureType, userId);
+            case OTHER -> false;
         };
     }
 
@@ -188,10 +275,11 @@ public class BeggarService {
             String unWear = unWearEnum.getUnWearPart();
 
             switch (unWear) {
-                case "tops" -> beggar.updateCustomTops(null);
-                case "bottoms" -> beggar.updateCustomBottoms(null);
+                case "top" -> beggar.updateCustomTops(null);
+                case "bottom" -> beggar.updateCustomBottoms(null);
                 case "shoes" -> beggar.updateCustomShoes(null);
-                case "accessories" -> beggar.updateCustomAccessories(null);
+                case "acc" -> beggar.updateCustomAccessories(null);
+                case "custom" -> beggar.updateCustoms(null);
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         } else {
@@ -203,18 +291,12 @@ public class BeggarService {
             String itemType = findItem.getItemType();
 
             switch (itemType) {
-                case "tops" :
-                    beggar.updateCustomTops(itemListEnum);
-                    break;
-                case "bottoms" :
-                    beggar.updateCustomBottoms(itemListEnum);
-                    break;
-                case "shoes" :
-                    beggar.updateCustomShoes(itemListEnum);
-                case "accessories" :
-                    beggar.updateCustomAccessories(itemListEnum);
-                default:
-                    throw new IllegalArgumentException("옳지 못한 행동입니다.");
+                case "top" -> beggar.updateCustomTops(itemListEnum);
+                case "bottom" -> beggar.updateCustomBottoms(itemListEnum);
+                case "shoes" -> beggar.updateCustomShoes(itemListEnum);
+                case "acc" -> beggar.updateCustomAccessories(itemListEnum);
+                case "custom" -> beggar.updateCustoms(itemListEnum);
+                default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }
 

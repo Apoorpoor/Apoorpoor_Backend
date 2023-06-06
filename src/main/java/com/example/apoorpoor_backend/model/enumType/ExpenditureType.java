@@ -15,7 +15,8 @@ public enum ExpenditureType {
     HEALTH(9L, "아프면 손드세요"),
     FOOD_EXPENSES(10L, "햄 버억"),
     SHOPPING(11L, "Flex 했지 뭐얌"),
-    LEISURE_ACTIVITIES(12L, "#여유 #휴식");
+    LEISURE_ACTIVITIES(12L, "#여유 #휴식"),
+    OTHER(13L, "기타");
 
     private final Long badgeNum;
     private final String badgeTitle;

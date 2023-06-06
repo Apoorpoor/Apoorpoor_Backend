@@ -1,6 +1,11 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
+import com.example.apoorpoor_backend.dto.user.AgeRequestDto;
+import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
+import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
+import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +40,15 @@ public class UserController {
         return userService.userInfo(username);
     }
 
+    @GetMapping("/mypage/{username}")
+    public ResponseEntity<UserResponseDto> getUserInfoByUsername(@PathVariable("username") String username) {
+        return userService.getUserInfoByUsername(username);
+    }
+
     @GetMapping("/mypage/status")
-    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<TotalSumResponseDto>> getStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
-        return userService.getStatus(condition, username);
+        return userService.getStatus(username);
     }
 
     @GetMapping("/mypage/recentStatus")

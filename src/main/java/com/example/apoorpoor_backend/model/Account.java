@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.AccountRequestDto;
+import com.example.apoorpoor_backend.dto.account.AccountRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

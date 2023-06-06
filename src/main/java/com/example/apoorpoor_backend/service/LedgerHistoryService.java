@@ -1,11 +1,15 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.LedgerHistoryRequestDto;
-import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryRequestDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
 import com.example.apoorpoor_backend.repository.*;
+import com.example.apoorpoor_backend.repository.account.AccountRepository;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -76,27 +80,33 @@ public class LedgerHistoryService {
             Balance balance = new Balance(income, expenditure, account);
             balanceRepository.save(balance);
         }
+        ExpType expType = ExpType.FILL_LEDGER;
+        /////////////////////////////////////////////////////////////////////////
+        if(expenditureType.equals(ExpenditureType.SAVINGS)) {
+            expType = ExpType.BEST_SAVER;
+        }
+        ////////////////////////////////////////////////////////////////////////
 
         // 1개 등록시 point +10, exp +10 (누적), 레벨업 확인
-        beggarService.updateExpNew(user.getUsername(), 10L);
+        beggarService.updateExpNew(user.getUsername(), expType);  /////////////////////////////////////////
+
 
         // 지출/수입 구분에 따라 랜덤 멘트 프론트에 전달하기
         String randomMENT = getMent(accountType);
-        return new ResponseEntity<>(new StatusResponseDto("거래 내역 저장 성공"), HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
 
     }
 
     public String getMent(AccountType accountType) {
-        List<MentType> mentTypes;
+       MentType mentType;
         if (accountType == AccountType.EXPENDITURE) {
-            mentTypes = Arrays.asList(MentType.MENT1, MentType.MENT2, MentType.MENT3, MentType.MENT4, MentType.MENT5, MentType.MENT6,
-                    MentType.MENT7, MentType.MENT8, MentType.MENT9, MentType.MENT10, MentType.MENT11);
+            List<MentType> expenditureMentTypes = Arrays.asList(MentType.MENT1, MentType.MENT2, MentType.MENT3, MentType.MENT4, MentType.MENT5, MentType.MENT6,MentType.MENT7, MentType.MENT8, MentType.MENT9, MentType.MENT10, MentType.MENT11);
+            mentType = expenditureMentTypes.get(random.nextInt(expenditureMentTypes.size()));
         } else {
-            mentTypes = Arrays.asList(MentType.MENT12, MentType.MENT13, MentType.MENT14, MentType.MENT15,
-                    MentType.MENT16, MentType.MENT17, MentType.MENT18);
+            List<MentType> incompeMentTypes = Arrays.asList(MentType.MENT12, MentType.MENT13, MentType.MENT14, MentType.MENT15, MentType.MENT16, MentType.MENT17, MentType.MENT18);
+            mentType = incompeMentTypes.get(random.nextInt(incompeMentTypes.size()));
         }
-        MentType randomMentType = mentTypes.get(random.nextInt(mentTypes.size()));
-        List<String> ments = randomMentType.getMents();
+        List<String> ments = mentType.getMents();
         String randomMENT = ments.get(random.nextInt(ments.size()));
         return randomMENT;
     }

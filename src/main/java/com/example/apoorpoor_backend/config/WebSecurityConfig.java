@@ -2,7 +2,7 @@ package com.example.apoorpoor_backend.config;
 
 import com.example.apoorpoor_backend.jwt.JwtAuthFilter;
 import com.example.apoorpoor_backend.jwt.JwtUtil;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

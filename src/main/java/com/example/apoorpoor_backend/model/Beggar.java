@@ -60,6 +60,16 @@ public class Beggar extends Timestamped{
     @Column
     private ItemListEnum accessories;
 
+    @Column
+    private ItemListEnum shaves;
+
+    @Column ItemListEnum hats;
+
+    @Column
+    private ItemListEnum watches;
+
+    @Column
+    private ItemListEnum customs;
 
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
@@ -99,6 +109,29 @@ public class Beggar extends Timestamped{
 
     public void updateCustomAccessories(ItemListEnum itemListEnum) {
         this.accessories = itemListEnum;
+    }
+
+    public void updateCustomShaves(ItemListEnum itemListEnum) {
+        this.shaves = itemListEnum;
+    }
+
+    public void updateCustomHats(ItemListEnum itemListEnum) {
+        this.hats = itemListEnum;
+    }
+
+    public void updateCustomWatches(ItemListEnum itemListEnum) {
+        this.watches = itemListEnum;
+    }
+
+    public void updateCustoms(ItemListEnum itemListEnum) {
+        this.customs = itemListEnum;
+        this.tops = null;
+        this.bottoms = null;
+        this.shoes = null;
+        this.shaves = null;
+        this.hats = null;
+        this.watches = null;
+        this.accessories = null;
     }
 
     public void updateLevel(Long level) {

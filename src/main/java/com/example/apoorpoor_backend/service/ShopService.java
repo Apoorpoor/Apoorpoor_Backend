@@ -1,17 +1,17 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
-import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
-import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
+import com.example.apoorpoor_backend.dto.shop.*;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Item;
 import com.example.apoorpoor_backend.model.Point;
 import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
-import com.example.apoorpoor_backend.repository.PointRepository;
+import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
-import com.example.apoorpoor_backend.repository.ItemRepository;
+import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -102,5 +102,10 @@ public class ShopService {
         return beggarRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
+    }
+
+    public Page<PointResponseDto> getPointList(PointSearchCondition condition, Pageable pageable, String username ) {
+        Beggar beggar = beggarCheck(username);
+        return pointRepository.findAllByPeriodAndBeggar(beggar.getId(), condition, pageable);
     }
 }

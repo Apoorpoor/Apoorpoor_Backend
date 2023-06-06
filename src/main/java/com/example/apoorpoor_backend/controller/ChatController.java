@@ -45,8 +45,7 @@ public class ChatController {
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500); // simulated delay
         chatService.sendChatRoom(chatDto, headerAccessor);
-        //msgOperation.convertAndSend("/sub/chat/room", chatDto);
-        kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, chatDto);
+        msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
     @EventListener

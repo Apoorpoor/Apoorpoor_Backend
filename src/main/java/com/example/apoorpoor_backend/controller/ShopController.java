@@ -3,6 +3,8 @@ package com.example.apoorpoor_backend.controller;
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
+import com.example.apoorpoor_backend.dto.shop.PointResponseDto;
+import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.ShopService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +40,11 @@ public class ShopController {
             @RequestBody PayRequestDto payRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return shopService.buyPointUpdate(payRequestDto, userDetails.getUsername());
+    }
+
+    @GetMapping("/point")
+    public Page<PointResponseDto> getPointList(PointSearchCondition condition, Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return shopService.getPointList(condition, pageable, userDetails.getUsername());
     }
 
 }

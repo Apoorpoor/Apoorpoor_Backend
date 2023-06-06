@@ -1,11 +1,11 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
-import com.example.apoorpoor_backend.repository.BeggarRepository;
-import com.example.apoorpoor_backend.repository.ChatRepository;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;

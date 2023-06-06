@@ -5,11 +5,11 @@
 //import com.example.apoorpoor_backend.model.Badge;
 //import com.example.apoorpoor_backend.model.Beggar;
 //import com.example.apoorpoor_backend.model.User;
-//import com.example.apoorpoor_backend.model.UserRoleEnum;
+//import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 //import com.example.apoorpoor_backend.model.enumType.ExpType;
 //import com.example.apoorpoor_backend.model.enumType.LevelType;
 //import com.example.apoorpoor_backend.repository.BadgeRepository;
-//import com.example.apoorpoor_backend.repository.BeggarRepository;
+//import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

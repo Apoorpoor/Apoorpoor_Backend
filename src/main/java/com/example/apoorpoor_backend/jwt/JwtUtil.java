@@ -1,9 +1,9 @@
 package com.example.apoorpoor_backend.jwt;
 
-import com.example.apoorpoor_backend.dto.TokenDto;
+import com.example.apoorpoor_backend.dto.user.TokenDto;
 import com.example.apoorpoor_backend.model.RefreshToken;
-import com.example.apoorpoor_backend.model.UserRoleEnum;
-import com.example.apoorpoor_backend.repository.RefreshTokenRepository;
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
+import com.example.apoorpoor_backend.repository.user.RefreshTokenRepository;
 import com.example.apoorpoor_backend.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +35,7 @@ public class JwtUtil {
 
     public static final String ACCESS_KEY = "ACCESS_KEY";
     public static final String REFRESH_KEY = "REFRESH_KEY";
-    private static final long ACCESS_TIME = 60 * 60 * 1000L;
+    private static final long ACCESS_TIME = 60 * 60 * 24 * 1000L;
     private static final long REFRESH_TIME = 60 * 60 * 24 * 1000L;
 
     @Value("${jwt.secret.key}")

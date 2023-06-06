@@ -1,14 +1,16 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.dto.account.*;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.model.Account;
 import com.example.apoorpoor_backend.model.Balance;
 import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.repository.AccountRepository;
+import com.example.apoorpoor_backend.repository.account.AccountRepository;
 import com.example.apoorpoor_backend.repository.BalanceRepository;
-import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

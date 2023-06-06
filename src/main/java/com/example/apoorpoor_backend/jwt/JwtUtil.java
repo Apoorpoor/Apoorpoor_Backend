@@ -38,7 +38,7 @@ public class JwtUtil {
     private static final long ACCESS_TIME = 60 * 60 * 1000L;
     private static final long REFRESH_TIME = 60 * 60 * 24 * 1000L;
 
-    @Value("${spring.jwt.secret.key}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,11 +90,14 @@ public class BeggarService {
         }
     }
 
-    public void badgeCheck(ExpenditureType expenditureType, User user) {
+    public void badgeCheck(User user) {
         Beggar beggar = beggarCheck(user.getUsername());
+        List<ExpenditureType> badgeList = Arrays.asList(ExpenditureType.values());
 
         //획득 기준 통과시에
-        if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
+        for (ExpenditureType expenditureType : badgeList) {
+            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
+        }
     }
 
     // 해당 월에 소비 뱃지 획득 가능한지 여부
@@ -237,4 +241,8 @@ public class BeggarService {
     }
 
 
+    public void resetBadge() {
+        //GetBadge만 삭제하면 되는지
+        getBadgeRepository.deleteAll();
+    }
 }

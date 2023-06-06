@@ -339,8 +339,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType1(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -363,7 +363,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 );
 
         String query = "select count(*)\n" +
@@ -371,10 +371,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 "where 1=1\n" +
                 "and account_type = 'EXPENDITURE'\n" +
                 "and expenditure_type = 'UTILITY_BILL'\n" +
-                "and account_id in (1, 2, 3)\n" +
-                "and date like '2022-11%';";
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
 
-        if(countQuery.fetchCount() < 1) return true;
+        if(countQuery.fetchCount() >= 1) return true;
         return false;
     }
 
@@ -382,8 +382,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType2(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -406,10 +406,18 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 );
 
-        if(countQuery.fetchCount() < 2) return true;
+        String query = "select count(*)\n" +
+                "from ledger_history\n" +
+                "where 1=1\n" +
+                "and account_type = 'EXPENDITURE'\n" +
+                "and expenditure_type = 'UTILITY_BILL'\n" +
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
+
+        if(countQuery.fetchCount() >= 2) return true;
         return false;
     }
 
@@ -417,8 +425,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType3(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -441,11 +449,11 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
-        if(result >= 120000L) return true;
+        if(result <= 120000L) return true;
         return false;
     }
 
@@ -453,8 +461,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType4(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -477,11 +485,11 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
-        if(result >= 60000L) return true;
+        if(result <= 60000L) return true;
 
         return false;
     }
@@ -490,8 +498,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType5(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -514,26 +522,26 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 );
 
-        String query = "select sum(expenditure)\n" +
+        String query = "select count(*)\n" +
                 "from ledger_history\n" +
                 "where 1=1\n" +
                 "and account_type = 'EXPENDITURE'\n" +
-                "and expenditure_type = 'COMMUNICATION_EXPENSES'\n" +
-                "and account_id in (1, 2, 3)\n" +
-                "and date like '2022-11%';";
+                "and expenditure_type = 'UTILITY_BILL'\n" +
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
 
-        if(countQuery.fetchCount() < 3) return true;
+        if(countQuery.fetchCount() >= 3) return true;
         return false;
     }
 
     /* EDUCATION 교육 : 15만원 */
     @Override
     public boolean checkEXPType6(ExpenditureType expenditureType, Long userId) {
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -556,7 +564,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
@@ -573,8 +581,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     /* CULTURE 문화: 10만원  */
     @Override
     public boolean checkEXPType8(ExpenditureType expenditureType, Long userId) {
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -597,7 +605,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
@@ -608,8 +616,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     /* HEALTH 건강: 5만원 */
     @Override
     public boolean checkEXPType9(ExpenditureType expenditureType, Long userId) {
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -632,7 +640,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
@@ -643,8 +651,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     /* FOOD_EXPENSES 식비 : 30만원 */
     @Override
     public boolean checkEXPType10(ExpenditureType expenditureType, Long userId) {
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -667,7 +675,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 
@@ -679,8 +687,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType11(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -703,10 +711,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 );
 
-        if(countQuery.fetchCount() < 4) return true;
+        if(countQuery.fetchCount() >= 4) return true;
         return false;
     }
 
@@ -714,8 +722,8 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     @Override
     public boolean checkEXPType12(ExpenditureType expenditureType, Long userId) {
 
-        LocalDate today = LocalDate.now();
-        String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -738,7 +746,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         accountTypeEq(AccountType.EXPENDITURE),
                         expenditureTypeEq(expenditureType),
                         ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(currentDate)
+                        formattedDate.eq(previousMonth)
                 )
                 .fetchOne();
 

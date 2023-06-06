@@ -8,7 +8,6 @@ import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.jpa.repository.Query;
 
 @Getter
 public class LedgerHistoryResponseDto {

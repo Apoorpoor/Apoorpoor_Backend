@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.repository.dsl;
 
 import com.example.apoorpoor_backend.dto.*;
+import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
@@ -9,8 +10,12 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
@@ -329,6 +334,426 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 ;
         return content;
     }
+
+    /* UTILITY_BILL 월세+관리비+공과금 : 1번 */
+    @Override
+    public boolean checkEXPType1(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        JPAQuery<LedgerHistory> countQuery = queryFactory
+                .select(ledgerHistory)
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                );
+
+        String query = "select count(*)\n" +
+                "from ledger_history\n" +
+                "where 1=1\n" +
+                "and account_type = 'EXPENDITURE'\n" +
+                "and expenditure_type = 'UTILITY_BILL'\n" +
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
+
+        if(countQuery.fetchCount() >= 1) return true;
+        return false;
+    }
+
+    /* CONDOLENCE_EXPENSE 경조사비 : 2번 */
+    @Override
+    public boolean checkEXPType2(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        JPAQuery<LedgerHistory> countQuery = queryFactory
+                .select(ledgerHistory)
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                );
+
+        String query = "select count(*)\n" +
+                "from ledger_history\n" +
+                "where 1=1\n" +
+                "and account_type = 'EXPENDITURE'\n" +
+                "and expenditure_type = 'UTILITY_BILL'\n" +
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
+
+        if(countQuery.fetchCount() >= 2) return true;
+        return false;
+    }
+
+    /* TRANSPORTATION 교통비 : 12만원 */
+    @Override
+    public boolean checkEXPType3(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result <= 120000L) return true;
+        return false;
+    }
+
+    /* COMMUNICATION_EXPENSES 통신비 : 6만원 이하 */
+    @Override
+    public boolean checkEXPType4(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result <= 60000L) return true;
+
+        return false;
+    }
+
+    /* INSURANCE 보험 : 3개 */
+    @Override
+    public boolean checkEXPType5(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        JPAQuery<LedgerHistory> countQuery = queryFactory
+                .select(ledgerHistory)
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                );
+
+        String query = "select count(*)\n" +
+                "from ledger_history\n" +
+                "where 1=1\n" +
+                "and account_type = 'EXPENDITURE'\n" +
+                "and expenditure_type = 'UTILITY_BILL'\n" +
+                "and account_id in (accountlist)\n" +
+                "and date like '이전달%';";
+
+        if(countQuery.fetchCount() >= 3) return true;
+        return false;
+    }
+
+    /* EDUCATION 교육 : 15만원 */
+    @Override
+    public boolean checkEXPType6(ExpenditureType expenditureType, Long userId) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result >= 150000L) return true;
+        return false;
+    }
+
+    /* SAVINGS 저축 : 20 / 30 / 50 만원  */
+    @Override
+    public boolean checkEXPType7(ExpenditureType expenditureType, Long userId) {
+        return false;
+    }
+
+    /* CULTURE 문화: 10만원  */
+    @Override
+    public boolean checkEXPType8(ExpenditureType expenditureType, Long userId) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result >= 100000L) return true;
+        return false;
+    }
+
+    /* HEALTH 건강: 5만원 */
+    @Override
+    public boolean checkEXPType9(ExpenditureType expenditureType, Long userId) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result >= 50000L) return true;
+        return false;
+    }
+
+    /* FOOD_EXPENSES 식비 : 30만원 */
+    @Override
+    public boolean checkEXPType10(ExpenditureType expenditureType, Long userId) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result >= 300000L) return true;
+        return false;
+    }
+
+    /* SHOPPING 쇼핑 : 4번 */
+    @Override
+    public boolean checkEXPType11(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        JPAQuery<LedgerHistory> countQuery = queryFactory
+                .select(ledgerHistory)
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                );
+
+        if(countQuery.fetchCount() >= 4) return true;
+        return false;
+    }
+
+    /* LEISURE_ACTIVITIES 여가생활 : 10만원  */
+    @Override
+    public boolean checkEXPType12(ExpenditureType expenditureType, Long userId) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // user_id로 생성된 account_id 찾기
+        List<Long> accountIdList = queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
+
+        // date_format(date, '%Y-%m') querydsl로 바꾸기
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        Long result = queryFactory
+                .select(ledgerHistory.expenditure.sum())
+                .from(ledgerHistory)
+                .where(
+                        accountTypeEq(AccountType.EXPENDITURE),
+                        expenditureTypeEq(expenditureType),
+                        ledgerHistory.account.id.in(accountIdList),
+                        formattedDate.eq(previousMonth)
+                )
+                .fetchOne();
+
+        if(result >= 100000L) return true;
+        return false;
+    }
+
 
     private BooleanExpression accountTypeEq(AccountType accountType){
         return accountType != null ? ledgerHistory.accountType.eq(accountType) :  null;

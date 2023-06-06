@@ -1,14 +1,14 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.AgeRequestDto;
-import com.example.apoorpoor_backend.dto.GenderRequestDto;
-import com.example.apoorpoor_backend.dto.UserResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +33,17 @@ public class UserController {
     public ResponseEntity<UserResponseDto> userInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         return userService.userInfo(username);
+    }
+
+    @GetMapping("/mypage/status")
+    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        String username = userDetails.getUsername();
+        return userService.getStatus(condition, username);
+    }
+
+    @GetMapping("/mypage/recentStatus")
+    public ResponseEntity<List<MonthSumResponseDto>> getRecentStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        String username = userDetails.getUsername();
+        return userService.getRecentStatus(username);
     }
 }

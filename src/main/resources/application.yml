@@ -1,5 +1,7 @@
 spring:
   config.activate.on-profile: default
+  config:
+    import: application-secret.yml
   jpa:
     properties:
       hibernate:

@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.ItemNumDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,13 +30,20 @@ public class ShopService {
 
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
         Beggar beggar = beggarCheck(username);
-        Long beggarLevel = beggar.getLevel();
-        List<ItemResponseDto> itemList;
+        List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
+        List<Long> hasItemNumDtoList = new ArrayList<>();
 
-        if(itemType.equals("total")) {
-            itemList = ItemListEnum.getEnumItemList(beggarLevel);
+        for (Item item : hasItemList) {
+            Long itemNum = item.getItemNum();
+
+            hasItemNumDtoList.add(itemNum);
+        }
+
+        List<ItemResponseDto> itemList;
+        if (itemType.equals("total")) {
+            itemList = ItemListEnum.getEnumItemList(beggar, hasItemNumDtoList);
         } else {
-            itemList = ItemListEnum.getEnumItemListByType(itemType, beggarLevel);
+            itemList = ItemListEnum.getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
@@ -49,16 +58,20 @@ public class ShopService {
         Long itemPrice = payRequestDto.getItemListEnum().getItemPrice();
         Long updatePoint = beggar.getPoint() - itemPrice;
 
+        if (updatePoint < 0) {
+            throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
+        }
+
         Long itemNum = payRequestDto.getItemListEnum().getItemNum();
         String itemName = payRequestDto.getItemListEnum().getItemName();
         Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
         String itemType = payRequestDto.getItemListEnum().getItemType();
 
-        if(itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
+        if (itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
             throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
         }
 
-        Item item = new Item(itemNum, itemName, levelLimit,  itemType, beggar);
+        Item item = new Item(itemNum, itemName, levelLimit, itemType, beggar);
         itemRepository.save(item);
 
 
@@ -70,7 +83,6 @@ public class ShopService {
                 .build();
 
         beggar.updateExp(beggarExpUpResponseDto);
-
 
 
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);

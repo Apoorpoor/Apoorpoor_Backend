@@ -80,6 +80,11 @@ public class Beggar extends Timestamped{
         this.point = responseDto.getPoint();
     }
 
+    public void updatePointAndExp(Long plusPoint){
+        this.point += plusPoint;
+        this.exp += plusPoint;
+    }
+
     public void updateCustomTops(ItemListEnum itemListEnum) {
         this.tops = itemListEnum;
     }
@@ -96,4 +101,7 @@ public class Beggar extends Timestamped{
         this.accessories = itemListEnum;
     }
 
+    public void updateLevel(Long level) {
+        this.level = level;
+    }
 }

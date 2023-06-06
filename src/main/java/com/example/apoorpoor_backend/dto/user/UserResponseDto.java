@@ -11,22 +11,22 @@ public class UserResponseDto {
 
     private Long id;
     private String username;
-    private Long kakaoId;
+    private Long sender;
     private Long age;
     private String gender;
 
     public UserResponseDto(User user){
         this.id = user.getId();
         this.username = user.getUsername();
-        this.kakaoId = user.getKakaoId();
+        this.sender = user.getSender();
         this.age = user.getAge();
         this.gender = user.getGender();
     }
 
-    public UserResponseDto(Long id, String username, Long kakaoId, Long age, String gender) {
+    public UserResponseDto(Long id, String username, Long sender, Long age, String gender) {
         this.id = id;
         this.username = username;
-        this.kakaoId = kakaoId;
+        this.sender = sender;
         this.age = age;
         this.gender = gender;
     }

@@ -21,7 +21,6 @@ import java.util.List;
 
 import static com.example.apoorpoor_backend.model.QPoint.*;
 import static io.jsonwebtoken.lang.Strings.hasText;
-
 public class PointRepositoryImpl implements PointRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;

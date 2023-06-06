@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
@@ -41,9 +42,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, String username) {
+    public ResponseEntity<List<TotalSumResponseDto>> getStatus(String username) {
         User findUser = userCheck(username);
-        List<MonthSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(condition, findUser.getId());
+        List<TotalSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(findUser.getId());
         return new ResponseEntity<>(mypageStatus, HttpStatus.OK);
 
     }

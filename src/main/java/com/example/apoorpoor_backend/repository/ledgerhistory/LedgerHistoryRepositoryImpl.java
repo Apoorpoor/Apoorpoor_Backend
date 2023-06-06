@@ -42,10 +42,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
     /*
      * 마이페이지 - 소비성향 육각형 그래프
-     * /users/mypage?date=2023-04
+     * /user/mypage/status
      * */
     @Override
-    public List<MonthSumResponseDto> getMypageStatus(MyPageSearchCondition condition, Long userId) {
+    public List<TotalSumResponseDto> getMypageStatus(Long userId) {
 
         // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = queryFactory
@@ -54,38 +54,26 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .where(account.user.id.eq(userId))
                 .fetch();
 
-        // date_format(date, '%Y-%m') querydsl로 바꾸기
-        StringTemplate formattedDate = Expressions.stringTemplate(
-                "DATE_FORMAT({0}, {1})"
-                ,ledgerHistory.date
-                ,ConstantImpl.create("%Y-%m")
-        );
-
-        List<MonthSumResponseDto> content = queryFactory
-                .select(new QMonthSumResponseDto(
-                        formattedDate.as("month"),
+        List<TotalSumResponseDto> content = queryFactory
+                .select(new QTotalSumResponseDto(
                         ledgerHistory.expenditureType,
-                        ledgerHistory.expenditure.sum().as("month_sum")
+                        ledgerHistory.expenditure.sum().as("total_sum")
                 ))
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(condition.getDate())
+                        ledgerHistory.account.id.in(accountIdList)
                 )
-                .groupBy(formattedDate, ledgerHistory.expenditureType)
+                .groupBy(ledgerHistory.expenditureType)
                 .fetch();
 
         String query =
-                "select DATE_FORMAT(date, '%Y-%m') as month,\n" +
-                        "       expenditure_type,\n" +
-                        "       sum(expenditure) as month_sum\n" +
+                "select expenditure_type, sum(expenditure)\n" +
                         "from ledger_history\n" +
                         "where 1=1\n" +
                         "and account_type = 'EXPENDITURE'\n" +
                         "and account_id in (1, 2, 3)\n" +
-                        "and date_format(date, '%Y-%m') = '2022-05'\n" +
-                        "group by month, expenditure_type"
+                        "group by expenditure_type"
                 ;
         return content;
     }

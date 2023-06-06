@@ -3,6 +3,7 @@ package com.example.apoorpoor_backend.repository.ledgerhistory;
 import com.example.apoorpoor_backend.dto.account.AccountSearchCondition;
 import com.example.apoorpoor_backend.dto.account.AccountTotalResponseDto;
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryListResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondition;
@@ -14,7 +15,7 @@ public interface LedgerHistoryRepositoryCustom {
 
     List<LedgerHistoryListResponseDto> search(LedgerHistorySearchCondition condition);
 
-    List<MonthSumResponseDto> getMypageStatus(MyPageSearchCondition condition, Long userId);
+    List<TotalSumResponseDto> getMypageStatus(Long userId);
     List<MonthSumResponseDto> getRecentStatus(Long userId);
 
     List<AccountTotalResponseDto> getTotalStatus(Long accountId, AccountSearchCondition condition);

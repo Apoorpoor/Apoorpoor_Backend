@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.user.AgeRequestDto;
 import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
@@ -45,9 +46,9 @@ public class UserController {
     }
 
     @GetMapping("/mypage/status")
-    public ResponseEntity<List<MonthSumResponseDto>> getStatus(MyPageSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<TotalSumResponseDto>> getStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
-        return userService.getStatus(condition, username);
+        return userService.getStatus(username);
     }
 
     @GetMapping("/mypage/recentStatus")

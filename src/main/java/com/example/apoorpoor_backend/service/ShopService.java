@@ -1,14 +1,15 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
-import com.example.apoorpoor_backend.dto.beggar.ItemNumDto;
 import com.example.apoorpoor_backend.dto.shop.ItemListResponseDto;
 import com.example.apoorpoor_backend.dto.shop.ItemResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PayRequestDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Item;
+import com.example.apoorpoor_backend.model.Point;
 import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
-import com.example.apoorpoor_backend.repository.BeggarRepository;
+import com.example.apoorpoor_backend.repository.PointRepository;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ public class ShopService {
     private final BeggarRepository beggarRepository;
 
     private final ItemRepository itemRepository;
+
+    private final PointRepository pointRepository;
 
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
         Beggar beggar = beggarCheck(username);
@@ -62,6 +65,8 @@ public class ShopService {
             throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
         }
 
+        String pointDescription = payRequestDto.getItemListEnum().getItemName() + "구매!!";//////////////////////////////////////
+
         Long itemNum = payRequestDto.getItemListEnum().getItemNum();
         String itemName = payRequestDto.getItemListEnum().getItemName();
         Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
@@ -81,6 +86,11 @@ public class ShopService {
                 .level(level)
                 .point(updatePoint)
                 .build();
+
+        //////////////////////////////////////////////////////////////////////////////
+        Point recordPoint = new Point(pointDescription, null, itemPrice, beggar);
+        pointRepository.save(recordPoint);
+      //////////////////////////////////////////////////////////////////////////////
 
         beggar.updateExp(beggarExpUpResponseDto);
 

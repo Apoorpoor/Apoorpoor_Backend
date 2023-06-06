@@ -1,15 +1,15 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.KakaoUserInfoDto;
-import com.example.apoorpoor_backend.dto.TokenDto;
+import com.example.apoorpoor_backend.dto.user.KakaoUserInfoDto;
+import com.example.apoorpoor_backend.dto.user.TokenDto;
 import com.example.apoorpoor_backend.jwt.JwtUtil;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.RefreshToken;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.UserRoleEnum;
-import com.example.apoorpoor_backend.repository.BeggarRepository;
-import com.example.apoorpoor_backend.repository.RefreshTokenRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.user.RefreshTokenRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

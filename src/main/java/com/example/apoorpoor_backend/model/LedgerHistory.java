@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;

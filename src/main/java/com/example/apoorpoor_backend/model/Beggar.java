@@ -104,4 +104,48 @@ public class Beggar extends Timestamped{
     public void updateLevel(Long level) {
         this.level = level;
     }
+    /*
+        /*
+    필요한 파라미터 : ExpType expType; BadgeType badgeType;
+     Beggar beggar = beggarCheck(username);
+        String nickname = beggar.getNickname();
+        ExpType expType = beggarExpUpRequestDto.getExpType();
+
+        Long exp = beggar.getExp() + expType.getAmount();
+        Long point = beggar.getPoint() + expType.getAmount();
+        Long level = beggar.getLevel();
+
+        String pointDescription = expType.getDescription();
+
+        if(expType.equals(ExpType.GET_BADGE)) {
+            pointDescription = ExpType.GET_BADGE.getDescription();
+            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
+        }
+
+        if(expType.equals(ExpType.BEST_SAVER)) {
+            pointDescription = ExpType.BEST_SAVER.getDescription();
+        }
+
+        if(expType.equals(ExpType.LEVEL_UP)) {
+            pointDescription = ExpType.LEVEL_UP.getDescription();
+        }
+
+        if (LevelType.getNextExpByLevel(level) <= exp) {
+            level ++;
+        }
+
+        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
+                .nickname(nickname)
+                .exp(exp)
+                .level(level)
+                .point(point)
+                .build();
+
+        Point recordPoint = new Point(pointDescription, point, null, beggar);
+        pointRepository.save(recordPoint);
+
+        beggar.updateExp(beggarExpUpResponseDto);
+
+        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
+     */
 }

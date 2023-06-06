@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.dto.beggar.*;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.BeggarService;
 import io.swagger.v3.oas.annotations.Operation;

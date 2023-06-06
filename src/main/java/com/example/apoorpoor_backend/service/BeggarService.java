@@ -26,6 +26,7 @@ public class BeggarService {
     private final GetBadgeRepository getBadgeRepository;
     private final BadgeRepository badgeRepository;
     private final ItemRepository itemRepository;
+    private final LedgerHistoryRepository ledgerHistoryRepository;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
@@ -88,15 +89,42 @@ public class BeggarService {
         }
     }
 
-    public void saveBadge(BadgeType badgeType, Beggar beggar) {
-        Long badgeNum = badgeType.getBadgeNum();
-        String badgeTitle = badgeType.getBadgeTitle();
+    public void badgeCheck(ExpenditureType expenditureType, User user) {
+        Beggar beggar = beggarCheck(user.getUsername());
+
+        //획득 기준 통과시에
+        if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
+    }
+
+    // 해당 월에 소비 뱃지 획득 가능한지 여부
+    private boolean badgeCriteriaCheck(ExpenditureType expenditureType, Long userId) {
+        return switch (expenditureType){
+            case UTILITY_BILL -> ledgerHistoryRepository.checkEXPType1(expenditureType, userId);
+            case CONDOLENCE_EXPENSE -> ledgerHistoryRepository.checkEXPType2(expenditureType, userId);
+            case TRANSPORTATION -> ledgerHistoryRepository.checkEXPType3(expenditureType, userId);
+            case COMMUNICATION_EXPENSES -> ledgerHistoryRepository.checkEXPType4(expenditureType, userId);
+            case INSURANCE -> ledgerHistoryRepository.checkEXPType5(expenditureType, userId);
+            case EDUCATION -> ledgerHistoryRepository.checkEXPType6(expenditureType, userId);
+            case SAVINGS -> ledgerHistoryRepository.checkEXPType7(expenditureType, userId);
+            case CULTURE -> ledgerHistoryRepository.checkEXPType8(expenditureType, userId);
+            case HEALTH -> ledgerHistoryRepository.checkEXPType9(expenditureType, userId);
+            case FOOD_EXPENSES -> ledgerHistoryRepository.checkEXPType10(expenditureType, userId);
+            case SHOPPING -> ledgerHistoryRepository.checkEXPType11(expenditureType, userId);
+            case LEISURE_ACTIVITIES -> ledgerHistoryRepository.checkEXPType12(expenditureType, userId);
+        };
+    }
+
+
+    public void saveBadgeNew(ExpenditureType expenditureType, Beggar beggar) {
+        Long badgeNum = expenditureType.getBadgeNum();
+        String badgeTitle = expenditureType.getBadgeTitle();
 
         boolean hasBadge = beggar.getGetBadgeList().stream()
                 .map(GetBadge::getBadge)
                 .anyMatch(b -> b.getBadgeNum().equals(badgeNum));
 
         if(!hasBadge) {
+
             Badge badge = new Badge(badgeNum, badgeTitle);
 
             badgeRepository.save(badge);
@@ -105,10 +133,34 @@ public class BeggarService {
             badge.getGetBadgeList().add(getBadge);
             getBadgeRepository.save(getBadge);
 
+            // 뱃지 알림 주기
+
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
         }
     }
+
+//    public void saveBadge(ExpenditureType expenditureType, Beggar beggar) {
+//        Long badgeNum = expenditureType.getBadgeNum();
+//        String badgeTitle = expenditureType.getBadgeTitle();
+//
+//        boolean hasBadge = beggar.getGetBadgeList().stream()
+//                .map(GetBadge::getBadge)
+//                .anyMatch(b -> b.getBadgeNum().equals(badgeNum));
+//
+//        if(!hasBadge) {
+//            Badge badge = new Badge(badgeNum, badgeTitle);
+//
+//            badgeRepository.save(badge);
+//
+//            GetBadge getBadge = new GetBadge(badge, beggar);
+//            badge.getGetBadgeList().add(getBadge);
+//            getBadgeRepository.save(getBadge);
+//
+//        } else {
+//            throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
+//        }
+//    }
 
     public ResponseEntity<String> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
@@ -183,4 +235,6 @@ public class BeggarService {
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
+
+
 }

@@ -79,6 +79,11 @@ public class LedgerHistoryService {
         // 1개 등록시 point +10, exp +10 (누적), 레벨업 확인
         beggarService.updateExpNew(user.getUsername(), 10L);
 
+        // 지출내역에 따라 뱃지 체크
+        if(accountType == AccountType.EXPENDITURE){
+            beggarService.badgeCheck(expenditureType, user);
+        }
+
         return new ResponseEntity<>(new StatusResponseDto("거래 내역 저장 성공"), HttpStatus.OK);
 
     }

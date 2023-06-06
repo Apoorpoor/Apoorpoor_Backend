@@ -11,7 +11,7 @@ public class UserResponseDto {
 
     private Long id;
     private String username;
-    private Long sender;
+    private String sender;
     private Long age;
     private String gender;
 
@@ -23,7 +23,7 @@ public class UserResponseDto {
         this.gender = user.getGender();
     }
 
-    public UserResponseDto(Long id, String username, Long sender, Long age, String gender) {
+    public UserResponseDto(Long id, String username, String sender, Long age, String gender) {
         this.id = id;
         this.username = username;
         this.sender = sender;

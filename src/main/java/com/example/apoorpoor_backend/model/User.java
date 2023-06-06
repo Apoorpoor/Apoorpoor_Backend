@@ -41,10 +41,10 @@ public class User extends Timestamped{
     private Timestamp createDate;
 
     @Column
-    private Long sender;
+    private String sender;
 
     @Builder
-    public User(String username, String password, UserRoleEnum role, Long kakaoId, Long sender) {
+    public User(String username, String password, UserRoleEnum role, Long kakaoId, String sender) {
         this.username = username;
         this.password = password;
         this.role = role;

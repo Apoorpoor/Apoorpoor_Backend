@@ -1,9 +1,9 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.UserRoleEnum;
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.BeggarService;
 import org.junit.jupiter.api.BeforeAll;

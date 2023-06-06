@@ -1,8 +1,8 @@
 //package com.example.apoorpoor_backend.controller;
 //
-//import com.example.apoorpoor_backend.dto.AccountRequestDto;
-//import com.example.apoorpoor_backend.dto.AccountResponseDto;
-//import com.example.apoorpoor_backend.dto.StatusResponseDto;
+//import com.example.apoorpoor_backend.dto.account.AccountRequestDto;
+//import com.example.apoorpoor_backend.dto.account.AccountResponseDto;
+//import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 //import com.example.apoorpoor_backend.security.UserDetailsImpl;
 //import com.example.apoorpoor_backend.service.AccountService;
 //import com.fasterxml.jackson.databind.ObjectMapper;

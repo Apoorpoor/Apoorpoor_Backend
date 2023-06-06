@@ -1,6 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import jakarta.persistence.*;
 import lombok.Getter;

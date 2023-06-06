@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

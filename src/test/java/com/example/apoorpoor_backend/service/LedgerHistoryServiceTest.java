@@ -1,18 +1,18 @@
 //package com.example.apoorpoor_backend.service;
 //
-//import com.example.apoorpoor_backend.dto.AccountRequestDto;
-//import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
+//import com.example.apoorpoor_backend.dto.account.AccountRequestDto;
+//import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 //import com.example.apoorpoor_backend.model.Account;
 //import com.example.apoorpoor_backend.model.LedgerHistory;
 //import com.example.apoorpoor_backend.model.User;
-//import com.example.apoorpoor_backend.model.UserRoleEnum;
+//import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 //import com.example.apoorpoor_backend.model.enumType.AccountType;
 //import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 //import com.example.apoorpoor_backend.model.enumType.IncomeType;
 //import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
-//import com.example.apoorpoor_backend.repository.AccountRepository;
-//import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
-//import com.example.apoorpoor_backend.repository.UserRepository;
+//import com.example.apoorpoor_backend.repository.account.AccountRepository;
+//import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+//import com.example.apoorpoor_backend.repository.user.UserRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

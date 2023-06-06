@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.security;
 
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.UserRoleEnum;
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

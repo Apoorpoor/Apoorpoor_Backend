@@ -1,8 +1,8 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.LedgerHistoryRequestDto;
-import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryRequestDto;
+import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.LedgerHistoryService;
 import lombok.RequiredArgsConstructor;

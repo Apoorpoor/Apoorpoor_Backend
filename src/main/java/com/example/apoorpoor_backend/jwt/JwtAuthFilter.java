@@ -1,8 +1,8 @@
 package com.example.apoorpoor_backend.jwt;
 
-import com.example.apoorpoor_backend.dto.SecurityExceptionDto;
+import com.example.apoorpoor_backend.dto.common.SecurityExceptionDto;
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,7 +1,7 @@
 package com.example.apoorpoor_backend.security;
 
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

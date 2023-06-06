@@ -1,8 +1,8 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.UserRoleEnum;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
+import com.example.apoorpoor_backend.repository.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,8 @@
 package com.example.apoorpoor_backend.repository.shop;
 
 
+import com.example.apoorpoor_backend.dto.shop.PointResponseDto;
+import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
 import com.example.apoorpoor_backend.dto.shop.QPointResponseDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;

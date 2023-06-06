@@ -32,4 +32,5 @@ public class BeggarSearchResponseDto {
 
     private String customImage;
 
+
 }

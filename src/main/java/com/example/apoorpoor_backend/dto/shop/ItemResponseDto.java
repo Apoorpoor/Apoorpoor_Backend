@@ -24,3 +24,4 @@ public class ItemResponseDto {
     private String itemImage;
 
 }
+

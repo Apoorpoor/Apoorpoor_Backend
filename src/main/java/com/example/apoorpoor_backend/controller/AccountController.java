@@ -1,8 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.AccountRequestDto;
-import com.example.apoorpoor_backend.dto.AccountResponseDto;
-import com.example.apoorpoor_backend.dto.StatusResponseDto;
+import com.example.apoorpoor_backend.dto.*;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +39,26 @@ public class AccountController {
     @DeleteMapping("/accounts/{id}")
     public ResponseEntity<StatusResponseDto> deleteAccount(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return accountService.deleteAccount(id, userDetails.getUsername());
+    }
+
+    @GetMapping("/accounts/{id}/totalStatus")
+    public ResponseEntity<List<AccountTotalResponseDto>> getTotalStatus(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getTotalStatus(id, condition, userDetails.getUsername());
+    }
+
+    @GetMapping("/accounts/{id}/status")
+    public ResponseEntity<List<LedgerHistoryResponseDto>> getStatus(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getStatus(id, condition, userDetails.getUsername());
+    }
+
+    @GetMapping("/accounts/{id}/statistics")
+    public ResponseEntity<List<MonthSumResponseDto>> getStatistics(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getStatistics(id, condition, userDetails.getUsername());
+    }
+
+    @GetMapping("/accounts/{id}/difference")
+    public ResponseEntity<List<MonthSumResponseDto>> getDifference(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getDifference(id, userDetails.getUsername());
     }
 
 }

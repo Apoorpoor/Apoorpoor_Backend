@@ -5,11 +5,13 @@ import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class LedgerHistoryResponseDto {
+    private Long id;
     private String title;
     private AccountType accountType;
     private IncomeType incomeType;
@@ -41,7 +43,7 @@ public class LedgerHistoryResponseDto {
                 .paymentMethod(ledgerHistory.getPaymentMethod())
                 .income(ledgerHistory.getIncome())
                 .expenditure(ledgerHistory.getExpenditure())
-                .date(ledgerHistory.getDate())
+                .date(ledgerHistory.getDate().toString())
                 .build();
     }
 
@@ -53,6 +55,19 @@ public class LedgerHistoryResponseDto {
         this.paymentMethod = ledgerHistory.getPaymentMethod();
         this.income = ledgerHistory.getIncome();
         this.expenditure = ledgerHistory.getExpenditure();
-        this.date = ledgerHistory.getDate();
+        this.date = ledgerHistory.getDate().toString();
+    }
+
+    @QueryProjection
+    public LedgerHistoryResponseDto(Long id, String title, AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType, PaymentMethod paymentMethod, Long income, Long expenditure, String date) {
+        this.id = id;
+        this.title = title;
+        this.accountType = accountType;
+        this.incomeType = incomeType;
+        this.expenditureType = expenditureType;
+        this.paymentMethod = paymentMethod;
+        this.income = income;
+        this.expenditure = expenditure;
+        this.date = date;
     }
 }

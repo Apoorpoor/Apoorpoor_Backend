@@ -26,7 +26,7 @@ public class Account extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Balance balance;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, orphanRemoval = true)

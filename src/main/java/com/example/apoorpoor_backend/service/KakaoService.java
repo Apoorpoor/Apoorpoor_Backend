@@ -72,6 +72,7 @@ public class KakaoService {
         if (findBeggar.isPresent()) nickname_flag = "true";
 
         response.addHeader("NICKNAME_FLAG", nickname_flag);
+        response.addHeader("USER_ID", kakaoUser.getId()+"");
 
         return "로그인 성공";
     }

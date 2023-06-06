@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 
 @Getter
 @Entity(name = "LEDGER_HISTORY")
@@ -47,10 +49,10 @@ public class LedgerHistory extends Timestamped{
     private Long expenditure;
 
     @Column
-    private String date;
+    private LocalDate date;
 
     public LedgerHistory(Account account, String title, AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType,
-                         PaymentMethod paymentMethod, Long income, Long expenditure, String date){
+                         PaymentMethod paymentMethod, Long income, Long expenditure, LocalDate date){
         this.account = account;
         this.title = title;
         this.accountType = accountType;
@@ -71,7 +73,7 @@ public class LedgerHistory extends Timestamped{
         this.paymentMethod = responseDto.getPaymentMethod();
         this.income = responseDto.getIncome();
         this.expenditure = responseDto.getExpenditure();
-        this.date = responseDto.getDate();
+        this.date = LocalDate.parse(responseDto.getDate());
     }
 
 }

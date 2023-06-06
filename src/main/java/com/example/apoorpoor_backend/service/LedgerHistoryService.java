@@ -3,18 +3,9 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.dto.LedgerHistoryRequestDto;
 import com.example.apoorpoor_backend.dto.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.StatusResponseDto;
-import com.example.apoorpoor_backend.model.Account;
-import com.example.apoorpoor_backend.model.Balance;
-import com.example.apoorpoor_backend.model.LedgerHistory;
-import com.example.apoorpoor_backend.model.User;
-import com.example.apoorpoor_backend.model.enumType.AccountType;
-import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
-import com.example.apoorpoor_backend.model.enumType.IncomeType;
-import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
-import com.example.apoorpoor_backend.repository.AccountRepository;
-import com.example.apoorpoor_backend.repository.BalanceRepository;
-import com.example.apoorpoor_backend.repository.LedgerHistoryRepository;
-import com.example.apoorpoor_backend.repository.UserRepository;
+import com.example.apoorpoor_backend.model.*;
+import com.example.apoorpoor_backend.model.enumType.*;
+import com.example.apoorpoor_backend.repository.*;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -34,6 +29,9 @@ public class LedgerHistoryService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final BalanceRepository balanceRepository;
+    private final BeggarRepository beggarRepository;
+    private final BeggarService beggarService;
+    private final Random random = new Random();
 
     public ResponseEntity<StatusResponseDto> createLedgerHistory(LedgerHistoryRequestDto requestDto, String username) {
         User user = userCheck(username);
@@ -46,8 +44,7 @@ public class LedgerHistoryService {
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
-        //LocalDate localDate = LocalDate.parse(requestDto.getDatetime()); // 2022-10-23
-        String localDate = requestDto.getDatetime();
+        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
@@ -68,7 +65,7 @@ public class LedgerHistoryService {
 
         ledgerHistoryRepository.save(ledgerHistory);
 
-        Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
+        Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
             Long incomeTotal = income + findBalance.get().getIncomeTotal();
@@ -80,8 +77,28 @@ public class LedgerHistoryService {
             balanceRepository.save(balance);
         }
 
+        // 1개 등록시 point +10, exp +10 (누적), 레벨업 확인
+        beggarService.updateExpNew(user.getUsername(), 10L);
+
+        // 지출/수입 구분에 따라 랜덤 멘트 프론트에 전달하기
+        String randomMENT = getMent(accountType);
         return new ResponseEntity<>(new StatusResponseDto("거래 내역 저장 성공"), HttpStatus.OK);
 
+    }
+
+    public String getMent(AccountType accountType) {
+        List<MentType> mentTypes;
+        if (accountType == AccountType.EXPENDITURE) {
+            mentTypes = Arrays.asList(MentType.MENT1, MentType.MENT2, MentType.MENT3, MentType.MENT4, MentType.MENT5, MentType.MENT6,
+                    MentType.MENT7, MentType.MENT8, MentType.MENT9, MentType.MENT10, MentType.MENT11);
+        } else {
+            mentTypes = Arrays.asList(MentType.MENT12, MentType.MENT13, MentType.MENT14, MentType.MENT15,
+                    MentType.MENT16, MentType.MENT17, MentType.MENT18);
+        }
+        MentType randomMentType = mentTypes.get(random.nextInt(mentTypes.size()));
+        List<String> ments = randomMentType.getMents();
+        String randomMENT = ments.get(random.nextInt(ments.size()));
+        return randomMENT;
     }
 
     public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {
@@ -94,8 +111,8 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         AccountType accountType = requestDto.getAccountType();
-        String localDate = requestDto.getDatetime();
-        // LocalDate localDate = LocalDate.parse(requestDto.getDatetime());
+
+        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
         if(accountType == AccountType.INCOME){
@@ -112,7 +129,22 @@ public class LedgerHistoryService {
             expenditure = 0L;
             income = 0L;
         }
-        Optional<LedgerHistory> ledgerHistory = ledgerHistoryRepository.findById(id);
+
+        LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
+
+        Optional<Balance> findBalance = getBalance(account);
+
+        if(findBalance.isPresent()) {
+            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();;
+            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+
+            findBalance.get().update(incomeTotal, expenditureTotal);
+        }else{
+            Balance balance = new Balance(income, expenditure, account);
+            balanceRepository.save(balance);
+        }
+
+
         LedgerHistoryResponseDto responseDto = LedgerHistoryResponseDto.builder()
                 .title(title)
                 .accountType(accountType)
@@ -121,9 +153,9 @@ public class LedgerHistoryService {
                 .paymentMethod(paymentMethod)
                 .income(income)
                 .expenditure(expenditure)
-                .date(localDate)
+                .date(localDate.toString())
                 .build();
-        ledgerHistory.get().update(responseDto);
+        ledgerHistory.update(responseDto);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -158,6 +190,17 @@ public class LedgerHistoryService {
     public LedgerHistory ledgerHistoryCheck(Long ledgerHistoryId){
         return ledgerHistoryRepository.findById(ledgerHistoryId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 거래내역입니다.")
+        );
+    }
+
+    private Optional<Balance> getBalance(Account account) {
+        Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
+        return findBalance;
+    }
+
+    public Beggar beggarCheck(String username) {
+        return beggarRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
 

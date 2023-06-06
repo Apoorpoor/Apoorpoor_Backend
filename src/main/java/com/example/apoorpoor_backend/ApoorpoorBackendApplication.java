@@ -4,11 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @EnableJpaAuditing
+@EnableScheduling
 @SpringBootApplication
 public class ApoorpoorBackendApplication {
 
@@ -24,7 +29,7 @@ public class ApoorpoorBackendApplication {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:3000", "http://3.34.85.5:8080", "http://192.168.25.2:3000")
                         .allowedOriginPatterns("*")
-                        .exposedHeaders("Authorization", "Authorization_Refresh", "Authorization", "Set-Cookie", "USER_ROLE", "ACCESS_KEY", "REFRESH_KEY", "NICKNAME_FLAG")
+                        .exposedHeaders("Set-Cookie", "USER_ROLE", "ACCESS_KEY", "REFRESH_KEY", "NICKNAME_FLAG", "USER_ID")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
                         //.allowedHeaders()
                         .allowCredentials(true)

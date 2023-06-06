@@ -1,13 +1,11 @@
 package com.example.apoorpoor_backend.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.errors.ApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -29,8 +27,6 @@ import java.util.Optional;
 @Component
 @Service
 public class S3Uploader {
-    //private final AmazonS3Client amazonS3Client;
-
     private static final String S3_BUCKET_PREFIX = "S3";
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -54,10 +50,6 @@ public class S3Uploader {
             String[] extensionArray = {".png", ".jpeg", ".jpg", ".webp", ".gif", ".mp4"};
 
             List<String> extensionList = new ArrayList<>(Arrays.asList(extensionArray));
-
-
-
-
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(image.getContentType());
             objectMetadata.setContentLength(image.getSize());

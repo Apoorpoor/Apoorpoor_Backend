@@ -7,6 +7,8 @@ import com.example.apoorpoor_backend.model.enumType.*;
 import com.example.apoorpoor_backend.repository.*;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.shop.ItemRepository;
+import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -266,6 +268,10 @@ public class BeggarService {
                 case "bottoms" -> beggar.updateCustomBottoms(null);
                 case "shoes" -> beggar.updateCustomShoes(null);
                 case "accessories" -> beggar.updateCustomAccessories(null);
+                case "shaves" -> beggar.updateCustomShaves(null);
+                case "hats" -> beggar.updateCustomHats(null);
+                case "watches" -> beggar.updateCustomWatches(null);
+                case "customs" -> beggar.updateCustoms(null);
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         } else {
@@ -277,18 +283,15 @@ public class BeggarService {
             String itemType = findItem.getItemType();
 
             switch (itemType) {
-                case "tops" :
-                    beggar.updateCustomTops(itemListEnum);
-                    break;
-                case "bottoms" :
-                    beggar.updateCustomBottoms(itemListEnum);
-                    break;
-                case "shoes" :
-                    beggar.updateCustomShoes(itemListEnum);
-                case "accessories" :
-                    beggar.updateCustomAccessories(itemListEnum);
-                default:
-                    throw new IllegalArgumentException("옳지 못한 행동입니다.");
+                case "tops" -> beggar.updateCustomTops(itemListEnum);
+                case "bottoms" -> beggar.updateCustomBottoms(itemListEnum);
+                case "shoes" -> beggar.updateCustomShoes(itemListEnum);
+                case "accessories" -> beggar.updateCustomAccessories(itemListEnum);
+                case "shaves" -> beggar.updateCustomShaves(itemListEnum);
+                case "hats" -> beggar.updateCustomHats(itemListEnum);
+                case "watches" -> beggar.updateCustomWatches(itemListEnum);
+                case "customs" -> beggar.updateCustoms(itemListEnum);
+                default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }
 

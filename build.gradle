@@ -60,10 +60,6 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0"
 
-    //kafka
-    implementation 'org.springframework.kafka:spring-kafka'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
-
     //jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 }

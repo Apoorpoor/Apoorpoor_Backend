@@ -40,12 +40,16 @@ public class User extends Timestamped{
     @CreationTimestamp
     private Timestamp createDate;
 
+    @Column
+    private String sender;
+
     @Builder
-    public User(String username, String password, UserRoleEnum role, Long kakaoId) {
+    public User(String username, String password, UserRoleEnum role, Long kakaoId, String sender) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.kakaoId = kakaoId;
+        this.sender = sender;
     }
 
     public User kakaoIdUpdate(Long kakaoId) {

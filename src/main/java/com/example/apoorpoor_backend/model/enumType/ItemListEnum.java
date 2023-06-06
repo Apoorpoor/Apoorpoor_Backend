@@ -101,6 +101,9 @@ public enum ItemListEnum {
         Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
         Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
         Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
+        Long shavesNum = beggar.getShaves() == null ? null : beggar.getShaves().getItemNum();
+        Long watchesNum = beggar.getWatches() == null ? null : beggar.getWatches().getItemNum();
+        Long customsNum = beggar.getCustoms() == null? null : beggar.getCustoms().getItemNum();
 
         String[] matches = new String[itemListEnumCount];
 
@@ -121,6 +124,9 @@ public enum ItemListEnum {
             if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
             if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
             if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(shavesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(watchesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
 
             ItemResponseDto dto = ItemResponseDto.builder()
                     .itemNum(itemNum)
@@ -146,6 +152,9 @@ public enum ItemListEnum {
         Long bottomsNum = beggar.getBottoms() == null ? null : beggar.getBottoms().getItemNum();
         Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
         Long accessoriesNum = beggar.getAccessories() == null ? null : beggar.getAccessories().getItemNum();
+        Long shavesNum = beggar.getShaves() == null ? null : beggar.getShaves().getItemNum();
+        Long watchesNum = beggar.getWatches() == null ? null : beggar.getWatches().getItemNum();
+        Long customsNum = beggar.getCustoms() == null? null : beggar.getCustoms().getItemNum();
 
         String[] matches = new String[itemListEnumCount];
 
@@ -169,6 +178,9 @@ public enum ItemListEnum {
                 if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
                 if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
                 if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(shavesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(watchesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
 
 
                 ItemResponseDto dto = ItemResponseDto.builder()

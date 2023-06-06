@@ -21,4 +21,6 @@ public class ItemResponseDto {
 
     private String itemState;
 
+    private String itemImage;
+
 }

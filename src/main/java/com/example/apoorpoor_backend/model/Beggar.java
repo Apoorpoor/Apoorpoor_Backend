@@ -49,27 +49,19 @@ public class Beggar extends Timestamped{
     private List<GetBadge> getBadgeList = new ArrayList<>();
 
     @Column
-    private ItemListEnum tops;
+    private ItemListEnum top;
 
     @Column
-    private ItemListEnum bottoms;
+    private ItemListEnum bottom;
 
     @Column
     private ItemListEnum shoes;
 
     @Column
-    private ItemListEnum accessories;
+    private ItemListEnum acc;
 
     @Column
-    private ItemListEnum shaves;
-
-    @Column ItemListEnum hats;
-
-    @Column
-    private ItemListEnum watches;
-
-    @Column
-    private ItemListEnum customs;
+    private ItemListEnum custom;
 
     public Beggar(BeggarRequestDto requestDto, User user){
         this.nickname = requestDto.getNickname();
@@ -96,11 +88,11 @@ public class Beggar extends Timestamped{
     }
 
     public void updateCustomTops(ItemListEnum itemListEnum) {
-        this.tops = itemListEnum;
+        this.top = itemListEnum;
     }
 
     public void updateCustomBottoms(ItemListEnum itemListEnum) {
-        this.bottoms = itemListEnum;
+        this.bottom = itemListEnum;
     }
 
     public void updateCustomShoes(ItemListEnum itemListEnum) {
@@ -108,30 +100,16 @@ public class Beggar extends Timestamped{
     }
 
     public void updateCustomAccessories(ItemListEnum itemListEnum) {
-        this.accessories = itemListEnum;
+        this.acc = itemListEnum;
     }
 
-    public void updateCustomShaves(ItemListEnum itemListEnum) {
-        this.shaves = itemListEnum;
-    }
-
-    public void updateCustomHats(ItemListEnum itemListEnum) {
-        this.hats = itemListEnum;
-    }
-
-    public void updateCustomWatches(ItemListEnum itemListEnum) {
-        this.watches = itemListEnum;
-    }
 
     public void updateCustoms(ItemListEnum itemListEnum) {
-        this.customs = itemListEnum;
-        this.tops = null;
-        this.bottoms = null;
+        this.custom = itemListEnum;
+        this.top = null;
+        this.bottom = null;
         this.shoes = null;
-        this.shaves = null;
-        this.hats = null;
-        this.watches = null;
-        this.accessories = null;
+        this.acc = null;
     }
 
     public void updateLevel(Long level) {

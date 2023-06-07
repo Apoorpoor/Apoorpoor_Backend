@@ -19,6 +19,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -215,22 +216,37 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
      * */
     public List<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition){
 
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.withDayOfMonth(1);
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m-%d")
+        );
 
-        String type = Optional.ofNullable(condition.getDateType()).orElse("");
+        BooleanBuilder builder = new BooleanBuilder();
 
-        if(type.equals("week")){
-            startDate = endDate.minusWeeks(1);
-        }else if(type.equals("month")){
-            startDate = endDate.minusMonths(1);
-        }else if(type.equals("3month")){
-            startDate = endDate.minusMonths(3);
-        }else if(type.equals("6month")){
-            startDate = endDate.minusMonths(6);
-        }else if(type.equals("year")){
-            startDate = endDate.minusYears(1);
+        if(condition.getDate() != null){
+            builder.and(formattedDate.like(condition.getDate()+"%"));
+        }else{
+            LocalDate endDate = LocalDate.now();
+            LocalDate startDate = endDate.withDayOfMonth(1);
+
+            String type = Optional.ofNullable(condition.getDateType()).orElse("");
+
+            if(type.equals("week")){
+                startDate = endDate.minusWeeks(1);
+            }else if(type.equals("month")){
+                startDate = endDate.minusMonths(1);
+            }else if(type.equals("3month")){
+                startDate = endDate.minusMonths(3);
+            }else if(type.equals("6month")){
+                startDate = endDate.minusMonths(6);
+            }else if(type.equals("year")){
+                startDate = endDate.minusYears(1);
+            }
+
+            builder.and(ledgerHistory.date.between(startDate, endDate));
         }
+
 
         List<LedgerHistoryResponseDto> content = queryFactory
                 .select(new QLedgerHistoryResponseDto(
@@ -247,7 +263,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.account.id.eq(accountId),
-                        ledgerHistory.date.between(startDate, endDate),
+                        builder,
                         accountTypeEq(condition.getAccountType()),
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())

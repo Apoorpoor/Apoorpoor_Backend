@@ -29,7 +29,7 @@ import java.util.Objects;
 public class ShopService {
 
     @Value("${secret.url.item}")
-    public static String itemUrl;
+    private String itemUrl;
 
     private final BeggarRepository beggarRepository;
 
@@ -115,7 +115,7 @@ public class ShopService {
         return pointRepository.findAllByPeriodAndBeggar(beggar.getId(), condition, pageable);
     }
 
-    public static List<ItemResponseDto> getEnumItemList(Beggar beggar, List<Long> hasItemNumDtoList) {
+    public List<ItemResponseDto> getEnumItemList(Beggar beggar, List<Long> hasItemNumDtoList) {
         List<ItemResponseDto> itemList = new ArrayList<>();
 
         int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
@@ -164,7 +164,7 @@ public class ShopService {
         return itemList;
     }
 
-    public static List<ItemResponseDto> getEnumItemListByType(String itemType, Beggar beggar, List<Long> hasItemNumDtoList) {
+    public List<ItemResponseDto> getEnumItemListByType(String itemType, Beggar beggar, List<Long> hasItemNumDtoList) {
         List<ItemResponseDto> filteredItemList = new ArrayList<>();
 
         int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();

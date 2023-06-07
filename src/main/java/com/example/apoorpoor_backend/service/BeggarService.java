@@ -11,6 +11,7 @@ import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.apoorpoor_backend.service.ShopService.itemUrl;
-
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BeggarService {
-
+    @Value("${secret.url.item}")
+    private String itemUrl;
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
     private final GetBadgeRepository getBadgeRepository;

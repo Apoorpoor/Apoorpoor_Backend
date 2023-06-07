@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
+import com.example.apoorpoor_backend.dto.beggar.BeggarSearchResponseDto;
 import com.example.apoorpoor_backend.dto.user.AgeRequestDto;
 import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
@@ -38,11 +39,6 @@ public class UserController {
     public ResponseEntity<UserResponseDto> userInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         return userService.userInfo(username);
-    }
-
-    @GetMapping("/mypage/{username}")
-    public ResponseEntity<UserResponseDto> getUserInfoByUsername(@PathVariable("username") String username) {
-        return userService.getUserInfoByUsername(username);
     }
 
     @GetMapping("/mypage/status")

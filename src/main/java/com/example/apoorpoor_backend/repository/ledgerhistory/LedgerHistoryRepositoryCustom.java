@@ -25,8 +25,6 @@ public interface LedgerHistoryRepositoryCustom {
     List<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition);
 
     List<MonthSumResponseDto> getDifference(Long accountId);
-    
-    boolean checkEXPType1(ExpenditureType expenditureType, Long userId);
 
     boolean checkEXPType2(ExpenditureType expenditureType, Long userId);
 
@@ -35,8 +33,6 @@ public interface LedgerHistoryRepositoryCustom {
     boolean checkEXPType4(ExpenditureType expenditureType, Long userId);
 
     boolean checkEXPType5(ExpenditureType expenditureType, Long userId);
-
-    boolean checkEXPType6(ExpenditureType expenditureType, Long userId);
 
     boolean checkEXPType7(ExpenditureType expenditureType, Long userId);
 

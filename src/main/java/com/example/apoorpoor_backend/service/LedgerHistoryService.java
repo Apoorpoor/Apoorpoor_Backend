@@ -52,7 +52,6 @@ public class LedgerHistoryService {
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
-            paymentMethod = null;
             expenditure = 0L;
         }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;
@@ -127,7 +126,6 @@ public class LedgerHistoryService {
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
-            paymentMethod = null;
             expenditure = 0L;
         }else if(accountType == AccountType.EXPENDITURE){
             incomeType = null;

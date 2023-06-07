@@ -70,6 +70,7 @@ dependencies {
 jar {
     enabled = false
 }
+
 // ===  QueryDsl 빌드 옵션 (선택) ===
 def querydslDir = "$buildDir/generated/querydsl"
 sourceSets {

@@ -104,10 +104,20 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<AccountTotalResponseDto>> getTotalStatus(Long accountId, AccountSearchCondition condition, String username) {
+    public ResponseEntity<AccountTotalListResponseDto> getTotalStatus(Long accountId, AccountSearchCondition condition, String username) {
         User user = userCheck(username);
         List<AccountTotalResponseDto> totalStatus = ledgerHistoryRepository.getTotalStatus(accountId, condition);
-        return new ResponseEntity<>(totalStatus, HttpStatus.OK);
+
+        Long expenditure_sum = 0L;
+        Long income_sum = 0L;
+        //지출 합 더하기
+        for (AccountTotalResponseDto status : totalStatus) {
+            expenditure_sum += Optional.ofNullable(status.getExpenditure_sum()).orElse(0L);
+            income_sum += Optional.ofNullable(status.getIncome_sum()).orElse(0L);
+        }
+
+        //수입 합 더하기
+        return new ResponseEntity<>(new AccountTotalListResponseDto(totalStatus, expenditure_sum, income_sum), HttpStatus.OK);
     }
 
     @Transactional(readOnly = true)

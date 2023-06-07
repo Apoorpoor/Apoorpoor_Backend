@@ -44,7 +44,7 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{id}/totalStatus")
-    public ResponseEntity<List<AccountTotalResponseDto>> getTotalStatus(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<AccountTotalListResponseDto> getTotalStatus(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return accountService.getTotalStatus(id, condition, userDetails.getUsername());
     }
 

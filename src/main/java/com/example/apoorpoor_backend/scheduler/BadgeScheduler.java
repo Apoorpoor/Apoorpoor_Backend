@@ -29,7 +29,7 @@ public class BadgeScheduler {
         System.out.println(new Date().toString());
     }
 
-    @Scheduled(cron = "0 34 22 * * *")
+    @Scheduled(cron = "0 0 0 1 * *")
     public void grantBadge(){
         // 해당 월의 지출내역에 따른 뱃지 부여
         List<User> userList = userService.getUserList();

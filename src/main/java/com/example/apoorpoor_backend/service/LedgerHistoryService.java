@@ -48,7 +48,7 @@ public class LedgerHistoryService {
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
-        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
+        LocalDate localDate = LocalDate.parse(requestDto.getDate());
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
@@ -122,7 +122,7 @@ public class LedgerHistoryService {
         Long expenditure = requestDto.getExpenditure();
         AccountType accountType = requestDto.getAccountType();
 
-        LocalDate localDate = LocalDate.parse(requestDto.getDateTime());
+        LocalDate localDate = LocalDate.parse(requestDto.getDate());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
 
         if(accountType == AccountType.INCOME){

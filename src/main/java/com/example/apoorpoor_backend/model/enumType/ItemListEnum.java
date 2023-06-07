@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @Getter
 public enum ItemListEnum {
-
     //tops
     ITEM_TOPS_0(0L, "촉촉한 종이 박스", 20L, 2L, "top", "top_lv2_01"),
     ITEM_TOPS_1(1L, "꼬질꼬질 홀터넥", 20L, 3L, "top", "top_lv3_01"),
@@ -62,10 +61,11 @@ public enum ItemListEnum {
     ITEM_SHOES_15(42L, "구두", 60L, 6L, "shoes", "shoes_lv6_05"),
 
     //accessories
-    ITEM_ACC_0(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01"),
-    ITEM_ACC_1(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02"),
-    ITEM_ACC_2(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03"),
-    ITEM_ACC_3(46L, "수영모", 60L, 6L, "acc", "acc_lv6_04"),
+    ITEM_ACC_0(46L, "수영모", 60L, 6L, "acc", "acc_lv4_01"),
+    ITEM_ACC_1(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01"),
+    ITEM_ACC_2(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02"),
+    ITEM_ACC_3(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03"),
+
 
     //customs
     ITEM_CUSTOM_0(47L, "의사 거지", 20L, 7L, "custom", "custom_lv7_01"),
@@ -86,7 +86,6 @@ public enum ItemListEnum {
 
     private final String itemImage;
 
-
     ItemListEnum(Long itemNum, String itemName, Long itemPrice, Long levelLimit, String itemType, String itemImage) {
         this.itemNum = itemNum;
         this.itemName = itemName;
@@ -94,108 +93,5 @@ public enum ItemListEnum {
         this.levelLimit = levelLimit;
         this.itemType = itemType;
         this.itemImage = itemImage;
-    }
-
-    public static List<ItemResponseDto> getEnumItemList(Beggar beggar, List<Long> hasItemNumDtoList) {
-        List<ItemResponseDto> itemList = new ArrayList<>();
-
-        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
-        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
-        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
-        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
-        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
-        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
-
-
-        String[] matches = new String[itemListEnumCount];
-
-        for (Long aLong : hasItemNumDtoList) {
-            matches[Math.toIntExact(aLong)] = "DONE";
-        }
-
-        int i = 0;
-        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
-            Long itemNum = itemListEnum.getItemNum();
-            String itemName = itemListEnum.getItemName();
-            Long itemPrice = itemListEnum.getItemPrice();
-            Long levelLimit = itemListEnum.getLevelLimit();
-            String itemType = itemListEnum.getItemType();
-            String itemState = matches[i];
-            String itemImage = itemListEnum.getItemImage();
-
-            if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
-            if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
-
-            ItemResponseDto dto = ItemResponseDto.builder()
-                    .itemNum(itemNum)
-                    .itemName(itemName)
-                    .itemPrice(itemPrice)
-                    .levelLimit(levelLimit)
-                    .itemType(itemType)
-                    .itemState(itemState)
-                    .itemImage(itemImage)
-                    .build();
-            itemList.add(dto);
-
-            i++;
-        }
-        return itemList;
-    }
-
-
-    public static List<ItemResponseDto> getEnumItemListByType(String itemType, Beggar beggar, List<Long> hasItemNumDtoList) {
-        List<ItemResponseDto> filteredItemList = new ArrayList<>();
-
-        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
-        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
-        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
-        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
-        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
-        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
-
-        String[] matches = new String[itemListEnumCount];
-
-        for (Long aLong : hasItemNumDtoList) {
-            matches[Math.toIntExact(aLong)] = "DONE";
-        }
-
-        int i = 0;
-
-        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
-            if (itemListEnum.getItemType().equals(itemType)) {
-
-                Long itemNum = itemListEnum.getItemNum();
-                String itemName = itemListEnum.getItemName();
-                Long itemPrice = itemListEnum.getItemPrice();
-                Long levelLimit = itemListEnum.getLevelLimit();
-                String itemState = matches[i];
-                String itemImage = itemListEnum.getItemImage();
-
-
-                if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
-                if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
-
-
-                ItemResponseDto dto = ItemResponseDto.builder()
-                        .itemNum(itemNum)
-                        .itemName(itemName)
-                        .itemPrice(itemPrice)
-                        .levelLimit(levelLimit)
-                        .itemType(itemType)
-                        .itemState(itemState)
-                        .itemImage(itemImage)
-                        .build();
-                filteredItemList.add(dto);
-
-            }
-            i++;
-        }
-        return filteredItemList;
     }
 }

@@ -62,7 +62,6 @@ dependencies {
 //    useJUnitPlatform()
 //}
 
-}
 jar {
     enabled = false
 }

@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.apoorpoor_backend.service.ShopService.itemUrl;
+
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +60,10 @@ public class BeggarService {
         String description = beggar.getDescription();
         String gender = user.getGender();
         Long age = user.getAge();
-        String topImage = beggar.getTop() == null ? null : beggar.getTop().getItemImage();
-        String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
-        String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
-        String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
+        String topImage = beggar.getTop() == null ? null : itemUrl + beggar.getTop().getItemImage();
+        String bottomImage = beggar.getBottom() == null ? null : itemUrl  + beggar.getBottom().getItemImage();
+        String shoesImage = beggar.getShoes() == null ? null : itemUrl  + beggar.getShoes().getItemImage();
+        String accImage = beggar.getAcc() == null ? null : itemUrl  + beggar.getAcc().getItemImage();
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)

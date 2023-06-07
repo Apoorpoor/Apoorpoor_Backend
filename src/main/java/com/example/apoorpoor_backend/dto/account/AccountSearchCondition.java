@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class AccountSearchCondition {
+    private String date;
     private String dateType;
     private AccountType accountType;
     private ExpenditureType expenditureType;

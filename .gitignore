@@ -37,6 +37,6 @@ out/
 .vscode/
 
 ## .gitignore
-**/src/main/resources/firebase
+**/src/main/resources/firebase/firebase_service_key.json
 **/src/main/resources/static/firebase-messaging-sw.js
 **/src/main/resources/templates/firebase.html

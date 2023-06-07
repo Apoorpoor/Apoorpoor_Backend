@@ -75,6 +75,36 @@ public class BeggarService {
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
 
+    public ResponseEntity<BeggarSearchResponseDto> getUserBeggar(Long user_id) {
+        User user = userIdCheck(user_id);
+        Beggar beggar = beggarIdCheck(user_id);
+
+        Long beggarId = beggar.getId();
+        Long userId = user.getId();
+        String nickname = beggar.getNickname();
+        Long point = beggar.getPoint();
+        Long level = beggar.getLevel();
+        String description = beggar.getDescription();
+        String gender = user.getGender();
+        Long age = user.getAge();
+        String topImage = beggar.getTop() == null ? null : beggar.getTop().getItemImage();
+        String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
+        String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
+        String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
+
+        BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
+                .builder().beggarId(beggarId)
+                .userId(userId).nickname(nickname)
+                .point(point).level(level)
+                .description(description).gender(gender)
+                .age(age).topImage(topImage).bottomImage(bottomImage)
+                .shoesImage(shoesImage).accImage(accImage)
+                .build();
+
+        return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
+    }
+
+
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
@@ -334,6 +364,20 @@ public class BeggarService {
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
+
+    public User userIdCheck(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
+    }
+
+    public Beggar beggarIdCheck(Long userId) {
+        return beggarRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
+    }
+
+
 
 
     public void resetBadge() {

@@ -22,6 +22,8 @@ public class QBadge extends EntityPathBase<Badge> {
 
     public final QTimestamped _super = new QTimestamped(this);
 
+    public final StringPath badgeImage = createString("badgeImage");
+
     public final NumberPath<Long> badgeNum = createNumber("badgeNum", Long.class);
 
     public final StringPath badgeTitle = createString("badgeTitle");

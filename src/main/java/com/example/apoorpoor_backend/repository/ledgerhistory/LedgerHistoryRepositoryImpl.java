@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -20,8 +21,11 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -188,18 +192,45 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
 
     /*
-     * 해당 날짜의 상세 지출/소비 내역
-     * /accounts/{id}/status?date=YYYY-MM-DD
-     * * 수입 지출별 카테고리 필터링
-     * /accounts/{id}/status?date=YYYY-MM&account_type='EXPENDITURE'&expenditure_type='UTILITY_BILL'
+     * /accounts/{id}/status?
+        dateType=month&
+        account_type=EXPENDITURE&
+        expenditure_type=EXPENDITURE_TYPE
+        ------------------------------------------------------
+        - dateType
+        default(parameter X) : 이번달(1일~마지막일)
+        1주일 : week
+        1개월 : month
+        3개월 : 3month
+        6개월 : 6month
+        1년 : year
+
+        - account_type
+        전체 : parameter X
+        수입 : INCOME
+        지출 : EXPENDITURE
+
+        - expenditure_type : 지출별 카테고리 항목
+        - income_type : 수입별 카테고리 항목
      * */
     public List<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition){
 
-        StringTemplate formattedDate = Expressions.stringTemplate(
-                "DATE_FORMAT({0}, {1})"
-                ,ledgerHistory.date
-                ,ConstantImpl.create("%Y-%m-%d")
-        );
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.withDayOfMonth(1);
+
+        String type = Optional.ofNullable(condition.getDateType()).orElse("");
+
+        if(type.equals("week")){
+            startDate = endDate.minusWeeks(1);
+        }else if(type.equals("month")){
+            startDate = endDate.minusMonths(1);
+        }else if(type.equals("3month")){
+            startDate = endDate.minusMonths(3);
+        }else if(type.equals("6month")){
+            startDate = endDate.minusMonths(6);
+        }else if(type.equals("year")){
+            startDate = endDate.minusYears(1);
+        }
 
         List<LedgerHistoryResponseDto> content = queryFactory
                 .select(new QLedgerHistoryResponseDto(
@@ -216,12 +247,12 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.account.id.eq(accountId),
-                        formattedDate.like(condition.getDate()+"%"),
+                        ledgerHistory.date.between(startDate, endDate),
                         accountTypeEq(condition.getAccountType()),
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(formattedDate.desc())
+                .orderBy(ledgerHistory.date.desc())
                 .fetch();
 
         String query =
@@ -791,7 +822,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
 
     private BooleanExpression accountTypeEq(AccountType accountType){
-        return accountType != null ? ledgerHistory.accountType.eq(accountType) :  null;
+        return accountType != null ? ledgerHistory.accountType.eq(accountType) : null;
     }
 
     private BooleanExpression expenditureTypeEq(ExpenditureType expenditureType){

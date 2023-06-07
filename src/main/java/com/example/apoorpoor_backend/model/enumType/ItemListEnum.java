@@ -62,10 +62,11 @@ public enum ItemListEnum {
     ITEM_SHOES_15(42L, "구두", 60L, 6L, "shoes", "shoes_lv6_05"),
 
     //accessories
-    ITEM_ACC_0(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01"),
-    ITEM_ACC_1(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02"),
-    ITEM_ACC_2(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03"),
-    ITEM_ACC_3(46L, "수영모", 60L, 6L, "acc", "acc_lv6_04"),
+    ITEM_ACC_0(46L, "수영모", 60L, 6L, "acc", "acc_lv4_01"),
+    ITEM_ACC_1(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01"),
+    ITEM_ACC_2(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02"),
+    ITEM_ACC_3(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03"),
+
 
     //customs
     ITEM_CUSTOM_0(47L, "의사 거지", 20L, 7L, "custom", "custom_lv7_01"),

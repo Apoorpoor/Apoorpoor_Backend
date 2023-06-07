@@ -68,5 +68,4 @@ public class BeggarController {
     public ResponseEntity<BeggarCustomListResponseDto> customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customList(userDetails.getUsername());
     }
-
 }

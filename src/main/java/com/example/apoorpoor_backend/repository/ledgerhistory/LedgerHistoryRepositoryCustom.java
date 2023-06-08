@@ -24,7 +24,7 @@ public interface LedgerHistoryRepositoryCustom {
 
     List<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition);
 
-    List<MonthSumResponseDto> getDifference(Long accountId);
+    List<MonthSumResponseDto> getDifference(Long accountId, AccountSearchCondition condition);
 
     boolean checkEXPType2(ExpenditureType expenditureType, Long userId);
 

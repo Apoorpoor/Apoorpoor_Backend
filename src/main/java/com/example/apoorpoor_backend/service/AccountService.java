@@ -135,9 +135,9 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getDifference(Long accountId, String username) {
+    public ResponseEntity<List<MonthSumResponseDto>> getDifference(Long accountId, AccountSearchCondition condition, String username) {
         User user = userCheck(username);
-        List<MonthSumResponseDto> difference = ledgerHistoryRepository.getDifference(accountId);
+        List<MonthSumResponseDto> difference = ledgerHistoryRepository.getDifference(accountId, condition);
         return new ResponseEntity<>(difference, HttpStatus.OK);
     }
 

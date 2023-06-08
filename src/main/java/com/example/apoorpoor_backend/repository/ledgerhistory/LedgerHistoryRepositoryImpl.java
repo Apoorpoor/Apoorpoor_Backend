@@ -194,10 +194,15 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
     /*
      * /accounts/{id}/status?
+     *  date=YYYY-MM&
         dateType=month&
         account_type=EXPENDITURE&
         expenditure_type=EXPENDITURE_TYPE
         ------------------------------------------------------
+        - date
+        default : 현재 캘린더의 달
+        달력에서 날짜 선택하면 : YYYY-MM-DD
+
         - dateType
         default(parameter X) : 이번달(1일~마지막일)
         1주일 : week
@@ -224,29 +229,36 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(condition.getDate() != null){
+        String date = condition.getDate();
+        String dateType = condition.getDateType();
+        AccountType accountType = condition.getAccountType();
+        ExpenditureType expenditureType = condition.getExpenditureType();
+
+        // 1. default 현재 캘린더의 달일때 (YYYY-MM)
+        if(date != null && dateType == null){
             builder.and(formattedDate.like(condition.getDate()+"%"));
-        }else{
-            LocalDate endDate = LocalDate.now();
-            LocalDate startDate = endDate.withDayOfMonth(1);
+        }
 
-            String type = Optional.ofNullable(condition.getDateType()).orElse("");
+        // 2. 달력에서 날짜 선택 (YYYY-MM-DD) && dateType 값
+        if(date != null && dateType != null) {
+            LocalDate endDate = LocalDate.parse(date); // 넘어온 yyyy-mm-dd
+            LocalDate startDate = endDate.withDayOfMonth(1); // default 해당 월의 1일로 초기화
 
-            if(type.equals("week")){
+            if (dateType.equals("week")) {
                 startDate = endDate.minusWeeks(1);
-            }else if(type.equals("month")){
+            } else if (dateType.equals("month")) {
                 startDate = endDate.minusMonths(1);
-            }else if(type.equals("3month")){
+            } else if (dateType.equals("3month")) {
                 startDate = endDate.minusMonths(3);
-            }else if(type.equals("6month")){
+            } else if (dateType.equals("6month")) {
                 startDate = endDate.minusMonths(6);
-            }else if(type.equals("year")){
+            } else if (dateType.equals("year")) {
                 startDate = endDate.minusYears(1);
             }
 
             builder.and(ledgerHistory.date.between(startDate, endDate));
-        }
 
+        }
 
         List<LedgerHistoryResponseDto> content = queryFactory
                 .select(new QLedgerHistoryResponseDto(
@@ -336,9 +348,9 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
     /*
      * 이번달, 지난달 지출내역
-     * /accounts/{id}/difference
+     * /accounts/{id}/difference/YYYY-MM-DD
      * */
-    public List<MonthSumResponseDto> getDifference(Long accountId) {
+    public List<MonthSumResponseDto> getDifference(Long accountId, AccountSearchCondition condition) {
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(

@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondit
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 
+import java.time.LocalDate;
 import java.util.List;
 public interface LedgerHistoryRepositoryCustom {
 
@@ -24,7 +25,7 @@ public interface LedgerHistoryRepositoryCustom {
 
     List<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition);
 
-    List<MonthSumResponseDto> getDifference(Long accountId, AccountSearchCondition condition);
+    MonthSumResponseDto getDifference(Long accountId, AccountSearchCondition condition, LocalDate targetDate, int quarter);
 
     boolean checkEXPType2(ExpenditureType expenditureType, Long userId);
 

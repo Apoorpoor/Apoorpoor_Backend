@@ -171,27 +171,6 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         return content;
     }
 
-
-    /*
-     * 수입 지출별 카테고리 필터링
-     * /accounts/{id}/status?date=YYYY-MM&accunt_type='EXPENDITURE'&expenditure_type='UTILITY_BILL'
-     */
-    public List<LedgerHistoryListResponseDto> search7(LedgerHistorySearchCondition condition) {
-        String query =
-                "select *\n" +
-                        "    from ledger_history\n" +
-                        "    where 1=1\n" +
-                        "    and account_id = 1\n" +
-                        "    and date like '2022-05%'\n" +
-                        "    and account_type = 'EXPENDITURE'\n" +
-                        "    and expenditure_type = 'UTILITY_BILL'\n" +
-                        "order by date desc "
-                ;
-        return null;
-    }
-
-
-
     /*
      * /accounts/{id}/status?
      *  date=YYYY-MM&
@@ -348,9 +327,9 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
     /*
      * 이번달, 지난달 지출내역
-     * /accounts/{id}/difference/YYYY-MM-DD
+     * /accounts/{id}/difference/YYYY-MM
      * */
-    public List<MonthSumResponseDto> getDifference(Long accountId, AccountSearchCondition condition) {
+    public MonthSumResponseDto getDifference(Long accountId, AccountSearchCondition condition, LocalDate targetDate, int quarter) {
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -359,7 +338,33 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 ,ConstantImpl.create("%Y-%m")
         );
 
-        List<MonthSumResponseDto> content = queryFactory
+        String date = targetDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        String date_year = targetDate.format(DateTimeFormatter.ofPattern("yyyy"));
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (quarter == 0) {
+            builder.and(formattedDate.eq(date));
+        }else if (quarter == 1){
+            // quarter 1, 2, 3, 4
+            String start_date = date_year+"-01";
+            String end_date = date_year+"-03";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 2){
+            String start_date = date_year+"-04";
+            String end_date = date_year+"-06";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 3){
+            String start_date = date_year+"-07";
+            String end_date = date_year+"-09";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 4){
+            String start_date = date_year+"-10";
+            String end_date = date_year+"-12";
+            builder.and(formattedDate.between(start_date, end_date));
+        }
+
+        return queryFactory
                 .select(new QMonthSumResponseDto(
                         formattedDate.as("month"),
                         ledgerHistory.expenditure.sum().as("month_sum")
@@ -367,25 +372,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.account.id.eq(accountId)
+                        ledgerHistory.account.id.eq(accountId),
+                        builder
                 )
-                .groupBy(formattedDate)
-                .orderBy(formattedDate.desc())
-                .limit(2)
-                .fetch();
-
-        String query =
-                "select DATE_FORMAT(date, '%Y-%m') as month,\n" +
-                        "                               sum(expenditure) as month_sum\n" +
-                        "                        from ledger_history\n" +
-                        "                        where 1=1\n" +
-                        "                        and account_type = 'EXPENDITURE'\n" +
-                        "                        and account_id = 1\n" +
-                        "                        group by month\n" +
-                        "                        order by month desc\n" +
-                        "                        limit 2"
-                ;
-        return content;
+                .fetchOne();
     }
 
     /* CONDOLENCE_EXPENSE 경조사비 : 2번 이하*/

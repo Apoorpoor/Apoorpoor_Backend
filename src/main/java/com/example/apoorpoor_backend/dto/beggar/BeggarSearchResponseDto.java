@@ -1,7 +1,11 @@
 package com.example.apoorpoor_backend.dto.beggar;
 
+import com.example.apoorpoor_backend.model.Badge;
+import com.example.apoorpoor_backend.model.GetBadge;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -13,6 +17,10 @@ public class BeggarSearchResponseDto {
     private String nickname;
 
     private Long point;
+
+    private Long exp;
+
+    private List<Badge> badgeList;
 
     private Long level;
 

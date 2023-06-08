@@ -85,7 +85,7 @@ public class KakaoService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b285dc18b3ecd8e4bc2dcc9a9460a12d");
         body.add("client_secret", "3AvD4HWtT4ZrHjrd9pC9TcyyjGtBKNQV");
-        body.add("redirect_uri", "http://localhost:3000/oauth/kakao");
+        body.add("redirect_uri", "http://apoorpoor.s3-website.ap-northeast-2.amazonaws.com/oauth/kakao");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =

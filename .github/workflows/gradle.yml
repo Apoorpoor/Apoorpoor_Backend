@@ -14,8 +14,6 @@ env:
   CODE_DEPLOY_APP_NAME: my-codedeploy-app
   DEPLOYMENT_GROUP_NAME: my-codedeploy-deployment-group
 
-
-
 jobs:
   build:
     # 실행 환경 지정

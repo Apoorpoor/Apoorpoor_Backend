@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ShopService {
+
+    @Value("${secret.url.item}")
+    private String itemUrl;
 
     private final BeggarRepository beggarRepository;
 
@@ -44,9 +50,9 @@ public class ShopService {
 
         List<ItemResponseDto> itemList;
         if (itemType.equals("total")) {
-            itemList = ItemListEnum.getEnumItemList(beggar, hasItemNumDtoList);
+            itemList = getEnumItemList(beggar, hasItemNumDtoList);
         } else {
-            itemList = ItemListEnum.getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
+            itemList = getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
         }
 
         ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
@@ -108,4 +114,107 @@ public class ShopService {
         Beggar beggar = beggarCheck(username);
         return pointRepository.findAllByPeriodAndBeggar(beggar.getId(), condition, pageable);
     }
+
+    public List<ItemResponseDto> getEnumItemList(Beggar beggar, List<Long> hasItemNumDtoList) {
+        List<ItemResponseDto> itemList = new ArrayList<>();
+
+        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
+        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
+        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
+        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
+        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
+        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
+
+
+        String[] matches = new String[itemListEnumCount];
+
+        for (Long aLong : hasItemNumDtoList) {
+            matches[Math.toIntExact(aLong)] = "DONE";
+        }
+
+        int i = 0;
+        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
+            Long itemNum = itemListEnum.getItemNum();
+            String itemName = itemListEnum.getItemName();
+            Long itemPrice = itemListEnum.getItemPrice();
+            Long levelLimit = itemListEnum.getLevelLimit();
+            String itemType = itemListEnum.getItemType();
+            String itemState = matches[i];
+            String itemImage = itemUrl + itemListEnum.getItemImage();
+
+            if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+            if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
+
+            ItemResponseDto dto = ItemResponseDto.builder()
+                    .itemNum(itemNum)
+                    .itemName(itemName)
+                    .itemPrice(itemPrice)
+                    .levelLimit(levelLimit)
+                    .itemType(itemType)
+                    .itemState(itemState)
+                    .itemImage(itemImage)
+                    .build();
+            itemList.add(dto);
+
+            i++;
+        }
+        return itemList;
+    }
+
+    public List<ItemResponseDto> getEnumItemListByType(String itemType, Beggar beggar, List<Long> hasItemNumDtoList) {
+        List<ItemResponseDto> filteredItemList = new ArrayList<>();
+
+        int itemListEnumCount = (int) Arrays.stream(ItemListEnum.values()).count();
+        Long topsNum = beggar.getTop() == null ? null : beggar.getTop().getItemNum();
+        Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
+        Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
+        Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
+        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
+
+        String[] matches = new String[itemListEnumCount];
+
+        for (Long aLong : hasItemNumDtoList) {
+            matches[Math.toIntExact(aLong)] = "DONE";
+        }
+
+        int i = 0;
+
+        for (ItemListEnum itemListEnum : ItemListEnum.values()) {
+            if (itemListEnum.getItemType().equals(itemType)) {
+
+                Long itemNum = itemListEnum.getItemNum();
+                String itemName = itemListEnum.getItemName();
+                Long itemPrice = itemListEnum.getItemPrice();
+                Long levelLimit = itemListEnum.getLevelLimit();
+                String itemState = matches[i];
+                String itemImage = itemUrl + itemListEnum.getItemImage();
+
+
+                if (Objects.equals(topsNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(bottomsNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(shoesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(accessoriesNum, itemNum)) itemState = "EQUIPPED";
+                if (Objects.equals(customsNum, itemNum)) itemState = "EQUIPPED";
+
+
+                ItemResponseDto dto = ItemResponseDto.builder()
+                        .itemNum(itemNum)
+                        .itemName(itemName)
+                        .itemPrice(itemPrice)
+                        .levelLimit(levelLimit)
+                        .itemType(itemType)
+                        .itemState(itemState)
+                        .itemImage(itemImage)
+                        .build();
+                filteredItemList.add(dto);
+
+            }
+            i++;
+        }
+        return filteredItemList;
+    }
+
 }

@@ -8,7 +8,7 @@
 //import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 //import com.example.apoorpoor_backend.model.enumType.ExpType;
 //import com.example.apoorpoor_backend.model.enumType.LevelType;
-//import com.example.apoorpoor_backend.repository.BadgeRepository;
+//import com.example.apoorpoor_backend.repository.badge.BadgeRepository;
 //import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;

@@ -41,18 +41,12 @@ public class UserService {
         return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<UserResponseDto> getUserInfoByUsername(String username) {
-        User findUser = userCheck(username);
-        return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
-    }
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<TotalSumResponseDto>> getStatus(String username) {
         User findUser = userCheck(username);
         List<TotalSumResponseDto> mypageStatus = ledgerHistoryRepository.getMypageStatus(findUser.getId());
         return new ResponseEntity<>(mypageStatus, HttpStatus.OK);
-
     }
 
     @Transactional(readOnly = true)

@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -18,10 +19,14 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -188,10 +193,26 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
 
     /*
-     * 해당 날짜의 상세 지출/소비 내역
-     * /accounts/{id}/status?date=YYYY-MM-DD
-     * * 수입 지출별 카테고리 필터링
-     * /accounts/{id}/status?date=YYYY-MM&account_type='EXPENDITURE'&expenditure_type='UTILITY_BILL'
+     * /accounts/{id}/status?
+        dateType=month&
+        account_type=EXPENDITURE&
+        expenditure_type=EXPENDITURE_TYPE
+        ------------------------------------------------------
+        - dateType
+        default(parameter X) : 이번달(1일~마지막일)
+        1주일 : week
+        1개월 : month
+        3개월 : 3month
+        6개월 : 6month
+        1년 : year
+
+        - account_type
+        전체 : parameter X
+        수입 : INCOME
+        지출 : EXPENDITURE
+
+        - expenditure_type : 지출별 카테고리 항목
+        - income_type : 수입별 카테고리 항목
      * */
     public List<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition){
 
@@ -200,6 +221,32 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 ,ledgerHistory.date
                 ,ConstantImpl.create("%Y-%m-%d")
         );
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(condition.getDate() != null){
+            builder.and(formattedDate.like(condition.getDate()+"%"));
+        }else{
+            LocalDate endDate = LocalDate.now();
+            LocalDate startDate = endDate.withDayOfMonth(1);
+
+            String type = Optional.ofNullable(condition.getDateType()).orElse("");
+
+            if(type.equals("week")){
+                startDate = endDate.minusWeeks(1);
+            }else if(type.equals("month")){
+                startDate = endDate.minusMonths(1);
+            }else if(type.equals("3month")){
+                startDate = endDate.minusMonths(3);
+            }else if(type.equals("6month")){
+                startDate = endDate.minusMonths(6);
+            }else if(type.equals("year")){
+                startDate = endDate.minusYears(1);
+            }
+
+            builder.and(ledgerHistory.date.between(startDate, endDate));
+        }
+
 
         List<LedgerHistoryResponseDto> content = queryFactory
                 .select(new QLedgerHistoryResponseDto(
@@ -216,12 +263,12 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.account.id.eq(accountId),
-                        formattedDate.like(condition.getDate()+"%"),
+                        builder,
                         accountTypeEq(condition.getAccountType()),
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(formattedDate.desc())
+                .orderBy(ledgerHistory.date.desc())
                 .fetch();
 
         String query =
@@ -329,51 +376,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         return content;
     }
 
-    /* UTILITY_BILL 월세+관리비+공과금 : 1번 */
-    @Override
-    public boolean checkEXPType1(ExpenditureType expenditureType, Long userId) {
-
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-        // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
-
-        // date_format(date, '%Y-%m') querydsl로 바꾸기
-        StringTemplate formattedDate = Expressions.stringTemplate(
-                "DATE_FORMAT({0}, {1})"
-                ,ledgerHistory.date
-                ,ConstantImpl.create("%Y-%m")
-        );
-
-        JPAQuery<LedgerHistory> countQuery = queryFactory
-                .select(ledgerHistory)
-                .from(ledgerHistory)
-                .where(
-                        accountTypeEq(AccountType.EXPENDITURE),
-                        expenditureTypeEq(expenditureType),
-                        ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(previousMonth)
-                );
-
-        String query = "select count(*)\n" +
-                "from ledger_history\n" +
-                "where 1=1\n" +
-                "and account_type = 'EXPENDITURE'\n" +
-                "and expenditure_type = 'UTILITY_BILL'\n" +
-                "and account_id in (accountlist)\n" +
-                "and date like '이전달%';";
-
-        log.info("UTILITY_BILL 월세+관리비+공과금");
-        if(countQuery.fetchCount() >= 1) return true;
-        return false;
-    }
-
-    /* CONDOLENCE_EXPENSE 경조사비 : 2번 */
+    /* CONDOLENCE_EXPENSE 경조사비 : 2번 이하*/
     @Override
     public boolean checkEXPType2(ExpenditureType expenditureType, Long userId) {
 
@@ -413,11 +416,11 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 "and date like '이전달%';";
 
         log.info("CONDOLENCE_EXPENSE 경조사비");
-        if(countQuery.fetchCount() >= 2) return true;
+        if(countQuery.fetchCount() <= 2) return true;
         return false;
     }
 
-    /* TRANSPORTATION 교통비 : 12만원 이상 */
+    /* TRANSPORTATION 교통비 : 12만원 이하 */
     @Override
     public boolean checkEXPType3(ExpenditureType expenditureType, Long userId) {
 
@@ -439,7 +442,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -450,11 +453,11 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("TRANSPORTATION 교통비");
-        if(result >= 120000L) return true;
+        if(result <= 120000L) return true;
         return false;
     }
 
-    /* COMMUNICATION_EXPENSES 통신비 : 6만원 이상 */
+    /* COMMUNICATION_EXPENSES 통신비 : 6만원 이하 */
     @Override
     public boolean checkEXPType4(ExpenditureType expenditureType, Long userId) {
 
@@ -476,7 +479,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -487,12 +490,12 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("COMMUNICATION_EXPENSES 통신비");
-        if(result >= 60000L) return true;
+        if(result <= 60000L) return true;
 
         return false;
     }
 
-    /* INSURANCE 보험 : 3개 */
+    /* INSURANCE 보험 : 3개 이하*/
     @Override
     public boolean checkEXPType5(ExpenditureType expenditureType, Long userId) {
 
@@ -532,43 +535,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 "and date like '이전달%';";
 
         log.info("INSURANCE 보험");
-        if(countQuery.fetchCount() >= 3) return true;
-        return false;
-    }
-
-    /* EDUCATION 교육 : 15만원 */
-    @Override
-    public boolean checkEXPType6(ExpenditureType expenditureType, Long userId) {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-        // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
-
-        // date_format(date, '%Y-%m') querydsl로 바꾸기
-        StringTemplate formattedDate = Expressions.stringTemplate(
-                "DATE_FORMAT({0}, {1})"
-                ,ledgerHistory.date
-                ,ConstantImpl.create("%Y-%m")
-        );
-
-        Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
-                .from(ledgerHistory)
-                .where(
-                        accountTypeEq(AccountType.EXPENDITURE),
-                        expenditureTypeEq(expenditureType),
-                        ledgerHistory.account.id.in(accountIdList),
-                        formattedDate.eq(previousMonth)
-                )
-                .fetchOne();
-
-        log.info("EDUCATION 교육");
-        if(result >= 150000L) return true;
+        if(countQuery.fetchCount() <= 3) return true;
         return false;
     }
 
@@ -593,7 +560,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -604,7 +571,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("SAVINGS 저축");
-        if(result >= 200000L) return true;
+        if(result <= 200000L) return true;
         return false;
     }
 
@@ -629,7 +596,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -640,7 +607,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("CULTURE 문화");
-        if(result >= 100000L) return true;
+        if(result <= 100000L) return true;
         return false;
     }
 
@@ -665,7 +632,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -676,7 +643,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("HEALTH 건강");
-        if(result >= 50000L) return true;
+        if(result <= 50000L) return true;
         return false;
     }
 
@@ -701,7 +668,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -712,7 +679,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("FOOD_EXPENSES 식비");
-        if(result >= 300000L) return true;
+        if(result <= 300000L) return true;
         return false;
     }
 
@@ -748,7 +715,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 );
 
         log.info("SHOPPING 쇼핑");
-        if(countQuery.fetchCount() >= 4) return true;
+        if(countQuery.fetchCount() <= 4) return true;
         return false;
     }
 
@@ -774,7 +741,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         Long result = queryFactory
-                .select(ledgerHistory.expenditure.sum())
+                .select(ledgerHistory.expenditure.sum().coalesce(0L))
                 .from(ledgerHistory)
                 .where(
                         accountTypeEq(AccountType.EXPENDITURE),
@@ -785,13 +752,13 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .fetchOne();
 
         log.info("LEISURE_ACTIVITIES 여가생활");
-        if(result >= 100000L) return true;
+        if(result <= 100000L) return true;
         return false;
     }
 
 
     private BooleanExpression accountTypeEq(AccountType accountType){
-        return accountType != null ? ledgerHistory.accountType.eq(accountType) :  null;
+        return accountType != null ? ledgerHistory.accountType.eq(accountType) : null;
     }
 
     private BooleanExpression expenditureTypeEq(ExpenditureType expenditureType){

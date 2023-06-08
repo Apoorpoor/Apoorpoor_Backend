@@ -4,13 +4,15 @@ import com.example.apoorpoor_backend.dto.beggar.*;
 import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
-import com.example.apoorpoor_backend.repository.*;
+import com.example.apoorpoor_backend.repository.badge.BadgeRepository;
+import com.example.apoorpoor_backend.repository.badge.GetBadgeRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BeggarService {
-
+    @Value("${secret.url.item}")
+    private String itemUrl;
+    @Value("${secret.url.badge}")
+    private String badgeUrl;
     private final BeggarRepository beggarRepository;
     private final UserRepository userRepository;
     private final GetBadgeRepository getBadgeRepository;
@@ -58,6 +62,44 @@ public class BeggarService {
         String description = beggar.getDescription();
         String gender = user.getGender();
         Long age = user.getAge();
+        Long exp = beggar.getExp();
+        List<Badge> badgeList = getBadgeList(beggarId);
+
+        String topImage = beggar.getTop() == null ? null : itemUrl + beggar.getTop().getItemImage();
+        String bottomImage = beggar.getBottom() == null ? null : itemUrl  + beggar.getBottom().getItemImage();
+        String shoesImage = beggar.getShoes() == null ? null : itemUrl  + beggar.getShoes().getItemImage();
+        String accImage = beggar.getAcc() == null ? null : itemUrl  + beggar.getAcc().getItemImage();
+
+        BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
+                .builder().beggarId(beggarId)
+                .userId(userId).nickname(nickname)
+                .point(point).level(level)
+                .exp(exp)
+                .badgeList(badgeList)
+                .description(description).gender(gender)
+                .age(age).topImage(topImage).bottomImage(bottomImage)
+                .shoesImage(shoesImage).accImage(accImage)
+                .build();
+
+        return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
+    }
+
+    private List<Badge> getBadgeList(Long beggarId) {
+        return badgeRepository.findByBadgeList(beggarId);
+    }
+
+    public ResponseEntity<BeggarSearchResponseDto> getUserBeggar(Long user_id) {
+        User user = userIdCheck(user_id);
+        Beggar beggar = beggarIdCheck(user_id);
+
+        Long beggarId = beggar.getId();
+        Long userId = user.getId();
+        String nickname = beggar.getNickname();
+        Long point = beggar.getPoint();
+        Long level = beggar.getLevel();
+        String description = beggar.getDescription();
+        String gender = user.getGender();
+        Long age = user.getAge();
         String topImage = beggar.getTop() == null ? null : beggar.getTop().getItemImage();
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
@@ -74,6 +116,7 @@ public class BeggarService {
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
+
 
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
@@ -202,12 +245,12 @@ public class BeggarService {
     // 해당 월에 소비 뱃지 획득 가능한지 여부
     private boolean badgeCriteriaCheck(ExpenditureType expenditureType, Long userId) {
         return switch (expenditureType){
-            case UTILITY_BILL -> ledgerHistoryRepository.checkEXPType1(expenditureType, userId);
+            case UTILITY_BILL -> false;
             case CONDOLENCE_EXPENSE -> ledgerHistoryRepository.checkEXPType2(expenditureType, userId);
             case TRANSPORTATION -> ledgerHistoryRepository.checkEXPType3(expenditureType, userId);
             case COMMUNICATION_EXPENSES -> ledgerHistoryRepository.checkEXPType4(expenditureType, userId);
             case INSURANCE -> ledgerHistoryRepository.checkEXPType5(expenditureType, userId);
-            case EDUCATION -> ledgerHistoryRepository.checkEXPType6(expenditureType, userId);
+            case EDUCATION -> false;
             case SAVINGS -> ledgerHistoryRepository.checkEXPType7(expenditureType, userId);
             case CULTURE -> ledgerHistoryRepository.checkEXPType8(expenditureType, userId);
             case HEALTH -> ledgerHistoryRepository.checkEXPType9(expenditureType, userId);
@@ -218,10 +261,18 @@ public class BeggarService {
         };
     }
 
+    public void addPoints(User user) {
+        Beggar beggar = beggarCheck(user.getUsername());
+        long badgeCount = getBadgeRepository.countByBeggar(beggar.getId());
+        long point = badgeCount * 20;
+        beggar.updatePointAndExp(point);
+    }
+
 
     public void saveBadgeNew(ExpenditureType expenditureType, Beggar beggar) {
         Long badgeNum = expenditureType.getBadgeNum();
         String badgeTitle = expenditureType.getBadgeTitle();
+        String badgeImage = badgeUrl + expenditureType.getBadgeImage();
 
         boolean hasBadge = beggar.getGetBadgeList().stream()
                 .map(GetBadge::getBadge)
@@ -229,7 +280,7 @@ public class BeggarService {
 
         if(!hasBadge) {
 
-            Badge badge = new Badge(badgeNum, badgeTitle);
+            Badge badge = new Badge(badgeNum, badgeTitle, badgeImage);
 
             badgeRepository.save(badge);
 
@@ -237,12 +288,15 @@ public class BeggarService {
             badge.getGetBadgeList().add(getBadge);
             getBadgeRepository.save(getBadge);
 
-            // 뱃지 알림 주기
+            // 뱃지 부여하니까 point, exp, level update
+            updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
 
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
         }
     }
+
+    //
 
 //    public void saveBadge(ExpenditureType expenditureType, Beggar beggar) {
 //        Long badgeNum = expenditureType.getBadgeNum();
@@ -335,9 +389,21 @@ public class BeggarService {
         );
     }
 
+    public User userIdCheck(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
+    }
+
+    public Beggar beggarIdCheck(Long userId) {
+        return beggarRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
+    }
 
     public void resetBadge() {
         //GetBadge만 삭제하면 되는지
         getBadgeRepository.deleteAll();
     }
+
 }

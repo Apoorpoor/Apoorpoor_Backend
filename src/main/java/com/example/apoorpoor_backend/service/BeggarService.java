@@ -264,7 +264,7 @@ public class BeggarService {
     public void addPoints(User user) {
         Beggar beggar = beggarCheck(user.getUsername());
         long badgeCount = getBadgeRepository.countByBeggar(beggar.getId());
-        long point = badgeCount * 20; // 뱃지 1개당 20포인트 적립
+        long point = badgeCount * 20;
         beggar.updatePointAndExp(point);
     }
 
@@ -288,7 +288,8 @@ public class BeggarService {
             badge.getGetBadgeList().add(getBadge);
             getBadgeRepository.save(getBadge);
 
-            // 뱃지 알림 주기
+            // 뱃지 부여하니까 point, exp, level update
+            updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
 
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");

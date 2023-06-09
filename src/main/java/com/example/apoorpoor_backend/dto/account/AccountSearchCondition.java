@@ -12,4 +12,6 @@ public class AccountSearchCondition {
     private AccountType accountType;
     private ExpenditureType expenditureType;
     private IncomeType incomeType;
+    private String startDate;
+    private String endDate;
 }

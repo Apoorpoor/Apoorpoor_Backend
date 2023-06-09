@@ -5,7 +5,6 @@ import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryListResponse
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondition;
 import com.example.apoorpoor_backend.dto.ledgerhistory.QLedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
@@ -19,17 +18,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
-import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
 public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCustom {
@@ -187,8 +182,6 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         1주일 : week
         1개월 : month
         3개월 : 3month
-        6개월 : 6month
-        1년 : year
 
         - account_type
         전체 : parameter X
@@ -212,15 +205,17 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String dateType = condition.getDateType();
         AccountType accountType = condition.getAccountType();
         ExpenditureType expenditureType = condition.getExpenditureType();
+        String inputStartDate = condition.getStartDate();
+        String inputEndDate = condition.getEndDate();
 
         // 1. default 현재 캘린더의 달일때 (YYYY-MM)
-        if(date != null && dateType == null){
+        if(date != null && dateType == null && inputEndDate == null && inputStartDate == null){
             builder.and(formattedDate.like(condition.getDate()+"%"));
         }
 
-        // 2. 달력에서 날짜 선택 (YYYY-MM-DD) && dateType 값
-        if(date != null && dateType != null) {
-            LocalDate endDate = LocalDate.parse(date); // 넘어온 yyyy-mm-dd
+        // 2. dateType 값 1주일, 1개월, 3개월 무조건 현재시간 기준
+        if(dateType != null) {
+            LocalDate endDate = LocalDate.now();
             LocalDate startDate = endDate.withDayOfMonth(1); // default 해당 월의 1일로 초기화
 
             if (dateType.equals("week")) {
@@ -229,14 +224,17 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 startDate = endDate.minusMonths(1);
             } else if (dateType.equals("3month")) {
                 startDate = endDate.minusMonths(3);
-            } else if (dateType.equals("6month")) {
-                startDate = endDate.minusMonths(6);
-            } else if (dateType.equals("year")) {
-                startDate = endDate.minusYears(1);
             }
 
             builder.and(ledgerHistory.date.between(startDate, endDate));
+        }
 
+        // 3. 직접입력 기준
+        if(dateType == null && inputStartDate != null && inputEndDate != null){
+            LocalDate endDate = LocalDate.parse(inputEndDate);
+            LocalDate startDate = LocalDate.parse(inputStartDate);
+
+            builder.and(ledgerHistory.date.between(startDate, endDate));
         }
 
         List<LedgerHistoryResponseDto> content = queryFactory

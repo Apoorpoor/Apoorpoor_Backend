@@ -31,6 +31,8 @@ jobs:
       - name: Set YML
         run: |
           echo ${{secrets.APPLICATION_SECRET_KEY}} | base64 --decode >> ./src/main/resources/application-secret.yml
+          
+
       # Build
       - name: Build with Gradle
         run: |

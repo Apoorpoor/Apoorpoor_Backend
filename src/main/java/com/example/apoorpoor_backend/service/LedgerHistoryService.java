@@ -184,8 +184,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(ledgerHistory.getAccount());
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = findBalance.get().getIncomeTotal()+ledgerHistory.getIncome();
-            Long expenditureTotal = findBalance.get().getExpenditureTotal()+ledgerHistory.getExpenditure();
+            Long incomeTotal = findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
+            Long expenditureTotal = findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }

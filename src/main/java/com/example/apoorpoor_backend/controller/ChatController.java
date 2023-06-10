@@ -42,8 +42,7 @@ public class ChatController {
     @SendTo("/sub/chat/room")
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500); // simulated delay
-        ChatDto filterChatDto = chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", filterChatDto);
+        msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
     @EventListener

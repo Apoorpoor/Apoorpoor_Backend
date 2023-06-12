@@ -104,15 +104,19 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
+        List<Badge> badgeList = getBadgeList(beggarId);
+
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
                 .userId(userId).nickname(nickname)
                 .point(point).level(level)
+                .badgeList(badgeList)
                 .description(description).gender(gender)
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
                 .build();
+
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }

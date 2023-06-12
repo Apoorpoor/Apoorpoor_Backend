@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //package com.example.apoorpoor_backend.config;
 //
 //
@@ -29,35 +28,3 @@
 //        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
 //    }
 //}
-=======
-// package com.example.apoorpoor_backend.config;
-
-
-// import org.springframework.cache.CacheManager;
-// import org.springframework.cache.annotation.EnableCaching;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.data.redis.cache.RedisCacheConfiguration;
-// import org.springframework.data.redis.cache.RedisCacheManager;
-// import org.springframework.data.redis.connection.RedisConnectionFactory;
-// import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-// import org.springframework.data.redis.serializer.RedisSerializationContext;
-// import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-// import java.time.Duration;
-
-// @Configuration
-// @EnableCaching
-// public class RedisCacheConfig {
-
-//     @Bean
-//     public CacheManager testCacheManager(RedisConnectionFactory cf) {
-//         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-//                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-//                 .entryTtl(Duration.ofDays(30L)); //수명 한달
-
-//         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
-//     }
-// }
->>>>>>> fda81ff2a614e17863b85aa4657a2a91a1b11775

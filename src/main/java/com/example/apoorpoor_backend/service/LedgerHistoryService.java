@@ -178,6 +178,8 @@ public class LedgerHistoryService {
     public ResponseEntity<LedgerHistoryResponseDto> getLedgerHistory(Long id, String username) {
         User user = userCheck(username);
         LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
+        notificationService.notifyTestEvent(user);
+        
 
         return new ResponseEntity<>(LedgerHistoryResponseDto.of(ledgerHistory), HttpStatus.OK);
     }

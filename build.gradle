@@ -47,7 +47,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-   // implementation 'com.auth0:java-jwt:4.2.1'
+    // implementation 'com.auth0:java-jwt:4.2.1'
 
     //jwt토큰
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
@@ -63,12 +63,19 @@ dependencies {
 
 
     //fcm
-    implementation 'com.google.firebase:firebase-admin:6.8.1'
+    //implementation 'com.google.firebase:firebase-admin:6.8.1'
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
 
     //jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    //Google Guava
+    implementation 'com.google.guava:guava:30.1-jre'
+    //Redis
+    //implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //implementation 'org.springframework.boot:spring-boot-starter-cache'
+
 }
 
 //tasks.named('test') {
@@ -83,7 +90,7 @@ jar {
 def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
-    main.java.srcDirs += [ querydslDir ]
+    main.java.srcDirs += [querydslDir]
 }
 
 tasks.withType(JavaCompile) {

@@ -35,11 +35,13 @@ public class LedgerHistoryService {
     private final BalanceRepository balanceRepository;
     private final BeggarRepository beggarRepository;
     private final BeggarService beggarService;
+    private final NotificationService notificationService;   //
     private final Random random = new Random();
 
     public ResponseEntity<StatusResponseDto> createLedgerHistory(LedgerHistoryRequestDto requestDto, String username) {
         User user = userCheck(username);
         Account account = accountCheck(requestDto.getAccountId());
+        Beggar beggar = beggarCheck(username);   /////////////////////////////
 
         String title = requestDto.getTitle();
         AccountType accountType = requestDto.getAccountType();
@@ -49,6 +51,7 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         LocalDate localDate = LocalDate.parse(requestDto.getDate());
+        notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());////////////////////////////
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;

@@ -6,13 +6,13 @@ import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
-import com.google.common.cache.CacheBuilder;
+//import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+//import org.springframework.cache.annotation.Cacheable;
+//import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
-    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
+//    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
     private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
 
 
@@ -75,8 +75,8 @@ public class ChatService {
         chatRepository.save(chat);
         // Redis 캐시에 저장
         String cacheKey = generateCacheKey(chatId);
-        ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
-        valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
+        //ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
+        //valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
     }
 
     private String generateCacheKey(Long chatId) {

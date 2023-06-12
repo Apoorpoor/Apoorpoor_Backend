@@ -241,8 +241,9 @@ public class BeggarService {
         //획득 기준 통과시에
         for (ExpenditureType expenditureType : badgeList) {
             if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
+            notificationService.notifyGetBadgeEvent(beggar, expenditureType.getBadgeTitle());
         }
-        notificationService.notifyGetBadgeEvent(beggar);
+
     }
 
     // 해당 월에 소비 뱃지 획득 가능한지 여부

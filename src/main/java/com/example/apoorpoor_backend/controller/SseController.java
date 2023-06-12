@@ -19,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 public class SseController {
 
-    public static Map<Long, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
+    public static Map<String, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
     private final JwtUtil jwtUtil;
 
     @CrossOrigin
     @GetMapping(value = "/sub", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@RequestParam("token") String token) {
-        Long userId = Long.valueOf(jwtUtil.getUserInfoFromToken(token));
+        String userName = String.valueOf(jwtUtil.getUserInfoFromToken(token));
 
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         try {
@@ -34,11 +34,11 @@ public class SseController {
             e.printStackTrace();
         }
 
-        sseEmitters.put(userId, sseEmitter);
+        sseEmitters.put(userName, sseEmitter);
 
-        sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
-        sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
-        sseEmitter.onError((e) -> sseEmitters.remove(userId));
+        sseEmitter.onCompletion(() -> sseEmitters.remove(userName));
+        sseEmitter.onTimeout(() -> sseEmitters.remove(userName));
+        sseEmitter.onError((e) -> sseEmitters.remove(userName));
 
         return sseEmitter;
     }

@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,7 +14,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @EnableJpaAuditing
-@EnableScheduling
+@EnableCaching
+@EnableScheduling //Caching
 @SpringBootApplication
 public class ApoorpoorBackendApplication {
 

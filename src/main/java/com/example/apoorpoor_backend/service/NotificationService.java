@@ -38,7 +38,7 @@ public class NotificationService {
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("sse test 알람!!"));
+                sseEmitter.send(SseEmitter.event().name("test").data("sse test 알람!!"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
             }

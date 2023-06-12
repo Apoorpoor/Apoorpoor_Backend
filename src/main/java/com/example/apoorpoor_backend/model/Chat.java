@@ -5,6 +5,7 @@ import com.example.apoorpoor_backend.model.enumType.MessageType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -25,11 +26,20 @@ public class Chat {
     @JoinColumn(name = "beggar_id")
     private Beggar beggar;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private long likeCount;
+
+
     public Chat (ChatDto chatDto, Beggar beggar, MessageType type) {
         this.sender = chatDto.getSender();
         this.message = chatDto.getMessage();
         this.beggar = beggar;
         this.type = type;
+        this.likeCount = 0;
     }
 
+    public void setLikes(){
+        ++likeCount;
+    }
 }

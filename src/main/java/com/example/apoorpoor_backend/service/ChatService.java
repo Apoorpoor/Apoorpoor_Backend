@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 public class ChatService {
 
     private final BeggarRepository beggarRepository;
-    private final ChatRepository chatRepository;
-    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
-    private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
+//     private final ChatRepository chatRepository;
+//     private final RedisTemplate<String, ChatDto> chatRedisTemplate;
+//     private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
 
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {

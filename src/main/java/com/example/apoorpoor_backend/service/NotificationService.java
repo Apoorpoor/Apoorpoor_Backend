@@ -30,4 +30,18 @@ public class NotificationService {
             }
         }
     }
+
+    public void notifyTestEvent(User user) {
+        String username = user.getUsername();
+        //Long beggarId =beggar.getId();
+
+        if(sseEmitters.containsKey(username)) {
+            SseEmitter sseEmitter = sseEmitters.get(username);
+            try {
+                sseEmitter.send(SseEmitter.event().name("sse test 알람!!"));
+            } catch (Exception e) {
+                sseEmitters.remove(username);
+            }
+        }
+    }
 }

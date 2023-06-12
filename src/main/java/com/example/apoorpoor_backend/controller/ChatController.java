@@ -51,11 +51,11 @@ public class ChatController {
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
-    @PostMapping("/chat/{chatId}/like")
-    @ResponseBody
-    public void addLikeToChatMessage(@PathVariable Long chatId) {
-        chatService.addLikeToChatMessage(chatId);
-    }
+//     @PostMapping("/chat/{chatId}/like")
+//     @ResponseBody
+//     public void addLikeToChatMessage(@PathVariable Long chatId) {
+//         chatService.addLikeToChatMessage(chatId);
+//     }
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -14,10 +14,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -29,6 +26,7 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
     private final S3Uploader s3Uploader;
+
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
@@ -51,6 +49,12 @@ public class ChatController {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         ChatDto chatDto = chatService.disconnectChatRoom(headerAccessor);
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
+    }
+
+    @PostMapping("/chat/{chatId}/like")
+    @ResponseBody
+    public void addLikeToChatMessage(@PathVariable Long chatId) {
+        chatService.addLikeToChatMessage(chatId);
     }
 
     @ResponseBody

@@ -18,13 +18,13 @@ public class ChatDto {
     private String date;
     private String message;
     private String image;
-    private Long userId; //
+    private Long userId;
 
     public ChatDto(Chat chat){
         this.type = chat.getType();
         this.beggar_id = chat.getBeggar().getId();
         this.sender = chat.getSender();
         this.message = chat.getMessage();
-        this.userId = chat.getBeggar().getUser().getId(); //
+        this.userId = chat.getBeggar().getUser().getId();
     }
 }

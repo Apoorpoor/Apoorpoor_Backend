@@ -241,7 +241,7 @@ public class BeggarService {
         //획득 기준 통과시에
         for (ExpenditureType expenditureType : badgeList) {
             if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
-            notificationService.notifyGetBadgeEvent(beggar, expenditureType.getBadgeTitle());
+            notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());
         }
 
     }

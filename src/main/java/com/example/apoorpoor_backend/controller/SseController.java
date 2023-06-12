@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -19,10 +20,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SseController {
 
     public static Map<Long, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
+    private final JwtUtil jwtUtil;
 
     @CrossOrigin
     @GetMapping(value = "/sub", consumes = MediaType.ALL_VALUE)
-    public SseEmitter subscribe(@RequestParam Long beggarId) {
+    public SseEmitter subscribe(@RequestParam("token") String token) {
+        Long userId = Long.valueOf(jwtUtil.getUserInfoFromToken(token));
 
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         try {
@@ -31,11 +34,11 @@ public class SseController {
             e.printStackTrace();
         }
 
-        sseEmitters.put(beggarId, sseEmitter);
+        sseEmitters.put(userId, sseEmitter);
 
-        sseEmitter.onCompletion(() -> sseEmitters.remove(beggarId));
-        sseEmitter.onTimeout(() -> sseEmitters.remove(beggarId));
-        sseEmitter.onError((e) -> sseEmitters.remove(beggarId));
+        sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
+        sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
+        sseEmitter.onError((e) -> sseEmitters.remove(userId));
 
         return sseEmitter;
     }

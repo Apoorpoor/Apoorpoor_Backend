@@ -16,17 +16,17 @@ import static com.example.apoorpoor_backend.controller.SseController.sseEmitters
 public class NotificationService {
 
     public void notifyGetBadgeEvent(User user, Beggar beggar, String expenditureTitle) {
-        String userName = user.getUsername();
+        String username = user.getUsername();
         //Long beggarId =beggar.getId();
         String nickName = beggar.getNickname();
 
-        if(sseEmitters.containsKey(userName)) {
-            SseEmitter sseEmitter = sseEmitters.get(userName);
+        if(sseEmitters.containsKey(username)) {
+            SseEmitter sseEmitter = sseEmitters.get(username);
             try {
                 sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"nickName\":\"" + nickName + "\", " + "\"msg :" + expenditureTitle + "뱃지를 획득 하였습니다!" + "\","
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\" }"));
             } catch (Exception e) {
-                sseEmitters.remove(userName);
+                sseEmitters.remove(username);
             }
         }
     }

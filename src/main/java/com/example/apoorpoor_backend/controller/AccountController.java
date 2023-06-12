@@ -59,8 +59,8 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{id}/difference")
-    public ResponseEntity<List<MonthSumResponseDto>> getDifference(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return accountService.getDifference(id, userDetails.getUsername());
+    public ResponseEntity<List<MonthSumResponseDto>> getDifference(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getDifference(id, condition, userDetails.getUsername());
     }
 
 }

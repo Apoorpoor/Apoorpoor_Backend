@@ -5,7 +5,6 @@ import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryListResponse
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondition;
 import com.example.apoorpoor_backend.dto.ledgerhistory.QLedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
@@ -19,17 +18,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
-import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
 public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCustom {
@@ -171,40 +166,22 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         return content;
     }
 
-
-    /*
-     * 수입 지출별 카테고리 필터링
-     * /accounts/{id}/status?date=YYYY-MM&accunt_type='EXPENDITURE'&expenditure_type='UTILITY_BILL'
-     */
-    public List<LedgerHistoryListResponseDto> search7(LedgerHistorySearchCondition condition) {
-        String query =
-                "select *\n" +
-                        "    from ledger_history\n" +
-                        "    where 1=1\n" +
-                        "    and account_id = 1\n" +
-                        "    and date like '2022-05%'\n" +
-                        "    and account_type = 'EXPENDITURE'\n" +
-                        "    and expenditure_type = 'UTILITY_BILL'\n" +
-                        "order by date desc "
-                ;
-        return null;
-    }
-
-
-
     /*
      * /accounts/{id}/status?
+     *  date=YYYY-MM&
         dateType=month&
         account_type=EXPENDITURE&
         expenditure_type=EXPENDITURE_TYPE
         ------------------------------------------------------
+        - date
+        default : 현재 캘린더의 달
+        달력에서 날짜 선택하면 : YYYY-MM-DD
+
         - dateType
         default(parameter X) : 이번달(1일~마지막일)
         1주일 : week
         1개월 : month
         3개월 : 3month
-        6개월 : 6month
-        1년 : year
 
         - account_type
         전체 : parameter X
@@ -224,29 +201,41 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(condition.getDate() != null){
+        String date = condition.getDate();
+        String dateType = condition.getDateType();
+        AccountType accountType = condition.getAccountType();
+        ExpenditureType expenditureType = condition.getExpenditureType();
+        String inputStartDate = condition.getStartDate();
+        String inputEndDate = condition.getEndDate();
+
+        // 1. default 현재 캘린더의 달일때 (YYYY-MM)
+        if(date != null && dateType == null && inputEndDate == null && inputStartDate == null){
             builder.and(formattedDate.like(condition.getDate()+"%"));
-        }else{
+        }
+
+        // 2. dateType 값 1주일, 1개월, 3개월 무조건 현재시간 기준
+        if(dateType != null) {
             LocalDate endDate = LocalDate.now();
-            LocalDate startDate = endDate.withDayOfMonth(1);
+            LocalDate startDate = endDate.withDayOfMonth(1); // default 해당 월의 1일로 초기화
 
-            String type = Optional.ofNullable(condition.getDateType()).orElse("");
-
-            if(type.equals("week")){
+            if (dateType.equals("week")) {
                 startDate = endDate.minusWeeks(1);
-            }else if(type.equals("month")){
+            } else if (dateType.equals("month")) {
                 startDate = endDate.minusMonths(1);
-            }else if(type.equals("3month")){
+            } else if (dateType.equals("3month")) {
                 startDate = endDate.minusMonths(3);
-            }else if(type.equals("6month")){
-                startDate = endDate.minusMonths(6);
-            }else if(type.equals("year")){
-                startDate = endDate.minusYears(1);
             }
 
             builder.and(ledgerHistory.date.between(startDate, endDate));
         }
 
+        // 3. 직접입력 기준
+        if(dateType == null && inputStartDate != null && inputEndDate != null){
+            LocalDate endDate = LocalDate.parse(inputEndDate);
+            LocalDate startDate = LocalDate.parse(inputStartDate);
+
+            builder.and(ledgerHistory.date.between(startDate, endDate));
+        }
 
         List<LedgerHistoryResponseDto> content = queryFactory
                 .select(new QLedgerHistoryResponseDto(
@@ -336,9 +325,9 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
     /*
      * 이번달, 지난달 지출내역
-     * /accounts/{id}/difference
+     * /accounts/{id}/difference/YYYY-MM
      * */
-    public List<MonthSumResponseDto> getDifference(Long accountId) {
+    public MonthSumResponseDto getDifference(Long accountId, AccountSearchCondition condition, LocalDate targetDate, int quarter) {
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -347,7 +336,33 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 ,ConstantImpl.create("%Y-%m")
         );
 
-        List<MonthSumResponseDto> content = queryFactory
+        String date = targetDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        String date_year = targetDate.format(DateTimeFormatter.ofPattern("yyyy"));
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (quarter == 0) {
+            builder.and(formattedDate.eq(date));
+        }else if (quarter == 1){
+            // quarter 1, 2, 3, 4
+            String start_date = date_year+"-01";
+            String end_date = date_year+"-03";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 2){
+            String start_date = date_year+"-04";
+            String end_date = date_year+"-06";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 3){
+            String start_date = date_year+"-07";
+            String end_date = date_year+"-09";
+            builder.and(formattedDate.between(start_date, end_date));
+        }else if (quarter == 4){
+            String start_date = date_year+"-10";
+            String end_date = date_year+"-12";
+            builder.and(formattedDate.between(start_date, end_date));
+        }
+
+        return queryFactory
                 .select(new QMonthSumResponseDto(
                         formattedDate.as("month"),
                         ledgerHistory.expenditure.sum().as("month_sum")
@@ -355,25 +370,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.account.id.eq(accountId)
+                        ledgerHistory.account.id.eq(accountId),
+                        builder
                 )
-                .groupBy(formattedDate)
-                .orderBy(formattedDate.desc())
-                .limit(2)
-                .fetch();
-
-        String query =
-                "select DATE_FORMAT(date, '%Y-%m') as month,\n" +
-                        "                               sum(expenditure) as month_sum\n" +
-                        "                        from ledger_history\n" +
-                        "                        where 1=1\n" +
-                        "                        and account_type = 'EXPENDITURE'\n" +
-                        "                        and account_id = 1\n" +
-                        "                        group by month\n" +
-                        "                        order by month desc\n" +
-                        "                        limit 2"
-                ;
-        return content;
+                .fetchOne();
     }
 
     /* CONDOLENCE_EXPENSE 경조사비 : 2번 이하*/

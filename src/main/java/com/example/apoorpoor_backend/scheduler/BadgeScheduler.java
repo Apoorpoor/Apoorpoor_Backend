@@ -38,7 +38,7 @@ public class BadgeScheduler {
 
         for (User user : userList) {
             beggarService.badgeCheck(user); // 새로운 뱃지 부여
-            beggarService.addPoints(user); // 뱃지에 대한 포인트를 지급해야함 뱃지 1개당 20포인트 줘야함
+            //beggarService.addPoints(user); //뱃지 1개당 20포인트
             log.info(LocalDate.now()+"cron job 완료");
         }
     }

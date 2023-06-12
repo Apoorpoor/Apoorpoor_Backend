@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -135,9 +136,30 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getDifference(Long accountId, String username) {
+    public ResponseEntity<List<MonthSumResponseDto>> getDifference(Long accountId, AccountSearchCondition condition, String username) {
         User user = userCheck(username);
-        List<MonthSumResponseDto> difference = ledgerHistoryRepository.getDifference(accountId);
+
+            String dateType = condition.getDateType();
+
+            LocalDate currentDate = LocalDate.parse(condition.getDate()+"-01");
+            LocalDate pastDate = LocalDate.parse(condition.getDate()+"-01");
+
+            int quarter = 0; // 분기 초기화
+
+            if (dateType.equals("month")) {
+                pastDate = currentDate.minusMonths(1);
+            } else if (dateType.equals("year")) {
+                pastDate = currentDate.minusYears(1);
+            } else if (dateType.equals("quarter")){
+                // 1,2,3 / 4,5,6 / 7,8,9 / 10,11,12
+                quarter = (int) Math.ceil(currentDate.getMonthValue() / 3.0); // 분기 추출
+                pastDate = currentDate.minusYears(1);
+            }
+
+        List<MonthSumResponseDto> difference = new ArrayList<>();
+        difference.add(ledgerHistoryRepository.getDifference(accountId, condition, currentDate, quarter));
+        difference.add(ledgerHistoryRepository.getDifference(accountId, condition, pastDate, quarter));
+
         return new ResponseEntity<>(difference, HttpStatus.OK);
     }
 

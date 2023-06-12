@@ -79,9 +79,10 @@ public class LedgerHistoryService {
             Balance balance = new Balance(income, expenditure, account);
             balanceRepository.save(balance);
         }
+
         ExpType expType = ExpType.FILL_LEDGER;
         /////////////////////////////////////////////////////////////////////////
-        if(expenditureType.equals(ExpenditureType.SAVINGS)) {
+        if(expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
             expType = ExpType.BEST_SAVER;
         }
         ////////////////////////////////////////////////////////////////////////
@@ -120,9 +121,8 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         AccountType accountType = requestDto.getAccountType();
-
-        LocalDate localDate = LocalDate.parse(requestDto.getDate());
         PaymentMethod paymentMethod = requestDto.getPaymentMethod();
+        LocalDate localDate = LocalDate.parse(requestDto.getDate());
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;

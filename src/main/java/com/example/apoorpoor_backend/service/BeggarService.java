@@ -39,6 +39,8 @@ public class BeggarService {
     private final LedgerHistoryRepository ledgerHistoryRepository;
     private final PointRepository pointRepository;
 
+    private final NotificationService notificationService;
+
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
 
@@ -240,6 +242,7 @@ public class BeggarService {
         for (ExpenditureType expenditureType : badgeList) {
             if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
         }
+        notificationService.notifyGetBadgeEvent(beggar);
     }
 
     // 해당 월에 소비 뱃지 획득 가능한지 여부

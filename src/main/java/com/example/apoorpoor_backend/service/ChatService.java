@@ -29,9 +29,9 @@ public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
-    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
-    private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
-
+//    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
+//    private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
+//
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -65,24 +65,24 @@ public class ChatService {
         chatDto.setDate(dateformat);
         Chat chat = new Chat(chatDto,beggar, type);
     }
+//
+//    @CachePut(value = "chatLikes", key = "#chatId")
+//   public void addLikeToChatMessage(Long chatId) {
+//        Chat chat = chatRepository.findById(chatId).orElseThrow(
+//                () -> new IllegalArgumentException("채팅 메시지를 찾을 수 없습니다.")
+//        );
+//        chat.setLikes(); // 좋아요 수 증가
+//        chatRepository.save(chat);
+//        // Redis 캐시에 저장
+//        String cacheKey = generateCacheKey(chatId);
+//        ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
+//        valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
+//    }
 
-    @CachePut(value = "chatLikes", key = "#chatId")
-   public void addLikeToChatMessage(Long chatId) {
-        Chat chat = chatRepository.findById(chatId).orElseThrow(
-                () -> new IllegalArgumentException("채팅 메시지를 찾을 수 없습니다.")
-        );
-        chat.setLikes(); // 좋아요 수 증가
-        chatRepository.save(chat);
-        // Redis 캐시에 저장
-        String cacheKey = generateCacheKey(chatId);
-        ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
-        valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
-    }
-
-    private String generateCacheKey(Long chatId) {
-        return CHAT_LIKES_CACHE_KEY + ":" + chatId;
-    }
-
+//        private String generateCacheKey(Long chatId) {
+//            return CHAT_LIKES_CACHE_KEY + ":" + chatId;
+//        }
+//
 
     public Beggar beggarCheck(Long beggar_id) {
         return beggarRepository.findById(beggar_id).orElseThrow(

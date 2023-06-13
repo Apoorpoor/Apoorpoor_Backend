@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -58,31 +59,31 @@ public class ChatService {
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateformat = format.format(date);
-        chatDto.setDate(dateformat);
-        Chat chat = new Chat(chatDto,beggar, type);
+//        Date date = new Date();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateformat = format.format(date);
+//        chatDto.setDate(dateformat);
+//        Chat chat = new Chat(chatDto,beggar, type);
     }
 
-    @CachePut(value = "chatLikes", key = "#chatId")
-   public void addLikeToChatMessage(Long chatId) {
-        Chat chat = chatRepository.findById(chatId).orElseThrow(
-                () -> new IllegalArgumentException("채팅 메시지를 찾을 수 없습니다.")
-        );
-        chat.setLikes(); // 좋아요 수 증가
-        chatRepository.save(chat);
-        // Redis 캐시에 저장
-        String cacheKey = generateCacheKey(chatId);
-        ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
-        valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
-    }
-
-    private String generateCacheKey(Long chatId) {
-        return CHAT_LIKES_CACHE_KEY + ":" + chatId;
-    }
-
-
+//    @CachePut(value = "chatLikes", key = "#chatId")
+//   public void addLikeToChatMessage(Long chatId) {
+//        Chat chat = chatRepository.findById(chatId).orElseThrow(
+//                () -> new IllegalArgumentException("채팅 메시지를 찾을 수 없습니다.")
+//        );
+//        chat.setLikes(); // 좋아요 수 증가
+//        chatRepository.save(chat);
+//        // Redis 캐시에 저장
+//        String cacheKey = generateCacheKey(chatId);
+//        ValueOperations<String, ChatDto> valueOperations = chatRedisTemplate.opsForValue();
+//        valueOperations.set(cacheKey, new ChatDto(chat), 30, TimeUnit.DAYS); // TTL 30일 설정
+//    }
+//
+//    private String generateCacheKey(Long chatId) {
+//        return CHAT_LIKES_CACHE_KEY + ":" + chatId;
+//    }
+//
+//
     public Beggar beggarCheck(Long beggar_id) {
         return beggarRepository.findById(beggar_id).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")

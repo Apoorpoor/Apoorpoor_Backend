@@ -29,6 +29,7 @@ public class LedgerHistoryController {
     public ResponseEntity<LedgerHistoryResponseDto> getLedgerHistory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.getLedgerHistory(id, userDetails.getUsername());
     }
+
     @DeleteMapping("/ledgerhistory/{id}")
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.deleteLedgerHistory(id, userDetails.getUsername());

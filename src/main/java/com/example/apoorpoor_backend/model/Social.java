@@ -42,4 +42,17 @@ public class Social {
     @Column
     private Double inc_avg;
 
+    public void updateExp(String date, Long expCount, Long expSum, Double expAvg) {
+        this.date = date;
+        this.exp_count = expCount;
+        this.exp_sum = expSum;
+        this.exp_avg = expAvg;
+    }
+
+    public void updateInc(String date, Long incCount, Long incSum, Double incAvg) {
+        this.date = date;
+        this.inc_count = incCount;
+        this.inc_sum = incSum;
+        this.inc_avg = incAvg;
+    }
 }

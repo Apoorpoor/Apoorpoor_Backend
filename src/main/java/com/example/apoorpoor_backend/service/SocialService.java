@@ -1,9 +1,13 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.social.*;
+import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Ranking;
+import com.example.apoorpoor_backend.model.Social;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.social.RankingRepository;
 import com.example.apoorpoor_backend.repository.social.SocialRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +25,9 @@ import java.util.List;
 public class SocialService {
 
     private final UserRepository userRepository;
+    private final BeggarRepository beggarRepository;
     private final SocialRepository socialRepository;
+    private final RankingRepository rankingRepository;
 
     public ResponseEntity<SocialResponseDto> getPercent(SocialSearchCondition condition, String username) {
         User findUser = userCheck(username);
@@ -67,112 +73,62 @@ public class SocialService {
 
     public void updatePercent() {
 
-        /*
-                * -- 지출 그룹별 평균
-        select
-               CASE
-                   WHEN U.age < 20 THEN 10
-                   WHEN U.age < 30 THEN 20
-                   WHEN U.age < 40 THEN 30
-                   WHEN U.age < 50 THEN 40
-                   WHEN U.age < 60 THEN 50
-                   WHEN U.age < 70 THEN 60
-                   WHEN U.age < 80 THEN 70
-                   WHEN U.age < 90 THEN 80
-                   WHEN U.age < 100 THEN 90
-                   ELSE '0'
-                   END AS age_abb,
-               date_format(H.date, '%Y-%m') as date,
-               COUNT(*) AS exp_count,
-               sum(expenditure) AS exp_sum,
-               SUM(expenditure) / COUNT(*) AS exp_avg
-        from account A, users U, ledger_history H
-        where 1=1
-          and A.user_id = U.user_id
-          and A.account_id = H.account_id
-          and H.account_type = 'EXPENDITURE'
-          and H.date like '2023-05%'
-        group by age_abb;
+        List<Social> socialList = socialRepository.findAll();
 
-        -- 수입 그룹별 평균
-        select
-            CASE
-                WHEN U.age < 20 THEN 10
-                WHEN U.age < 30 THEN 20
-                WHEN U.age < 40 THEN 30
-                WHEN U.age < 50 THEN 40
-                WHEN U.age < 60 THEN 50
-                WHEN U.age < 70 THEN 60
-                WHEN U.age < 80 THEN 70
-                WHEN U.age < 90 THEN 80
-                WHEN U.age < 100 THEN 90
-                ELSE '0'
-                END AS age_abb,
-            date_format(H.date, '%Y-%m') as date,
-            COUNT(*) AS inc_count,
-            sum(income) AS inc_sum,
-            SUM(income) / COUNT(*) AS inc_avg
-        from account A, users U, ledger_history H
-        where 1=1
-          and A.user_id = U.user_id
-          and A.account_id = H.account_id
-          and H.account_type = 'INCOME'
-          and H.date like '2023-05%'
-        group by age_abb;
-                *
-                *
-                * */
+        // 지출 그룹별 평균
+        List<ExpenditureAvgDto> expenditureAvgDtoList = socialRepository.getPercentExpenditureAvg();
+
+        for (ExpenditureAvgDto expenditureAvgDto : expenditureAvgDtoList) {
+            Social social = socialRepository.findByAgeAndDateAndGender(expenditureAvgDto.getAge_abb(),
+                    expenditureAvgDto.getDate(), expenditureAvgDto.getGender());
+            social.updateExp(expenditureAvgDto.getDate(), expenditureAvgDto.getExp_count(),
+                    expenditureAvgDto.getExp_sum(), expenditureAvgDto.getExp_avg());
+        }
+
+        // 수입 그룹별 평균
+        List<IncomeAvgDto> incomeAvgDtoList = socialRepository.getPercentIncomeAvg();
+
+        for (IncomeAvgDto incomeAvgDto : incomeAvgDtoList) {
+            Social social = socialRepository.findByAgeAndDateAndGender(incomeAvgDto.getAge_abb(),
+                    incomeAvgDto.getDate(), incomeAvgDto.getGender());
+            social.updateInc(incomeAvgDto.getDate(), incomeAvgDto.getInc_count(),
+                    incomeAvgDto.getInc_sum(), incomeAvgDto.getInc_avg());
+        }
+
     }
 
     public void updateRank() {
 
-        // 지난달 수입 총합 업데이트
+        List<Ranking> rankingList = rankingRepository.findAll();
 
+        // 지난달 수입 총합 업데이트
         List<IncomeTotalDto> rankIncomeSum = socialRepository.getRankIncomeSum();
 
-        /*
-        * -- 지난달 수입 총합
-        select
-            row_number() over(order by sum(income) desc) as rownum,
-            date_format(H.date, '%Y-%m') as date,
-            sum(income) AS inc_sum,
-            B.beggar_id
-        from account A, users U, ledger_history H, beggar B
-        where 1=1
-          and A.user_id = U.user_id
-          and A.account_id = H.account_id
-          and A.user_id = B.user_id
-          and H.account_type = 'INCOME'
-          and H.date like '2023-05%'
-        group by beggar_id
-        limit 10;
-
-        -- 지난달 지출 총합
-        select
-            row_number() over(order by sum(expenditure) desc) as rownum,
-            date_format(H.date, '%Y-%m') as date,
-            sum(expenditure) AS exp_sum,
-            B.beggar_id
-        from account A, users U, ledger_history H, beggar B
-        where 1=1
-          and A.user_id = U.user_id
-          and A.account_id = H.account_id
-          and A.user_id = B.user_id
-          and H.account_type = 'EXPENDITURE'
-          and H.date like '2023-05%'
-        group by beggar_id
-        order by exp_sum desc
-        limit 10;
-        * */
+        for(int i=0; i<rankIncomeSum.size(); i++){
+            IncomeTotalDto incomeTotalDto = rankIncomeSum.get(i);
+            Beggar beggar = beggarIdCheck(incomeTotalDto.getBeggarId());
+            rankingList.get(i).updateIncomeTotal(incomeTotalDto.getDate(), incomeTotalDto.getIncSum(), beggar);
+        }
 
         // 지난달 지출 총합 업데이트
-
         List<ExpenditureTotalDto> rankExpenditureSum = socialRepository.getRankExpenditureSum();
+
+        for(int i=0; i<rankExpenditureSum.size(); i++){
+            ExpenditureTotalDto expenditureTotalDto = rankExpenditureSum.get(i);
+            Beggar beggar = beggarIdCheck(expenditureTotalDto.getBeggarId());
+            rankingList.get(i).updateExpenditureTotal(expenditureTotalDto.getDate(), expenditureTotalDto.getExpSum(), beggar);
+        }
     }
 
     public User userCheck(String username) {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
+        );
+    }
+
+    public Beggar beggarIdCheck(Long beggarId) {
+        return beggarRepository.findById(beggarId).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
 

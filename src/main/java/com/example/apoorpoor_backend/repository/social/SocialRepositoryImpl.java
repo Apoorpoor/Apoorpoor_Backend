@@ -1,13 +1,11 @@
 package com.example.apoorpoor_backend.repository.social;
 
-import com.example.apoorpoor_backend.dto.social.ExpenditureTotalDto;
-import com.example.apoorpoor_backend.dto.social.IncomeTotalDto;
-import com.example.apoorpoor_backend.dto.social.QIncomeTotalDto;
-import com.example.apoorpoor_backend.dto.social.SocialSearchCondition;
+import com.example.apoorpoor_backend.dto.social.*;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -150,10 +148,10 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-        queryFactory
+        return queryFactory
                 .select(new QIncomeTotalDto(
                         ledgerHistory.date.stringValue(),
-                        ledgerHistory.expenditure.sum().as("incSum"),
+                        ledgerHistory.income.sum().as("incSum"),
                         beggar.id
                 ))
                 .from(account)
@@ -163,15 +161,151 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
                         ledgerHistory.date.eq(LocalDate.parse(date))
-                );
-
-        return null;
+                )
+                .groupBy(beggar.id)
+                .orderBy(ledgerHistory.income.sum().desc())
+                .limit(10)
+                .fetch();
     }
 
     @Override
     public List<ExpenditureTotalDto> getRankExpenditureSum() {
 
-        return null;
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return queryFactory
+                .select(new QExpenditureTotalDto(
+                        ledgerHistory.date.stringValue(),
+                        ledgerHistory.expenditure.sum().as("expSum"),
+                        beggar.id
+                ))
+                .from(account)
+                .join(account.user, user)
+                .join(account.ledgerHistories, ledgerHistory)
+                .join(beggar.user, user)
+                .where(
+                        ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
+                        ledgerHistory.date.eq(LocalDate.parse(date))
+                )
+                .groupBy(beggar.id)
+                .orderBy(ledgerHistory.income.sum().desc())
+                .limit(10)
+                .fetch();
+    }
+
+    @Override
+    public List<ExpenditureAvgDto> getPercentExpenditureAvg() {
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        List<ExpenditureAvgDto> result = queryFactory.
+                select(new QExpenditureAvgDto(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        ledgerHistory.expenditure.countDistinct(),
+                        ledgerHistory.expenditure.sum(),
+                        ledgerHistory.expenditure.sum().doubleValue().divide(ledgerHistory.expenditure.countDistinct()),
+                        user.gender
+                ))
+                .from(account)
+                .join(account.user, user)
+                .join(account.ledgerHistories, ledgerHistory)
+                .where(
+                        ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
+                        ledgerHistory.date.eq(LocalDate.parse(date))
+                )
+                .groupBy(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        user.gender
+                ).fetch();
+
+        return result;
+    }
+
+    @Override
+    public List<IncomeAvgDto> getPercentIncomeAvg() {
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        List<IncomeAvgDto> result = queryFactory.
+                select(new QIncomeAvgDto(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        ledgerHistory.income.countDistinct(),
+                        ledgerHistory.income.sum(),
+                        ledgerHistory.income.sum().doubleValue().divide(ledgerHistory.income.countDistinct()),
+                        user.gender
+                ))
+                .from(account)
+                .join(account.user, user)
+                .join(account.ledgerHistories, ledgerHistory)
+                .where(
+                        ledgerHistory.accountType.eq(AccountType.INCOME),
+                        ledgerHistory.date.eq(LocalDate.parse(date))
+                )
+                .groupBy(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        user.gender
+                ).fetch();
+
+        return result;
+    }
+
+    @Override
+    public Social findByAgeAndDateAndGender(Long ageAbb, String date, String gender) {
+
+        return queryFactory
+                .select(social)
+                .from(social)
+                .where(
+                        social.age_abb.eq(ageAbb),
+                        social.date.eq(date),
+                        social.gender.eq(gender)
+                )
+                .fetchOne();
     }
 
     @Override

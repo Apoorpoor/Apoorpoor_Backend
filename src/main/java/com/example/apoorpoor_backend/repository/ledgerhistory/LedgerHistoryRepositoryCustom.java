@@ -7,8 +7,12 @@ import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryListResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondition;
+import com.example.apoorpoor_backend.dto.social.SocialResponseDto;
+import com.example.apoorpoor_backend.dto.social.SocialSearchCondition;
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
+import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,4 +50,5 @@ public interface LedgerHistoryRepositoryCustom {
     boolean checkEXPType11(ExpenditureType expenditureType, Long userId);
 
     boolean checkEXPType12(ExpenditureType expenditureType, Long userId);
+
 }

@@ -18,13 +18,14 @@ public class NotificationService {
     public void notifyGetBadgeEvent(User user, Beggar beggar, String expenditureTitle) {
         String username = user.getUsername();
         //Long beggarId =beggar.getId();
-        String nickName = beggar.getNickname();
+        String nickname = beggar.getNickname();
 
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"nickName\":\"" + nickName + "\", " + "\"msg :" + expenditureTitle + "뱃지를 획득 하였습니다!" + "\","
-                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\" }"));
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"nickName\":\"" + nickname + "\", " +
+                        "\"msg\":\"" + expenditureTitle + "뱃지를 획득하였습니다!\"," +
+                        "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
             }

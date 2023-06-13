@@ -25,7 +25,7 @@ public class SseController {
     @CrossOrigin
     @GetMapping(value = "/sub", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@RequestParam("token") String token) {
-        String userName = String.valueOf(jwtUtil.getUserInfoFromToken(token));
+        String username = jwtUtil.getUserInfoFromToken(token);
 
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         try {
@@ -34,11 +34,11 @@ public class SseController {
             e.printStackTrace();
         }
 
-        sseEmitters.put(userName, sseEmitter);
+        sseEmitters.put(username, sseEmitter);
 
-        sseEmitter.onCompletion(() -> sseEmitters.remove(userName));
-        sseEmitter.onTimeout(() -> sseEmitters.remove(userName));
-        sseEmitter.onError((e) -> sseEmitters.remove(userName));
+        sseEmitter.onCompletion(() -> sseEmitters.remove(username));
+        sseEmitter.onTimeout(() -> sseEmitters.remove(username));
+        sseEmitter.onError((e) -> sseEmitters.remove(username));
 
         return sseEmitter;
     }

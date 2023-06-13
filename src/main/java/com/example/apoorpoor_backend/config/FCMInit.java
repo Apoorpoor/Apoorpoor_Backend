@@ -15,10 +15,7 @@
 //@Slf4j
 //@Service
 //public class FCMInit{
-//    private static final String path = "firebase/firebase_service_key.json";
-//    @Value("${secret.fcm.key.path}")
-//    private
-//
+//    private static final String path = "firebase/apoorpoor-55170-firebase-adminsdk-mir91-a019045af1.json";
 //
 //    @PostConstruct
 //    public void init(){
@@ -34,6 +31,5 @@
 //            e.printStackTrace();
 //        }
 //    }
-//
 //
 //}

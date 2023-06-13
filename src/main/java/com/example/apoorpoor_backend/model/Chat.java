@@ -19,6 +19,10 @@ public class Chat {
 
     private String message;
 
+    @ColumnDefault("1")
+    @Column(nullable = false)
+    private Long level;
+
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
@@ -36,6 +40,7 @@ public class Chat {
         this.message = chatDto.getMessage();
         this.beggar = beggar;
         this.type = type;
+        this.level = 1L;
 //        this.likeCount = 0;
     }
 

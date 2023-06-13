@@ -1,25 +1,13 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
-import com.example.apoorpoor_backend.model.Beggar;
-import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
-import com.example.apoorpoor_backend.repository.chat.ChatRepository;
-import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -28,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ChatService {
 
     private final BeggarRepository beggarRepository;
-    private final ChatRepository chatRepository;
+//    private final ChatRepository chatRepository;
 //    private final RedisTemplate<String, ChatDto> chatRedisTemplate;
 //    private static final String CHAT_LIKES_CACHE_KEY = "chat_likes";
 //
@@ -50,21 +38,22 @@ public class ChatService {
                 .type(MessageType.LEAVE)
                 .sender(nickName)
                 .beggar_id(beggar_id)
+                .level(1L)
                 .message(nickName + "님이 퇴장하셨습니다.")
                 .userId(userId)
                 .build();
         return chatDto;
     }
 
-    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
-        Beggar beggar = beggarCheck(chatDto.getBeggar_id());
-        MessageType type = MessageType.TALK;
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateformat = format.format(date);
-        chatDto.setDate(dateformat);
-        Chat chat = new Chat(chatDto,beggar, type);
-    }
+//    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
+//        Beggar beggar = beggarCheck(chatDto.getBeggar_id());
+//        MessageType type = MessageType.TALK;
+//        Date date = new Date();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateformat = format.format(date);
+//        chatDto.setDate(dateformat);
+//        Chat chat = new Chat(chatDto,beggar, type);
+//    }
 //
 //    @CachePut(value = "chatLikes", key = "#chatId")
 //   public void addLikeToChatMessage(Long chatId) {
@@ -84,9 +73,9 @@ public class ChatService {
 //        }
 //
 
-    public Beggar beggarCheck(Long beggar_id) {
-        return beggarRepository.findById(beggar_id).orElseThrow(
-                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
-        );
-    }
+//    public Beggar beggarCheck(Long beggar_id) {
+//        return beggarRepository.findById(beggar_id).orElseThrow(
+//                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+//        );
+//    }
 }

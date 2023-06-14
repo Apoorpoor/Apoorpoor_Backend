@@ -176,11 +176,8 @@ public class LedgerHistoryService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<LedgerHistoryResponseDto> getLedgerHistory(Long id, String username) {
-        ExpenditureType expenditureType = ExpenditureType.FOOD_EXPENSES;  /////
         User user = userCheck(username);
         LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
-        notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());  //////
-        
 
         return new ResponseEntity<>(LedgerHistoryResponseDto.of(ledgerHistory), HttpStatus.OK);
     }

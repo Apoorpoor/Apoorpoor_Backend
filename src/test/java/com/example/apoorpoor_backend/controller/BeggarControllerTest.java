@@ -5,7 +5,6 @@ import com.example.apoorpoor_backend.dto.beggar.BeggarResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarSearchResponseDto;
 import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.Badge;
-import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -55,23 +52,25 @@ class BeggarControllerTest {
         BeggarService mockedBeggarService = mock(BeggarService.class);
         BeggarRequestDto mockedRequestDto = new BeggarRequestDto();
         UserDetailsImpl mockedUserDetails = new UserDetailsImpl(user.getUser(), user.getUsername());
+        StatusResponseDto mockedResponseDto = new StatusResponseDto("푸어가  생성 되었어요...");
 
-        // service의 메서드가 호출될때 임의의 파라미터로 응답 확인
-        StatusResponseDto expectedResponse = new StatusResponseDto("Success");
-        when(mockedBeggarService.createBeggar(eq(mockedRequestDto), anyString())).thenReturn(ResponseEntity.ok(expectedResponse));
+        // service 의 메서드가 호출될때 임의의 파라미터로 응답 확인
+        ResponseEntity<StatusResponseDto> expectedResponse = new ResponseEntity<>(mockedResponseDto, HttpStatus.OK);
+        when(mockedBeggarService.createBeggar(any(), anyString())).thenReturn(expectedResponse);
 
-        // cotroller 인스턴스 생성
+        // controller 인스턴스 생성
         BeggarController controller = new BeggarController(mockedBeggarService);
 
         // controller 메서드 호출
         ResponseEntity<StatusResponseDto> response = controller.createBeggar(mockedRequestDto, mockedUserDetails);
 
         // 응답 검증
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        assertEquals(expectedResponse.getStatusCode(), response.getStatusCode());
+        assertEquals(expectedResponse.getBody(), response.getBody());
+        assertEquals(expectedResponse, response);
 
         // Mock 객체로 서비스 메서드의 호출 확인
-        verify(mockedBeggarService).createBeggar(eq(mockedRequestDto), anyString());
+        verify(mockedBeggarService).createBeggar(any(), anyString());
     }
 
     @Test
@@ -84,7 +83,7 @@ class BeggarControllerTest {
         BeggarSearchResponseDto expectedResponseDto = BeggarSearchResponseDto.builder()
                 .beggarId(1L)
                 .userId(2L)
-                .nickname("John Doe")
+                .nickname("Tester")
                 .point(100L)
                 .exp(500L)
                 .badgeList(List.of(new Badge(1L, "badge1", "badgeImage1"), new Badge(2L, "badge2", "badgeImage2")))
@@ -106,49 +105,98 @@ class BeggarControllerTest {
         BeggarController mockedBeggarController = new BeggarController(mockedBeggarService);
 
         // 임의의 파라미터로 응답 확인
-        Mockito.when(mockedBeggarService.myBeggar(Mockito.anyString())).thenReturn(expectedResponse);
+        when(mockedBeggarService.myBeggar(anyString())).thenReturn(expectedResponse);
 
         // 응답객체 저장
         ResponseEntity<BeggarSearchResponseDto> response = mockedBeggarController.myBeggar(mockedUserDetails);
 
         // 실제 응답과 예상응답 비교
+        assertEquals(expectedResponse.getStatusCode(), response.getStatusCode());
+        assertEquals(expectedResponse.getBody(), response.getBody());
         assertEquals(expectedResponse, response);
+
+        // Mock 객체로 서비스 메서드의 호출 확인
+        verify(mockedBeggarService).myBeggar(anyString());
+    }
+
+    @Test
+    @DisplayName("getUserBeggar Test")
+    void getUserBeggar() {
+        // Mock 객체 생성
+        BeggarService mockedBeggarService = mock(BeggarService.class);
+
+        BeggarSearchResponseDto expectedResponseDto = BeggarSearchResponseDto.builder()
+                .beggarId(1L)
+                .userId(2L)
+                .nickname("Tester")
+                .point(100L)
+                .exp(500L)
+                .badgeList(List.of(new Badge(1L, "badge1", "badgeImage1"), new Badge(2L, "badge2", "badgeImage2")))
+                .level(5L)
+                .description("Description")
+                .gender("Male")
+                .age(30L)
+                .topImage("topImage.jpg")
+                .bottomImage("bottomImage.jpg")
+                .shoesImage("shoesImage.jpg")
+                .accImage("accImage.jpg")
+                .customImage("customImage.jpg")
+                .build();
+
+        // 테스트 예상 결과
+        ResponseEntity<BeggarSearchResponseDto> expectedResponse = new ResponseEntity<>(expectedResponseDto, HttpStatus.OK);
+
+        // 컨트롤러 인스턴스 생성
+        BeggarController mockedBeggarController = new BeggarController(mockedBeggarService);
+
+        // 임의의 파라미터로 응답 확인
+        when(mockedBeggarService.getUserBeggar(anyLong())).thenReturn(expectedResponse);
+
+        // 응답 객체 저장
+        ResponseEntity<BeggarSearchResponseDto> response = mockedBeggarController.getUserBeggar(anyLong());
+
+        // 테스트 결과 검증
+        assertEquals(expectedResponse.getStatusCode(), response.getStatusCode());
+        assertEquals(expectedResponse.getBody(), response.getBody());
+        assertEquals(expectedResponse, response);
+
+        // Mock 객체로 서비스 메서드의 호출 확인
+        verify(mockedBeggarService).getUserBeggar(anyLong());
     }
 
 //    @Test
-//    @DisplayName("getUserBeggar")
-//    void getUserBeggar() {
+//    @DisplayName("updateBeggar Test")
+//    void updateBeggar() {
 //        // Mock 객체 생성
-//        String nickname = "tester";
-//
 //        BeggarService mockedBeggarService = mock(BeggarService.class);
 //        UserDetailsImpl mockedUserDetails = new UserDetailsImpl(user.getUser(), user.getUsername());
-//
-//        BeggarRequestDto mockedRequestDto = new BeggarRequestDto();
 //
 //        BeggarResponseDto expectedResponseDto = BeggarResponseDto.builder()
 //                .beggar_id(1L)
 //                .user_id(1L)
-//                .description("testDescription")
-//                .level(1L)
-//                .nickname(nickname)
-//                .point(100L)
+//                .point(10L)
+//                .nickname("Tester")
+//                .level(3L)
+//                .description("CommentTest")
 //                .build();
 //
-//        // 테스트 예상 결과
+//        // Test 예상 결과
 //        ResponseEntity<BeggarResponseDto> expectedResponse = new ResponseEntity<>(expectedResponseDto, HttpStatus.OK);
 //
 //        // 컨트롤러 인스턴스 생성
 //        BeggarController mockedBeggarController = new BeggarController(mockedBeggarService);
 //
-//        // 임의의 파라미터로 응답 확인
-//        Mockito.when(mockedBeggarService.getUserBeggar(Mockito.anyLong())).thenReturn(expectedResponse);
+//        // when()을 사용하여 메서드 호출에 대한 응답을 지정
+//        when(mockedBeggarService.updateBeggar(any(), anyString())).thenReturn(expectedResponse);
 //
 //        // 응답 객체 저장
-//        ResponseEntity<BeggarResponseDto> response = mockedBeggarController.getUserBeggar(anyLong());
+//        ResponseEntity<BeggarResponseDto> response = mockedBeggarController.updateBeggar(any(), mockedUserDetails);
 //
 //        // 테스트 결과 검증
 //        assertEquals(expectedResponse.getStatusCode(), response.getStatusCode());
 //        assertEquals(expectedResponse.getBody(), response.getBody());
+//
+//        // Mock 객체로 서비스 메서드의 호출 확인
+//        verify(mockedBeggarService).updateBeggar(any(), anyString());
 //    }
 }

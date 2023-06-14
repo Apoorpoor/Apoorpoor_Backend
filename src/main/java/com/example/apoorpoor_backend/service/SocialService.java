@@ -99,16 +99,7 @@ public class SocialService {
 
     public void updateRank() {
 
-        List<Ranking> rankingList = rankingRepository.findAll();
-
-        // 지난달 수입 총합 업데이트
-        List<IncomeTotalDto> rankIncomeSum = socialRepository.getRankIncomeSum();
-
-        for(int i=0; i<rankIncomeSum.size(); i++){
-            IncomeTotalDto incomeTotalDto = rankIncomeSum.get(i);
-            Beggar beggar = beggarIdCheck(incomeTotalDto.getBeggarId());
-            rankingList.get(i).updateIncomeTotal(incomeTotalDto.getDate(), incomeTotalDto.getIncSum(), beggar);
-        }
+        List<Ranking> rankingList = rankingRepository.findAll(); // 2개로 분기 타야됨
 
         // 지난달 지출 총합 업데이트
         List<ExpenditureTotalDto> rankExpenditureSum = socialRepository.getRankExpenditureSum();
@@ -118,6 +109,16 @@ public class SocialService {
             Beggar beggar = beggarIdCheck(expenditureTotalDto.getBeggarId());
             rankingList.get(i).updateExpenditureTotal(expenditureTotalDto.getDate(), expenditureTotalDto.getExpSum(), beggar);
         }
+
+        // 지난달 수입 총합 업데이트
+        List<IncomeTotalDto> rankIncomeSum = socialRepository.getRankIncomeSum();
+
+        for(int i=0; i<rankIncomeSum.size(); i++){
+            IncomeTotalDto incomeTotalDto = rankIncomeSum.get(i);
+            Beggar beggar = beggarIdCheck(incomeTotalDto.getBeggarId());
+            rankingList.get(10+i).updateIncomeTotal(incomeTotalDto.getDate(), incomeTotalDto.getIncSum(), beggar);
+        }
+
     }
 
     public User userCheck(String username) {

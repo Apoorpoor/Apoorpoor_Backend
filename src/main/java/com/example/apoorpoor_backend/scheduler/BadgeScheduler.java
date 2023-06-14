@@ -47,9 +47,11 @@ public class BadgeScheduler {
         // 해당 월의 나이대 별 소비/저축 업데이트
         socialService.updatePercent();
 
+        log.info(LocalDate.now()+"해당 월의 나이대 별 소비/저축 업데이트 완료");
 
         // 랭킹 - 절약 푸어 / 플렉스 푸어
         socialService.updateRank();
 
+        log.info(LocalDate.now()+"랭킹 - 절약 푸어 / 플렉스 푸어 업데이트 완료");
     }
 }

@@ -148,19 +148,24 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         return queryFactory
                 .select(new QIncomeTotalDto(
                         ledgerHistory.date.stringValue(),
                         ledgerHistory.income.sum().as("incSum"),
                         beggar.id
                 ))
-                .from(account)
-                .join(account.user, user)
-                .join(account.ledgerHistories, ledgerHistory)
-                .join(beggar.user, user)
+                .from(ledgerHistory)
+                .join(ledgerHistory.account, account)
+                .join(account.user.beggar, beggar)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(beggar.id)
                 .orderBy(ledgerHistory.income.sum().desc())
@@ -174,22 +179,27 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         return queryFactory
                 .select(new QExpenditureTotalDto(
                         ledgerHistory.date.stringValue(),
                         ledgerHistory.expenditure.sum().as("expSum"),
                         beggar.id
                 ))
-                .from(account)
-                .join(account.user, user)
-                .join(account.ledgerHistories, ledgerHistory)
-                .join(beggar.user, user)
+                .from(ledgerHistory)
+                .join(ledgerHistory.account, account)
+                .join(account.user.beggar, beggar)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(beggar.id)
-                .orderBy(ledgerHistory.income.sum().desc())
+                .orderBy(ledgerHistory.expenditure.sum().desc())
                 .limit(10)
                 .fetch();
     }
@@ -199,6 +209,12 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
 
         List<ExpenditureAvgDto> result = queryFactory.
                 select(new QExpenditureAvgDto(
@@ -213,7 +229,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                                 .when(user.age.lt(90)).then(80L)
                                 .when(user.age.lt(100)).then(90L)
                                 .otherwise(0L),
-                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        Expressions.stringTemplate("date_format({0}, '%Y-%m')", ledgerHistory.date),
                         ledgerHistory.expenditure.countDistinct(),
                         ledgerHistory.expenditure.sum(),
                         ledgerHistory.expenditure.sum().doubleValue().divide(ledgerHistory.expenditure.countDistinct()),
@@ -224,7 +240,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(
                         new CaseBuilder()
@@ -250,6 +266,12 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         List<IncomeAvgDto> result = queryFactory.
                 select(new QIncomeAvgDto(
                         new CaseBuilder()
@@ -263,7 +285,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                                 .when(user.age.lt(90)).then(80L)
                                 .when(user.age.lt(100)).then(90L)
                                 .otherwise(0L),
-                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        Expressions.stringTemplate("date_format({0}, '%Y-%m')", ledgerHistory.date),
                         ledgerHistory.income.countDistinct(),
                         ledgerHistory.income.sum(),
                         ledgerHistory.income.sum().doubleValue().divide(ledgerHistory.income.countDistinct()),
@@ -274,7 +296,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(
                         new CaseBuilder()

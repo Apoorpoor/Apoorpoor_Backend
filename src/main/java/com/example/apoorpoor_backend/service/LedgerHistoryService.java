@@ -53,7 +53,8 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         LocalDate localDate = LocalDate.parse(requestDto.getDate());
-        notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());////////////////////////////
+
+        //notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());////////////////////////////
 
 
         if(accountType == AccountType.INCOME){

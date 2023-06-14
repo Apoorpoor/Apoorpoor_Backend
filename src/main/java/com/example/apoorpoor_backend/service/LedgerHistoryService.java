@@ -53,7 +53,6 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         LocalDate localDate = LocalDate.parse(requestDto.getDate());
-        notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());////////////////////////////
 
 
         if(accountType == AccountType.INCOME){
@@ -176,9 +175,10 @@ public class LedgerHistoryService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<LedgerHistoryResponseDto> getLedgerHistory(Long id, String username) {
+        ExpenditureType expenditureType = ExpenditureType.FOOD_EXPENSES;  /////
         User user = userCheck(username);
         LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
-        notificationService.notifyTestEvent(user);
+        notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());  //////
         
 
         return new ResponseEntity<>(LedgerHistoryResponseDto.of(ledgerHistory), HttpStatus.OK);

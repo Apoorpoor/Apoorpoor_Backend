@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.dto.account.AccountRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import java.util.List;
 @Getter
 @Entity(name = "ACCOUNT")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Account extends Timestamped{
 

@@ -4,8 +4,10 @@ import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
 import com.example.apoorpoor_backend.model.enumType.ItemListEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.List;
 @Getter
 @Entity(name = "BEGGAR")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Beggar extends Timestamped{
 

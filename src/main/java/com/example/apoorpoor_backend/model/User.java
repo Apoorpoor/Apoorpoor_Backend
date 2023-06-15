@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import java.sql.Timestamp;
 
 @Entity(name = "USERS")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class User extends Timestamped{
     @Id

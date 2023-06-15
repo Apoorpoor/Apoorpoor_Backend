@@ -1,11 +1,13 @@
 package com.example.apoorpoor_backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "GET_BADGE")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class GetBadge extends Timestamped {
 

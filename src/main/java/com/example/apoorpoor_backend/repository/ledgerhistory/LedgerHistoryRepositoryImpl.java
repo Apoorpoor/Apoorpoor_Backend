@@ -10,6 +10,7 @@ import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -18,6 +19,9 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -48,11 +52,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     public List<TotalSumResponseDto> getMypageStatus(Long userId) {
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         List<TotalSumResponseDto> content = queryFactory
                 .select(new QTotalSumResponseDto(
@@ -86,11 +86,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
     public List<MonthSumResponseDto> getRecentStatus(Long userId) {
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -191,7 +187,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         - expenditure_type : 지출별 카테고리 항목
         - income_type : 수입별 카테고리 항목
      * */
-    public List<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition){
+    public Page<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition, Pageable pageable){
 
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
@@ -237,7 +233,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
             builder.and(ledgerHistory.date.between(startDate, endDate));
         }
 
-        List<LedgerHistoryResponseDto> content = queryFactory
+        QueryResults<LedgerHistoryResponseDto> results = queryFactory
                 .select(new QLedgerHistoryResponseDto(
                         ledgerHistory.id,
                         ledgerHistory.title,
@@ -257,8 +253,10 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(ledgerHistory.date.desc())
-                .fetch();
+                .orderBy(ledgerHistory.date.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
 
         String query =
                 "select *\n" +
@@ -277,14 +275,18 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         "    and expenditure_type = 'UTILITY_BILL'\n" +
                         "order by date desc "
                 ;
-        return content;
+
+        List<LedgerHistoryResponseDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     /*
      * 이번달 상세 지출내역
      * /accounts/{id}/statistics?date=YYYY-MM
      * */
-    public List<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition) {
+    public Page<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition, Pageable pageable) {
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -293,7 +295,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 ,ConstantImpl.create("%Y-%m")
         );
 
-        List<MonthSumResponseDto> content = queryFactory
+        QueryResults<MonthSumResponseDto> results = queryFactory
                 .select(new QMonthSumResponseDto(
                         formattedDate.as("month"),
                         ledgerHistory.expenditureType,
@@ -306,7 +308,12 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         formattedDate.eq(condition.getDate())
                 )
                 .groupBy(formattedDate, ledgerHistory.expenditureType)
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MonthSumResponseDto> content = results.getResults();
+        long total = results.getTotal();
 
 
         String query =
@@ -320,7 +327,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         "and date_format(date, '%Y-%m') = '2022-05'\n" +
                         "group by month, expenditure_type"
                 ;
-        return content;
+        return new PageImpl<>(content, pageable, total);
     }
 
     /*
@@ -384,11 +391,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -428,11 +431,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -465,11 +464,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -503,11 +498,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -546,11 +537,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -582,11 +569,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -618,11 +601,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -654,11 +633,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -691,11 +666,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -727,11 +698,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(userId))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(userId);
 
         // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
@@ -754,6 +721,14 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         log.info("LEISURE_ACTIVITIES 여가생활");
         if(result <= 100000L) return true;
         return false;
+    }
+
+    private List<Long> getAccountIdList(Long userId) {
+        return queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(userId))
+                .fetch();
     }
 
     private BooleanExpression accountTypeEq(AccountType accountType){

@@ -41,6 +41,9 @@ public class User extends Timestamped{
     @CreationTimestamp
     private Timestamp createDate;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Beggar beggar;
+
     @Builder
     public User(String username, String password, UserRoleEnum role, Long kakaoId) {
         this.username = username;
@@ -60,5 +63,10 @@ public class User extends Timestamped{
 
     public void updateGender(String gender) {
         this.gender = gender;
+    }
+
+    public void setBeggar(Beggar beggar) {
+        this.beggar = beggar;
+        beggar.setUser(this);
     }
 }

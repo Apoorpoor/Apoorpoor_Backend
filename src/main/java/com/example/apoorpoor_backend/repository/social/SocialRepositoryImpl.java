@@ -36,11 +36,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     public Long getExpenditure(SocialSearchCondition condition, User findUser) {
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(findUser.getId()))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
 
@@ -61,11 +57,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     @Override
     public Long getIncome(SocialSearchCondition condition, User findUser) {
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(findUser.getId()))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
 
@@ -96,6 +88,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
     @Override
     public Long getPercent(SocialSearchCondition condition, User findUser) {
+
         return null;
     }
 
@@ -148,19 +141,24 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         return queryFactory
                 .select(new QIncomeTotalDto(
                         ledgerHistory.date.stringValue(),
                         ledgerHistory.income.sum().as("incSum"),
                         beggar.id
                 ))
-                .from(account)
-                .join(account.user, user)
-                .join(account.ledgerHistories, ledgerHistory)
-                .join(beggar.user, user)
+                .from(ledgerHistory)
+                .join(ledgerHistory.account, account)
+                .join(account.user.beggar, beggar)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(beggar.id)
                 .orderBy(ledgerHistory.income.sum().desc())
@@ -174,22 +172,27 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         return queryFactory
                 .select(new QExpenditureTotalDto(
                         ledgerHistory.date.stringValue(),
                         ledgerHistory.expenditure.sum().as("expSum"),
                         beggar.id
                 ))
-                .from(account)
-                .join(account.user, user)
-                .join(account.ledgerHistories, ledgerHistory)
-                .join(beggar.user, user)
+                .from(ledgerHistory)
+                .join(ledgerHistory.account, account)
+                .join(account.user.beggar, beggar)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(beggar.id)
-                .orderBy(ledgerHistory.income.sum().desc())
+                .orderBy(ledgerHistory.expenditure.sum().desc())
                 .limit(10)
                 .fetch();
     }
@@ -199,6 +202,12 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
 
         List<ExpenditureAvgDto> result = queryFactory.
                 select(new QExpenditureAvgDto(
@@ -213,7 +222,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                                 .when(user.age.lt(90)).then(80L)
                                 .when(user.age.lt(100)).then(90L)
                                 .otherwise(0L),
-                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        Expressions.stringTemplate("date_format({0}, '%Y-%m')", ledgerHistory.date),
                         ledgerHistory.expenditure.countDistinct(),
                         ledgerHistory.expenditure.sum(),
                         ledgerHistory.expenditure.sum().doubleValue().divide(ledgerHistory.expenditure.countDistinct()),
@@ -224,7 +233,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(
                         new CaseBuilder()
@@ -250,6 +259,12 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
         List<IncomeAvgDto> result = queryFactory.
                 select(new QIncomeAvgDto(
                         new CaseBuilder()
@@ -263,7 +278,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                                 .when(user.age.lt(90)).then(80L)
                                 .when(user.age.lt(100)).then(90L)
                                 .otherwise(0L),
-                        Expressions.stringTemplate("date_format({0}. '%Y-%m')", ledgerHistory.date),
+                        Expressions.stringTemplate("date_format({0}, '%Y-%m')", ledgerHistory.date),
                         ledgerHistory.income.countDistinct(),
                         ledgerHistory.income.sum(),
                         ledgerHistory.income.sum().doubleValue().divide(ledgerHistory.income.countDistinct()),
@@ -274,7 +289,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
-                        ledgerHistory.date.eq(LocalDate.parse(date))
+                        formattedDate.eq(date)
                 )
                 .groupBy(
                         new CaseBuilder()
@@ -304,6 +319,48 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                         social.age_abb.eq(ageAbb),
                         social.date.eq(date),
                         social.gender.eq(gender)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long getExpSum(SocialSearchCondition condition, User findUser) {
+        Long age = findUser.getAge();
+        String gender = findUser.getGender();
+
+        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return queryFactory
+                .select(social.exp_sum.coalesce(0L))
+                .from(social)
+                .where(
+                        social.age_abb.eq(age_abb),
+                        social.gender.eq(gender),
+                        social.date.eq(date)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long getIncSum(SocialSearchCondition condition, User findUser) {
+        Long age = findUser.getAge();
+        String gender = findUser.getGender();
+
+        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return queryFactory
+                .select(social.inc_sum.coalesce(0L))
+                .from(social)
+                .where(
+                        social.age_abb.eq(age_abb),
+                        social.gender.eq(gender),
+                        social.date.eq(date)
                 )
                 .fetchOne();
     }
@@ -339,5 +396,13 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
     private BooleanExpression accountTypeRankingEq(AccountType accountType){
         return accountType != null ? ranking.accountType.eq(accountType) : null;
+    }
+
+    private List<Long> getAccountIdList(User findUser) {
+        return queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(findUser.getId()))
+                .fetch();
     }
 }

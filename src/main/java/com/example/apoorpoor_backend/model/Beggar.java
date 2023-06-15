@@ -115,6 +115,11 @@ public class Beggar extends Timestamped{
     public void updateLevel(Long level) {
         this.level = level;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+        user.setBeggar(this);
+    }
     /*
         /*
     필요한 파라미터 : ExpType expType; BadgeType badgeType;

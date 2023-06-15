@@ -12,6 +12,8 @@ import com.example.apoorpoor_backend.dto.social.SocialSearchCondition;
 import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -25,9 +27,9 @@ public interface LedgerHistoryRepositoryCustom {
 
     List<AccountTotalResponseDto> getTotalStatus(Long accountId, AccountSearchCondition condition);
 
-    List<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition);
+    Page<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition, Pageable pageable);
 
-    List<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition);
+    Page<MonthSumResponseDto> getStatistic(Long accountId, AccountSearchCondition condition, Pageable pageable);
 
     MonthSumResponseDto getDifference(Long accountId, AccountSearchCondition condition, LocalDate targetDate, int quarter);
 

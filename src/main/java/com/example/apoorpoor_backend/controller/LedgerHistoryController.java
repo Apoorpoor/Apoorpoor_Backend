@@ -12,25 +12,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ledgerhistory")
 public class LedgerHistoryController {
     private final LedgerHistoryService ledgerHistoryService;
 
-    @PostMapping("/")
+    @PostMapping("/ledgerhistory")
     public ResponseEntity<StatusResponseDto> createLedgerHistory(@RequestBody LedgerHistoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.createLedgerHistory(requestDto, userDetails.getUsername());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/ledgerhistory/{id}")
     public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(@PathVariable Long id, @RequestBody LedgerHistoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.updateLedgerHistory(id,requestDto, userDetails.getUsername());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/ledgerhistory/{id}")
     public ResponseEntity<LedgerHistoryResponseDto> getLedgerHistory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.getLedgerHistory(id, userDetails.getUsername());
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/ledgerhistory/{id}")
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.deleteLedgerHistory(id, userDetails.getUsername());
     }

@@ -59,7 +59,7 @@ public class QAccount extends EntityPathBase<Account> {
     public QAccount(Class<? extends Account> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.balance = inits.isInitialized("balance") ? new QBalance(forProperty("balance"), inits.get("balance")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

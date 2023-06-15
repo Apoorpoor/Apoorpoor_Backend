@@ -1,7 +1,11 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
+import com.example.apoorpoor_backend.model.Beggar;
+import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
+import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
@@ -10,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class ChatService{
+
+    private final BeggarRepository beggarRepository;
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -33,5 +40,22 @@ public class ChatService{
                 .userId(userId)
                 .build();
         return chatDto;
+    }
+
+    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
+        Beggar beggar = beggarCheck(chatDto.getBeggar_id());
+        MessageType type = MessageType.TALK;
+        Chat chat = Chat.builder()
+                .sender(chatDto.getSender())
+                .message(chatDto.getMessage())
+                .beggar(beggar)
+                .type(type)
+                .build();
+    }
+
+    public Beggar beggarCheck(Long beggar_id) {
+        return beggarRepository.findById(beggar_id).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
     }
 }

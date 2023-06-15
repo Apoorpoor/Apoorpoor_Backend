@@ -61,4 +61,9 @@ public class BeggarController {
     public ResponseEntity<BeggarCustomListResponseDto> customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customList(userDetails.getUsername());
     }
+
+    @GetMapping("/beggar/info/{nickname}")
+    public ResponseEntity<StatusResponseDto> checkNickname(@PathVariable String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.checkNickname(nickname, userDetails.getUsername());
+    }
 }

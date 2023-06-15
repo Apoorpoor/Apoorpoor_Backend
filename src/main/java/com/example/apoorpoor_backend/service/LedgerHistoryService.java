@@ -109,7 +109,7 @@ public class LedgerHistoryService {
 
         beggarService.updateExpNew(user.getUsername(), expType);
 
-        return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto(randomMENT, expType.getAmount()), HttpStatus.OK);
     }
 
 

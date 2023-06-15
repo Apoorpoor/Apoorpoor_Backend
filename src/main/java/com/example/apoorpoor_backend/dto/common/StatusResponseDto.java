@@ -7,7 +7,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StatusResponseDto {
     private String meassage;
+    private Long point;
     public StatusResponseDto(String meassage){
         this.meassage = meassage;
+    }
+
+    public StatusResponseDto(String meassage, Long point) {
+        this.meassage = meassage;
+        this.point = point;
     }
 }

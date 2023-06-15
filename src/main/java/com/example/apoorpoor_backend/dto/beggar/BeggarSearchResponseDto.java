@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.dto.beggar;
 
 import com.example.apoorpoor_backend.model.Badge;
-import com.example.apoorpoor_backend.model.GetBadge;
 import lombok.Builder;
 import lombok.Getter;
 

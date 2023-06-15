@@ -1,13 +1,17 @@
 package com.example.apoorpoor_backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "POINT")
 @Table
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Point extends Timestamped{
 
     @Id
@@ -25,10 +29,4 @@ public class Point extends Timestamped{
     @JoinColumn(name = "beggar_id")
     private Beggar beggar;
 
-    public Point(String pointDescription, Long earnedPoint, Long usedPoints, Beggar beggar) {
-        this.pointDescription = pointDescription;
-        this.earnedPoint = earnedPoint;
-        this.usedPoints = usedPoints;
-        this.beggar = beggar;
-    }
 }

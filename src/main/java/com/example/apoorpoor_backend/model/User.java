@@ -2,10 +2,10 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Entity(name = "USERS")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +42,9 @@ public class User extends Timestamped{
     @CreationTimestamp
     private Timestamp createDate;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Beggar beggar;
+
     @Builder
     public User(String username, String password, UserRoleEnum role, Long kakaoId) {
         this.username = username;
@@ -60,5 +64,10 @@ public class User extends Timestamped{
 
     public void updateGender(String gender) {
         this.gender = gender;
+    }
+
+    public void setBeggar(Beggar beggar) {
+        this.beggar = beggar;
+        beggar.setUser(this);
     }
 }

@@ -1,16 +1,13 @@
 package com.example.apoorpoor_backend.dto.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class KakaoUserInfoDto {
     private Long id;
     private String nickname;
 
-    public KakaoUserInfoDto(Long id, String nickname) {
-        this.id = id;
-        this.nickname = nickname;
-    }
 }

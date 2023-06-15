@@ -55,7 +55,9 @@ public class ShopService {
             itemList = getEnumItemListByType(itemType, beggar, hasItemNumDtoList);
         }
 
-        ItemListResponseDto itemListResponseDto = new ItemListResponseDto(itemList);
+        ItemListResponseDto itemListResponseDto = ItemListResponseDto.builder().
+                itemList(itemList)
+                .build();
         return new ResponseEntity<>(itemListResponseDto, HttpStatus.OK);
     }
 
@@ -71,7 +73,7 @@ public class ShopService {
             throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
         }
 
-        String pointDescription = payRequestDto.getItemListEnum().getItemName() + "구매!!";//////////////////////////////////////
+        String pointDescription = payRequestDto.getItemListEnum().getItemName() + "구매!!";
 
         Long itemNum = payRequestDto.getItemListEnum().getItemNum();
         String itemName = payRequestDto.getItemListEnum().getItemName();
@@ -82,7 +84,14 @@ public class ShopService {
             throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
         }
 
-        Item item = new Item(itemNum, itemName, levelLimit, itemType, beggar);
+        Item item = Item.builder()
+                .itemNum(itemNum)
+                .itemName(itemName)
+                .levelLimit(levelLimit)
+                .itemType(itemType)
+                .beggar(beggar)
+                .build();
+
         itemRepository.save(item);
 
 
@@ -93,21 +102,20 @@ public class ShopService {
                 .point(updatePoint)
                 .build();
 
-        //////////////////////////////////////////////////////////////////////////////
-        Point recordPoint = new Point(pointDescription, null, itemPrice, beggar);
+        Point recordPoint = Point.builder()
+                .pointDescription(pointDescription)
+                .earnedPoint(null)
+                .usedPoints(itemPrice)
+                .beggar(beggar)
+                .build();
+
         pointRepository.save(recordPoint);
-      //////////////////////////////////////////////////////////////////////////////
+
 
         beggar.updateExp(beggarExpUpResponseDto);
 
 
         return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
-    }
-
-    public Beggar beggarCheck(String username) {
-        return beggarRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
-        );
     }
 
     public Page<PointResponseDto> getPointList(PointSearchCondition condition, Pageable pageable, String username ) {
@@ -215,6 +223,12 @@ public class ShopService {
             i++;
         }
         return filteredItemList;
+    }
+
+    public Beggar beggarCheck(String username) {
+        return beggarRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
     }
 
 }

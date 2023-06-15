@@ -55,7 +55,6 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                //.requestMatchers(PathRequest.toH2Console())
                 .and().ignoring().requestMatchers(PERMIT_URL_ARRAY);
     }
 
@@ -64,20 +63,16 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                // login 없이 허용하는 페이지
                 .requestMatchers("/**").permitAll()
                 .requestMatchers("/users/signup").permitAll()
                 .requestMatchers("/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/read/**").permitAll()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                // 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
-                // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil,userRepository), UsernamePasswordAuthenticationFilter.class)
                 .cors();
 

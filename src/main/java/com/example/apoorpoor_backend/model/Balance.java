@@ -2,12 +2,16 @@ package com.example.apoorpoor_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "BALANCE")
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Balance {
 
     @Id
@@ -25,12 +29,6 @@ public class Balance {
 
     @Column
     private Long expenditureTotal;
-
-    public Balance(Long incomeTotal, Long expenditureTotal, Account account) {
-        this.incomeTotal = incomeTotal;
-        this.expenditureTotal = expenditureTotal;
-        this.account = account;
-    }
 
     public void update(Long incomeTotal, Long expenditureTotal) {
         this.incomeTotal = incomeTotal;

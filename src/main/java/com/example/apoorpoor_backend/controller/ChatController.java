@@ -31,7 +31,7 @@ public class ChatController {
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
     public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        Thread.sleep(500); // simulated delay
+        Thread.sleep(500);
         ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
         msgOperation.convertAndSend("/sub/chat/room", newchatdto);
     }
@@ -39,7 +39,7 @@ public class ChatController {
     @MessageMapping("/chat/send")
     @SendTo("/sub/chat/room")
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        Thread.sleep(500); // simulated delay
+        Thread.sleep(500);
         chatService.sendChatRoom(chatDto, headerAccessor);
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
@@ -51,11 +51,6 @@ public class ChatController {
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
-//    @PostMapping("/chat/{chatId}/like")
-//    @ResponseBody
-//    public void addLikeToChatMessage(@PathVariable Long chatId) {
-//        chatService.addLikeToChatMessage(chatId);
-//    }
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -9,22 +9,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/social")
 public class SocialController {
 
     private final SocialService socialService;
 
-    @GetMapping("/social/percent")
+    @GetMapping("/percent")
     public ResponseEntity<SocialResponseDto> getPercent(SocialSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
      return socialService.getPercent(condition, userDetails.getUsername());
     }
 
-    @GetMapping("/social/rank")
+    @GetMapping("/rank")
     public ResponseEntity<List<RankingResponseDto>> getRank(SocialSearchCondition condition){
         return socialService.getRank(condition);
     }

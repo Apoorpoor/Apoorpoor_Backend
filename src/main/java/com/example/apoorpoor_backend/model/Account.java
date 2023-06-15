@@ -2,6 +2,8 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.dto.account.AccountRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +12,10 @@ import java.util.List;
 
 @Getter
 @Entity(name = "ACCOUNT")
-@NoArgsConstructor
+@Builder
 @Table
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account extends Timestamped{
 
     @Id
@@ -32,10 +36,6 @@ public class Account extends Timestamped{
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<LedgerHistory> ledgerHistories = new ArrayList<>();
 
-    public Account(AccountRequestDto requestDto, User user){
-        this.title = requestDto.getTitle();
-        this.user = user;
-    }
     public void update(AccountRequestDto requestDto){
         this.title = requestDto.getTitle();
     }

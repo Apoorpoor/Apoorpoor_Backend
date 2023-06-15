@@ -2,7 +2,6 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
-import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
@@ -38,9 +37,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public ResponseEntity<UserResponseDto> userInfo(String username) {
         User findUser = userCheck(username);
-        return new ResponseEntity<>(new UserResponseDto(findUser), HttpStatus.OK);
-    }
 
+        UserResponseDto userResponseDto = UserResponseDto.builder()
+                .id(findUser.getId())
+                .username(findUser.getUsername())
+                .age(findUser.getAge())
+                .gender(findUser.getGender())
+                .build();
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<TotalSumResponseDto>> getStatus(String username) {

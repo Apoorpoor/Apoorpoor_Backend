@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @EnableJpaAuditing
 @EnableCaching
-@EnableScheduling //Caching
+@EnableScheduling
 @SpringBootApplication
 public class ApoorpoorBackendApplication {
 

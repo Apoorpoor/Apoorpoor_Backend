@@ -61,10 +61,10 @@ public class ChatService {
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateformat = format.format(date);
-        chatDto.setDate(dateformat);
+//        Date date = new Date();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateformat = format.format(date);
+//        chatDto.setDate(dateformat);
         Chat chat = new Chat(chatDto,beggar, type);
     }
 

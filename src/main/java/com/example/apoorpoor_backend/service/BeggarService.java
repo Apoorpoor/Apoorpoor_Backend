@@ -48,7 +48,16 @@ public class BeggarService {
         if(findBeggar.isPresent())
             return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
 
-        beggarRepository.save(new Beggar(beggarRequestDto, findUser));
+        Beggar beggar =Beggar.builder()
+                .nickname(beggarRequestDto.getNickname())
+                .user(findUser)
+                .point(0L)
+                .level(1L)
+                .exp(0L)
+                .build();
+
+        beggarRepository.save(beggar);
+
         return new ResponseEntity<>(new StatusResponseDto("푸어가 생성되었어요..."), HttpStatus.OK );
     }
 
@@ -127,51 +136,27 @@ public class BeggarService {
     public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
         beggar.update(beggarRequestDto);
-        return new ResponseEntity<>(BeggarResponseDto.of(beggar), HttpStatus.OK);
+
+        BeggarResponseDto beggarResponseDto = BeggarResponseDto.builder()
+                .beggar_id(beggar.getId())
+                .nickname(beggar.getNickname())
+                .point(beggar.getPoint())
+                .level(beggar.getLevel())
+                .description(beggar.getDescription())
+                .build();
+
+        return new ResponseEntity<>(beggarResponseDto, HttpStatus.OK);
     }
 
-//    public ResponseEntity<BeggarExpUpResponseDto> updateExp(BeggarExpUpRequestDto beggarExpUpRequestDto, String username) {
-//        Beggar beggar = beggarCheck(username);
-//        String nickname = beggar.getNickname();
-//        Long exp = beggar.getExp() + beggarExpUpRequestDto.getExpType().getAmount();
-//        Long point = beggar.getPoint() + beggarExpUpRequestDto.getExpType().getAmount();
-//        Long level = beggar.getLevel();
-//
-//        if(beggarExpUpRequestDto.getExpType().equals(ExpType.GET_BADGE)) {
-//            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
-//        }
-//
-//        if (LevelType.getNextExpByLevel(level) <= exp) {
-//            level ++;
-//        }
-//
-//        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
-//                .nickname(nickname)
-//                .exp(exp)
-//                .level(level)
-//                .point(point)
-//                .build();
-//
-//        beggar.updateExp(beggarExpUpResponseDto);
-//        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
-//    }
 
     public void updateExpNew(String username, ExpType expType) {
         Beggar beggar = beggarCheck(username);
 
-        ////////////////////////////////////////////////
         Long plusPoint = expType.getAmount();
-        /////////////////////////////////////////////////
 
         beggar.updatePointAndExp(plusPoint);
 
-        /////////////////////////////////////////////////
         String pointDescription = expType.getDescription();
-
-//        if(expType.equals(ExpType.GET_BADGE)) {
-//            pointDescription = ExpType.GET_BADGE.getDescription();
-//            //saveBadgeNew(beggarExpUpRequestDto.getBadgeType(), beggar);
-//        }
 
         if(expType.equals(ExpType.BEST_SAVER)) {
             pointDescription = ExpType.BEST_SAVER.getDescription();
@@ -181,9 +166,14 @@ public class BeggarService {
             pointDescription = ExpType.LEVEL_UP.getDescription();
         }
 
-        Point recordPoint = new Point(pointDescription, plusPoint, null, beggar);
+        Point recordPoint = Point.builder()
+                .pointDescription(pointDescription)
+                .earnedPoint(plusPoint)
+                .usedPoints(null)
+                .beggar(beggar)
+                .build();
+
         pointRepository.save(recordPoint);
-        /////////////////////////////////////////////////
 
         Long exp = beggar.getExp();
         Long level = beggar.getLevel();
@@ -191,58 +181,14 @@ public class BeggarService {
         if (LevelType.getNextExpByLevel(level) <= exp) {
             level++;
             beggar.updateLevel(level);
-            updateExpNew(username, ExpType.LEVEL_UP); ////////////////////////////////////////////////
+            updateExpNew(username, ExpType.LEVEL_UP);
         }
     }
-    /*
-    필요한 파라미터 : ExpType expType; BadgeType badgeType;
-     Beggar beggar = beggarCheck(username);
-        String nickname = beggar.getNickname();
-        ExpType expType = beggarExpUpRequestDto.getExpType();
-
-        Long exp = beggar.getExp() + expType.getAmount();
-        Long point = beggar.getPoint() + expType.getAmount();
-        Long level = beggar.getLevel();
-
-        String pointDescription = expType.getDescription();
-
-        if(expType.equals(ExpType.GET_BADGE)) {
-            pointDescription = ExpType.GET_BADGE.getDescription();
-            saveBadge(beggarExpUpRequestDto.getBadgeType(), beggar);
-        }
-
-        if(expType.equals(ExpType.BEST_SAVER)) {
-            pointDescription = ExpType.BEST_SAVER.getDescription();
-        }
-
-        if(expType.equals(ExpType.LEVEL_UP)) {
-            pointDescription = ExpType.LEVEL_UP.getDescription();
-        }
-
-        if (LevelType.getNextExpByLevel(level) <= exp) {
-            level ++;
-        }
-
-        BeggarExpUpResponseDto beggarExpUpResponseDto = BeggarExpUpResponseDto.builder()
-                .nickname(nickname)
-                .exp(exp)
-                .level(level)
-                .point(point)
-                .build();
-
-        Point recordPoint = new Point(pointDescription, point, null, beggar);
-        pointRepository.save(recordPoint);
-
-        beggar.updateExp(beggarExpUpResponseDto);
-
-        return new ResponseEntity<>(beggarExpUpResponseDto, HttpStatus.OK);
-     */
 
     public void badgeCheck(User user) {
         Beggar beggar = beggarCheck(user.getUsername());
         List<ExpenditureType> badgeList = Arrays.asList(ExpenditureType.values());
 
-        //획득 기준 통과시에
         for (ExpenditureType expenditureType : badgeList) {
             if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
             notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
@@ -250,7 +196,6 @@ public class BeggarService {
 
     }
 
-    // 해당 월에 소비 뱃지 획득 가능한지 여부
     private boolean badgeCriteriaCheck(ExpenditureType expenditureType, Long userId) {
         return switch (expenditureType){
             case UTILITY_BILL -> false;
@@ -296,7 +241,6 @@ public class BeggarService {
             badge.getGetBadgeList().add(getBadge);
             getBadgeRepository.save(getBadge);
 
-            // 뱃지 부여하니까 point, exp, level update
             updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
 
         } else {
@@ -304,29 +248,6 @@ public class BeggarService {
         }
     }
 
-    //
-
-//    public void saveBadge(ExpenditureType expenditureType, Beggar beggar) {
-//        Long badgeNum = expenditureType.getBadgeNum();
-//        String badgeTitle = expenditureType.getBadgeTitle();
-//
-//        boolean hasBadge = beggar.getGetBadgeList().stream()
-//                .map(GetBadge::getBadge)
-//                .anyMatch(b -> b.getBadgeNum().equals(badgeNum));
-//
-//        if(!hasBadge) {
-//            Badge badge = new Badge(badgeNum, badgeTitle);
-//
-//            badgeRepository.save(badge);
-//
-//            GetBadge getBadge = new GetBadge(badge, beggar);
-//            badge.getGetBadgeList().add(getBadge);
-//            getBadgeRepository.save(getBadge);
-//
-//        } else {
-//            throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
-//        }
-//    }
 
     public ResponseEntity<String> customBeggar(BeggarCustomRequestDto beggarCustomRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
@@ -376,12 +297,21 @@ public class BeggarService {
             Long levelLimit = item.getLevelLimit();
             String itemType = item.getItemType();
 
-            ItemDto itemDto = new ItemDto(itemNum, itemName, levelLimit, itemType);
+            ItemDto itemDto = ItemDto.builder()
+                    .itemNum(itemNum)
+                    .itemName(itemName)
+                    .levelLimit(levelLimit)
+                    .itemType(itemType)
+                    .build();
 
             itemsCollectionList.add(itemDto);
 
         }
-        BeggarCustomListResponseDto beggarCustomListResponseDto = new BeggarCustomListResponseDto(itemsCollectionList);
+
+        BeggarCustomListResponseDto beggarCustomListResponseDto = BeggarCustomListResponseDto.builder()
+                .itemsCollectionList(itemsCollectionList)
+                .build();
+
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
     }
 
@@ -410,7 +340,6 @@ public class BeggarService {
     }
 
     public void resetBadge() {
-        //GetBadge만 삭제하면 되는지
         getBadgeRepository.deleteAll();
     }
 

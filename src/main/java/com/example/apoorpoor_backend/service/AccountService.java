@@ -36,7 +36,14 @@ public class AccountService {
 
     public ResponseEntity<StatusResponseDto> createAccount(AccountRequestDto requestDto, String username) {
         User user = userCheck(username);
-        accountRepository.save(new Account(requestDto, user));
+
+        Account account = Account.builder()
+                .title(requestDto.getTitle())
+                .user(user)
+                .build();
+
+        accountRepository.save(account);
+
         return new ResponseEntity<>(new StatusResponseDto("가계부 생성 완료"), HttpStatus.OK);
     }
 
@@ -51,9 +58,31 @@ public class AccountService {
             List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
 
             for (LedgerHistory ledgerHistory : account.getLedgerHistories()) {
-                ledgerHistoryResponseDtoList.add(LedgerHistoryResponseDto.of(ledgerHistory));
+
+                LedgerHistoryResponseDto ledgerHistoryResponseDto = LedgerHistoryResponseDto.builder()
+                        .id(ledgerHistory.getId())
+                        .title(ledgerHistory.getTitle())
+                        .accountType(ledgerHistory.getAccountType())
+                        .incomeType(ledgerHistory.getIncomeType())
+                        .expenditureType(ledgerHistory.getExpenditureType())
+                        .paymentMethod(ledgerHistory.getPaymentMethod())
+                        .income(ledgerHistory.getIncome())
+                        .expenditure(ledgerHistory.getExpenditure())
+                        .date(ledgerHistory.getDate().toString())
+                        .build();
+
+                ledgerHistoryResponseDtoList.add(ledgerHistoryResponseDto);
             }
-            accountResponseDtoList.add(new AccountResponseDto(account, ledgerHistoryResponseDtoList));
+
+            AccountResponseDto accountResponseDto = AccountResponseDto.builder()
+                    .id(account.getId())
+                    .title(account.getTitle())
+                    .userId(account.getUser().getId())
+                    .balance(account.getBalance())
+                    .ledgerHistoryResponseDtoList(ledgerHistoryResponseDtoList)
+                    .build();
+
+            accountResponseDtoList.add(accountResponseDto);
         }
 
         return ResponseEntity.ok(accountResponseDtoList);
@@ -62,9 +91,7 @@ public class AccountService {
     @Transactional(readOnly = true)
     public ResponseEntity<AccountResponseDto> getAccount(Long id, String username) {
         User user = userCheck(username);
-        Account account = accountRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
-        );
+        Account account = getAccount(id);
 
         Optional<Balance> findBalance = balanceRepository.findByAccountId(id);
 
@@ -77,21 +104,46 @@ public class AccountService {
         List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList = new ArrayList<>();
 
         for (LedgerHistory ledgerHistory : ledgerHistoryList) {
-            ledgerHistoryResponseDtoList.add(LedgerHistoryResponseDto.of(ledgerHistory));
+
+            LedgerHistoryResponseDto ledgerHistoryResponseDto = LedgerHistoryResponseDto.builder()
+                    .id(ledgerHistory.getId())
+                    .title(ledgerHistory.getTitle())
+                    .accountType(ledgerHistory.getAccountType())
+                    .incomeType(ledgerHistory.getIncomeType())
+                    .expenditureType(ledgerHistory.getExpenditureType())
+                    .paymentMethod(ledgerHistory.getPaymentMethod())
+                    .income(ledgerHistory.getIncome())
+                    .expenditure(ledgerHistory.getExpenditure())
+                    .date(ledgerHistory.getDate().toString())
+                    .build();
+
+
+            ledgerHistoryResponseDtoList.add(ledgerHistoryResponseDto);
         }
 
-        AccountResponseDto accountResponseDto = new AccountResponseDto(account.getId(), account.getTitle(),
-                account.getUser().getId(), ledgerHistoryResponseDtoList, balance);
+        AccountResponseDto accountResponseDto = AccountResponseDto.builder()
+                .id(account.getId())
+                .title(account.getTitle())
+                .userId(account.getUser().getId())
+                .ledgerHistoryResponseDtoList(ledgerHistoryResponseDtoList)
+                .balance(balance)
+                .build();
+
         return new ResponseEntity<>(accountResponseDto, HttpStatus.OK);
     }
 
     public ResponseEntity<AccountResponseDto> updateAccount(Long id, AccountRequestDto requestDto, String username) {
         User user = userCheck(username);
-        Account account = accountRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
-        );
+        Account account = getAccount(id);
         account.update(requestDto);
-        AccountResponseDto accountResponseDto = new AccountResponseDto(account);
+        
+        AccountResponseDto accountResponseDto = AccountResponseDto.builder()
+                .id(account.getId())
+                .title(account.getTitle())
+                .userId(account.getUser().getId())
+                .balance(account.getBalance())
+                .build();
+        
         return ResponseEntity.ok(accountResponseDto);
     }
 
@@ -113,14 +165,18 @@ public class AccountService {
 
         Long expenditure_sum = 0L;
         Long income_sum = 0L;
-        //지출 합 더하기
+
         for (AccountTotalResponseDto status : totalStatus) {
             expenditure_sum += Optional.ofNullable(status.getExpenditure_sum()).orElse(0L);
             income_sum += Optional.ofNullable(status.getIncome_sum()).orElse(0L);
         }
 
-        //수입 합 더하기
-        return new ResponseEntity<>(new AccountTotalListResponseDto(totalStatus, expenditure_sum, income_sum), HttpStatus.OK);
+        AccountTotalListResponseDto accountTotalListResponseDto = AccountTotalListResponseDto.builder()
+                .accountTotalResponseDtoList(totalStatus)
+                .expenditure_sum(expenditure_sum)
+                .income_sum(income_sum)
+                .build();
+        return new ResponseEntity<>(accountTotalListResponseDto, HttpStatus.OK);
     }
 
     @Transactional(readOnly = true)
@@ -144,15 +200,14 @@ public class AccountService {
             LocalDate currentDate = LocalDate.parse(condition.getDate()+"-01");
             LocalDate pastDate = LocalDate.parse(condition.getDate()+"-01");
 
-            int quarter = 0; // 분기 초기화
+            int quarter = 0;
 
             if (dateType.equals("month")) {
                 pastDate = currentDate.minusMonths(1);
             } else if (dateType.equals("year")) {
                 pastDate = currentDate.minusYears(1);
             } else if (dateType.equals("quarter")){
-                // 1,2,3 / 4,5,6 / 7,8,9 / 10,11,12
-                quarter = (int) Math.ceil(currentDate.getMonthValue() / 3.0); // 분기 추출
+                quarter = (int) Math.ceil(currentDate.getMonthValue() / 3.0);
                 pastDate = currentDate.minusYears(1);
             }
 
@@ -169,8 +224,9 @@ public class AccountService {
         );
     }
 
-
+    private Account getAccount(Long id) {
+        return accountRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 가계부가 존재하지 않습니다.")
+        );
+    }
 }
-
-
-

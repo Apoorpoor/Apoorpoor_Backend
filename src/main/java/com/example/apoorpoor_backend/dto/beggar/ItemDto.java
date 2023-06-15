@@ -1,10 +1,10 @@
 package com.example.apoorpoor_backend.dto.beggar;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class ItemDto {
     private Long itemNum;
 
@@ -13,11 +13,4 @@ public class ItemDto {
     private Long levelLimit;
 
     private String itemType;
-
-    public ItemDto(Long itemNum, String itemName, Long levelLimit, String itemType) {
-        this.itemNum = itemNum;
-        this.itemName = itemName;
-        this.levelLimit = levelLimit;
-        this.itemType = itemType;
-    }
 }

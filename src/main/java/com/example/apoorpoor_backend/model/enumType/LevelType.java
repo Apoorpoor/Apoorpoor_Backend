@@ -29,7 +29,7 @@ public enum LevelType {
                 return levelType.nextExp;
             }
         }
-        return null; // 예외 처리 필요 (존재하지 않는 레벨일 경우)
+        return null;
     }
 
 }

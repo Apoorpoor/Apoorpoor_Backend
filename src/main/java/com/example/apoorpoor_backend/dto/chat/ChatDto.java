@@ -1,16 +1,13 @@
 package com.example.apoorpoor_backend.dto.chat;
 
-import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChatDto {
     private MessageType type;
     private Long beggar_id;

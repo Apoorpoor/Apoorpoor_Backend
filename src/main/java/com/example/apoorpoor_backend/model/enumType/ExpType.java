@@ -17,9 +17,4 @@ public enum ExpType {
         this.amount = amount;
         this.description = description;
     }
-
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-
 }

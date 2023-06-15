@@ -19,9 +19,9 @@ import java.util.List;
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QBeggar.beggar;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.ledgerHistory;
-import static com.example.apoorpoor_backend.model.QRanking.*;
-import static com.example.apoorpoor_backend.model.QSocial.*;
-import static com.example.apoorpoor_backend.model.QUser.*;
+import static com.example.apoorpoor_backend.model.QRanking.ranking;
+import static com.example.apoorpoor_backend.model.QSocial.social;
+import static com.example.apoorpoor_backend.model.QUser.user;
 
 @Slf4j
 public class SocialRepositoryImpl implements SocialRepositoryCustom{
@@ -35,7 +35,6 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     @Override
     public Long getExpenditure(SocialSearchCondition condition, User findUser) {
 
-        // user_id로 생성된 account_id 찾기
         List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
@@ -43,7 +42,6 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate yesterday = LocalDate.now().minusMonths(1);
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-        // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
                 ,ledgerHistory.date
@@ -56,7 +54,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
     @Override
     public Long getIncome(SocialSearchCondition condition, User findUser) {
-        // user_id로 생성된 account_id 찾기
+
         List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
@@ -64,7 +62,6 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         LocalDate yesterday = LocalDate.now().minusMonths(1);
         String previousMonth = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-        // date_format(date, '%Y-%m') querydsl로 바꾸기
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
                 ,ledgerHistory.date
@@ -98,7 +95,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         Long age = findUser.getAge();
         String gender = findUser.getGender();
 
-        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+        Long age_abb = age-(age%10);
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -119,7 +116,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         Long age = findUser.getAge();
         String gender = findUser.getGender();
 
-        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+        Long age_abb = age-(age%10);
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -328,7 +325,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         Long age = findUser.getAge();
         String gender = findUser.getGender();
 
-        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+        Long age_abb = age-(age%10);
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -349,7 +346,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         Long age = findUser.getAge();
         String gender = findUser.getGender();
 
-        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+        Long age_abb = age-(age%10);
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));

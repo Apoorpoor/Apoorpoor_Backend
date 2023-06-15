@@ -2,12 +2,9 @@ package com.example.apoorpoor_backend.repository.shop;
 
 import com.example.apoorpoor_backend.dto.shop.PointResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
-import com.example.apoorpoor_backend.model.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 
 public interface PointRepositoryCustom {
 

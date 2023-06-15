@@ -2,10 +2,10 @@ package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.model.enumType.UserRoleEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Entity(name = "USERS")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,23 +4,15 @@ import com.example.apoorpoor_backend.dto.account.AccountSearchCondition;
 import com.example.apoorpoor_backend.dto.account.AccountTotalResponseDto;
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
-import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryListResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistorySearchCondition;
-import com.example.apoorpoor_backend.dto.social.SocialResponseDto;
-import com.example.apoorpoor_backend.dto.social.SocialSearchCondition;
-import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
-import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+
 
 import java.time.LocalDate;
 import java.util.List;
 public interface LedgerHistoryRepositoryCustom {
-
-    List<LedgerHistoryListResponseDto> search(LedgerHistorySearchCondition condition);
 
     List<TotalSumResponseDto> getMypageStatus(Long userId);
     List<MonthSumResponseDto> getRecentStatus(Long userId);

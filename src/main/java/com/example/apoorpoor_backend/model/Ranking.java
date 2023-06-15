@@ -1,15 +1,15 @@
 package com.example.apoorpoor_backend.model;
 
-import com.example.apoorpoor_backend.dto.social.ExpenditureTotalDto;
-import com.example.apoorpoor_backend.dto.social.IncomeTotalDto;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "RANKING")
 @NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Ranking {
 

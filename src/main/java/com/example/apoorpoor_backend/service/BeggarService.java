@@ -117,7 +117,6 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
-        List<Badge> badgeList = getBadgeList(beggarId);
 
 
 

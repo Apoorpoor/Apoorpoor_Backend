@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "GET_BADGE")
 @NoArgsConstructor
-@Getter
 @AllArgsConstructor
+@Getter
 public class GetBadge extends Timestamped {
 
     @Id

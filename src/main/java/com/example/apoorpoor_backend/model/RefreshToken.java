@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "REFRESH_TOKEN")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

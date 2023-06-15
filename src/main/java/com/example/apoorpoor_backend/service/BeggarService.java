@@ -185,6 +185,7 @@ public class BeggarService {
             level++;
             beggar.updateLevel(level);
             updateExpNew(username, ExpType.LEVEL_UP);
+            notificationService.notifyLevelUpEvent(username, beggar);
         }
     }
 

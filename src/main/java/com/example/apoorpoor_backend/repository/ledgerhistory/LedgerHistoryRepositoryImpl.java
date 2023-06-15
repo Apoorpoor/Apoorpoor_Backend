@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.example.apoorpoor_backend.model.QAccount.account;
-import static com.example.apoorpoor_backend.model.QLedgerHistory.*;
+import static com.example.apoorpoor_backend.model.QLedgerHistory.ledgerHistory;
 
 @Slf4j
 public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCustom {

@@ -5,8 +5,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-
 import static com.example.apoorpoor_backend.model.QGetBadge.getBadge;
+
 
 public class GetBadgeRepositoryImpl implements GetBadgeRepositoryCustom{
     private final JPAQueryFactory queryFactory;

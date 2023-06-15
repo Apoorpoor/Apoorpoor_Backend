@@ -25,16 +25,13 @@ public class Chat {
 
     @Enumerated(EnumType.STRING)
     private MessageType type;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "beggar_id")
     private Beggar beggar;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
 //    @ColumnDefault("0")
 //    private long likeCount;
-
-
     public Chat (ChatDto chatDto, Beggar beggar, MessageType type) {
         this.sender = chatDto.getSender();
         this.message = chatDto.getMessage();
@@ -43,7 +40,6 @@ public class Chat {
         this.level = 1L;
 //        this.likeCount = 0;
     }
-
 //    public void setLikes(){
 //        ++likeCount;
 //    }

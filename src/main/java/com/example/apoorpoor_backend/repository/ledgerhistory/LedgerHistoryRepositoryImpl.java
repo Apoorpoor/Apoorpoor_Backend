@@ -756,7 +756,6 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         return false;
     }
 
-
     private BooleanExpression accountTypeEq(AccountType accountType){
         return accountType != null ? ledgerHistory.accountType.eq(accountType) : null;
     }

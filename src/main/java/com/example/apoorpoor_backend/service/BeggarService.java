@@ -102,11 +102,14 @@ public class BeggarService {
         String description = beggar.getDescription();
         String gender = user.getGender();
         Long age = user.getAge();
+        List<Badge> badgeList = getBadgeList(beggarId);
+
         String topImage = beggar.getTop() == null ? null : beggar.getTop().getItemImage();
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
         List<Badge> badgeList = getBadgeList(beggarId);
+
 
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto

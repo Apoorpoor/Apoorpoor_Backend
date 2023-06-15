@@ -5,6 +5,7 @@ import com.example.apoorpoor_backend.model.Beggar;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
+
 import static com.example.apoorpoor_backend.model.QBeggar.beggar;
 import static com.example.apoorpoor_backend.model.QUser.user;
 

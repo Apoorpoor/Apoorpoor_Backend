@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "POINT")
 @Table
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Point extends Timestamped{
 
     @Id

@@ -17,9 +17,9 @@ import java.util.List;
 @Getter
 @Entity(name = "BEGGAR")
 @Builder
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class Beggar extends Timestamped{
 
     @Id

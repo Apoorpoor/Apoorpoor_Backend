@@ -17,9 +17,9 @@ import java.time.LocalDate;
 @Getter
 @Entity(name = "LEDGER_HISTORY")
 @Builder
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class LedgerHistory extends Timestamped{
 
     @Id

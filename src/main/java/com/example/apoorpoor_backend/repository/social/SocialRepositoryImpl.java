@@ -19,9 +19,9 @@ import java.util.List;
 import static com.example.apoorpoor_backend.model.QAccount.account;
 import static com.example.apoorpoor_backend.model.QBeggar.beggar;
 import static com.example.apoorpoor_backend.model.QLedgerHistory.ledgerHistory;
-import static com.example.apoorpoor_backend.model.QRanking.*;
-import static com.example.apoorpoor_backend.model.QSocial.*;
-import static com.example.apoorpoor_backend.model.QUser.*;
+import static com.example.apoorpoor_backend.model.QRanking.ranking;
+import static com.example.apoorpoor_backend.model.QSocial.social;
+import static com.example.apoorpoor_backend.model.QUser.user;
 
 @Slf4j
 public class SocialRepositoryImpl implements SocialRepositoryCustom{

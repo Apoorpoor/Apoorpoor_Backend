@@ -1,12 +1,14 @@
 package com.example.apoorpoor_backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "SOCIAL")
 @NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Social {
 

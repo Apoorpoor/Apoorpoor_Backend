@@ -212,8 +212,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(ledgerHistory.getAccount());
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
-            Long expenditureTotal = findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+            Long incomeTotal = Optional.of(findBalance.get().getIncomeTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getIncome()).orElse(0L);
+            Long expenditureTotal = Optional.of(findBalance.get().getExpenditureTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getExpenditure()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }

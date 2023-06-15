@@ -11,6 +11,7 @@ import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepos
 import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
+import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -182,6 +183,7 @@ public class BeggarService {
             level++;
             beggar.updateLevel(level);
             updateExpNew(username, ExpType.LEVEL_UP);
+            notificationService.notifyLevelUpEvent(username, beggar);
         }
     }
 
@@ -190,8 +192,7 @@ public class BeggarService {
         List<ExpenditureType> badgeList = Arrays.asList(ExpenditureType.values());
 
         for (ExpenditureType expenditureType : badgeList) {
-            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
-            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
+            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(user, expenditureType, beggar);
         }
 
     }
@@ -222,7 +223,7 @@ public class BeggarService {
     }
 
 
-    public void saveBadgeNew(ExpenditureType expenditureType, Beggar beggar) {
+    public void saveBadgeNew(User user, ExpenditureType expenditureType, Beggar beggar) {
         Long badgeNum = expenditureType.getBadgeNum();
         String badgeTitle = expenditureType.getBadgeTitle();
         String badgeImage = badgeUrl + expenditureType.getBadgeImage();
@@ -242,6 +243,8 @@ public class BeggarService {
             getBadgeRepository.save(getBadge);
 
             updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
+
+            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
 
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
@@ -313,6 +316,14 @@ public class BeggarService {
                 .build();
 
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<StatusResponseDto> checkNickname(String nickname, String username) {
+        User user = userCheck(username);
+        Optional<Beggar> beggar = beggarRepository.findByNickname(nickname);
+        if(beggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("중복된 닉네임이 존재합니다."), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new StatusResponseDto("사용 가능한 닉네임입니다."), HttpStatus.OK);
     }
 
     public User userCheck(String username) {

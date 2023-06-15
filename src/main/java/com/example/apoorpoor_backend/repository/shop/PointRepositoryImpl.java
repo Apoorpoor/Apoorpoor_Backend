@@ -70,6 +70,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                         point.createdAt.between(startDate, endDate),
                         builder
                 )
+                .orderBy(point.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

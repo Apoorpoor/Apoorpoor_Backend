@@ -100,26 +100,91 @@ public class LedgerHistoryService {
         }
 
         ExpType expType = ExpType.FILL_LEDGER;
-        if(expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
+        if (expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
             expType = ExpType.BEST_SAVER;
         }
+
+        MentManager mentManager = new MentManager();
+        String randomMENT = mentManager.getMent(accountType, incomeType, expenditureType);
+
         beggarService.updateExpNew(user.getUsername(), expType);
 
-        String randomMENT = getMent(accountType);
         return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
-
     }
 
-    public String getMent(AccountType accountType) {
-        Random random = new Random();
-        MentType mentType;
-        if (accountType == AccountType.EXPENDITURE) {
-            mentType = MentType.values()[random.nextInt(MentType.MENT11.ordinal() + 1)];
-        } else {
-            mentType = MentType.values()[random.nextInt(MentType.MENT18.ordinal() - MentType.MENT12.ordinal() + 1) + MentType.MENT12.ordinal()];
+
+    public class MentManager {
+        public String getMent(AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType) {
+
+            if (accountType == AccountType.EXPENDITURE) {
+                MentType mentType = getExpenditureMentType(expenditureType);
+                if (mentType != null) {
+                    List<String> ments = mentType.getMents();
+                    if (ments != null && !ments.isEmpty()) {
+                        return ments.get(random.nextInt(ments.size()));
+                    }
+                }
+            } else {
+                MentType mentType = getIncomeMentType(incomeType);
+                if (mentType != null) {
+                    List<String> ments = mentType.getMents();
+                    if (ments != null && !ments.isEmpty()) {
+                        return ments.get(random.nextInt(ments.size()));
+                    }
+                }
+            }
+            return null;
         }
-        List<String> ments = mentType.getMents();
-        return ments.get(random.nextInt(ments.size()));
+
+        private MentType getExpenditureMentType(ExpenditureType expenditureType) {
+            switch (expenditureType) {
+                case UTILITY_BILL:
+                    return MentType.MENT1;
+                case CONDOLENCE_EXPENSE:
+                    return MentType.MENT2;
+                case TRANSPORTATION:
+                    return MentType.MENT3;
+                case COMMUNICATION_EXPENSES:
+                    return MentType.MENT4;
+                case INSURANCE:
+                    return MentType.MENT5;
+                case EDUCATION:
+                    return MentType.MENT6;
+                case SAVINGS:
+                    return MentType.MENT7;
+                case CULTURE:
+                    return MentType.MENT8;
+                case HEALTH:
+                    return MentType.MENT9;
+                case FOOD_EXPENSES:
+                    return MentType.MENT10;
+                case SHOPPING:
+                    return MentType.MENT11;
+                default:
+                    return null;
+            }
+        }
+
+        private MentType getIncomeMentType(IncomeType incomeType) {
+            switch (incomeType) {
+                case EMPLOYMENT_INCOME:
+                    return MentType.MENT12;
+                case BUSINESS:
+                    return MentType.MENT13;
+                case STOCKS:
+                    return MentType.MENT14;
+                case INVESTMENT:
+                    return MentType.MENT15;
+                case ALLOWANCE:
+                    return MentType.MENT16;
+                case FIXED_DEPOSIT_MATURITY:
+                    return MentType.MENT17;
+                case OTHER:
+                    return MentType.MENT18;
+                default:
+                    return null;
+            }
+        }
     }
 
     public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {

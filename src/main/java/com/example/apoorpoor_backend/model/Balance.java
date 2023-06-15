@@ -2,12 +2,16 @@ package com.example.apoorpoor_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "BALANCE")
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Balance {
 
     @Id

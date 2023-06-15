@@ -6,8 +6,10 @@ import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 @Entity(name = "LEDGER_HISTORY")
 @Builder
 @Table
+@NoArgsConstructor
+@AllArgsConstructor
 public class LedgerHistory extends Timestamped{
 
     @Id

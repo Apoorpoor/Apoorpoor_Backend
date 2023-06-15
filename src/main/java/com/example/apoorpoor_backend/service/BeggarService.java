@@ -11,6 +11,7 @@ import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepos
 import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
+import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,10 @@ public class BeggarService {
         Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
         if(findBeggar.isPresent())
             return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
+
+        Optional<Beggar> nicknameBeggar = beggarRepository.findByNickname(beggarRequestDto.getNickname());
+        if(nicknameBeggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("이미 중복된 닉네임이 존재합니다."), HttpStatus.BAD_REQUEST);
 
         Beggar beggar =Beggar.builder()
                 .nickname(beggarRequestDto.getNickname())

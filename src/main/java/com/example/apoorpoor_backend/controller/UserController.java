@@ -2,10 +2,8 @@ package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
-import com.example.apoorpoor_backend.dto.beggar.BeggarSearchResponseDto;
 import com.example.apoorpoor_backend.dto.user.AgeRequestDto;
 import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
-import com.example.apoorpoor_backend.dto.user.MyPageSearchCondition;
 import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.UserService;

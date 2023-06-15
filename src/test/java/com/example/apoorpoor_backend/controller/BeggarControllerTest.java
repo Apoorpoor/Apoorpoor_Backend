@@ -46,7 +46,14 @@ class BeggarControllerTest {
         String username = "user";
         UserRoleEnum userRoleEnum = UserRoleEnum.USER;
         Long kakaoId = 213213124L;
-        User user1 = new User(username, null, userRoleEnum, kakaoId);
+
+        User user1 = User.builder()
+                .username(username)
+                .password(null)
+                .role(userRoleEnum)
+                .kakaoId(kakaoId)
+                .build();
+
         user = new UserDetailsImpl(user1, user1.getUsername());
     }
 
@@ -120,13 +127,25 @@ class BeggarControllerTest {
         BeggarService mockedBeggarService = mock(BeggarService.class);
         UserDetailsImpl mockedUserDetails = mock(UserDetailsImpl.class);
 
+        Badge badge1 = Badge.builder()
+                .badgeNum(1L)
+                .badgeTitle("badge1")
+                .badgeImage("badgeImage1")
+                .build();
+
+        Badge badge2 = Badge.builder()
+                .badgeNum(2L)
+                .badgeTitle("badge2")
+                .badgeImage("badgeImage2")
+                .build();
+
         BeggarSearchResponseDto expectedResponseDto = BeggarSearchResponseDto.builder()
                 .beggarId(1L)
                 .userId(2L)
                 .nickname("Tester")
                 .point(100L)
                 .exp(500L)
-                .badgeList(List.of(new Badge(1L, "badge1", "badgeImage1"), new Badge(2L, "badge2", "badgeImage2")))
+                .badgeList(List.of(badge1, badge2))
                 .level(5L)
                 .description("Description")
                 .gender("Male")
@@ -176,13 +195,25 @@ class BeggarControllerTest {
         // Mock 객체 생성
         BeggarService mockedBeggarService = mock(BeggarService.class);
 
+        Badge badge1 = Badge.builder()
+                .badgeNum(1L)
+                .badgeTitle("badge1")
+                .badgeImage("badgeImage1")
+                .build();
+
+        Badge badge2 = Badge.builder()
+                .badgeNum(2L)
+                .badgeTitle("badge2")
+                .badgeImage("badgeImage2")
+                .build();
+
         BeggarSearchResponseDto expectedResponseDto = BeggarSearchResponseDto.builder()
                 .beggarId(1L)
                 .userId(2L)
                 .nickname("Tester")
                 .point(100L)
                 .exp(500L)
-                .badgeList(List.of(new Badge(1L, "badge1", "badgeImage1"), new Badge(2L, "badge2", "badgeImage2")))
+                .badgeList(List.of(badge1, badge2))
                 .level(5L)
                 .description("Description")
                 .gender("Male")

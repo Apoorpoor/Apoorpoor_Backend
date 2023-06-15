@@ -83,9 +83,19 @@ public class SocialService {
             String topImage = ranking.getBeggar().getTop() == null ? null : itemUrl + ranking.getBeggar().getTop().getItemImage();
             String accImage = ranking.getBeggar().getAcc() == null ? null : itemUrl + ranking.getBeggar().getAcc().getItemImage();
 
-            rankingResponseDtoList.add(new RankingResponseDto(ranking.getRank_num(), ranking.getBeggar().getId(), ranking.getBeggar().getNickname(),
-                    ranking.getBeggar().getLevel(), accImage, topImage,
-                    ranking.getTotal(), ranking.getAccountType(), ranking.getDate()));
+            RankingResponseDto rankingResponseDto = RankingResponseDto.builder()
+                    .rank_num(ranking.getRank_num())
+                    .beggar_id(ranking.getBeggar().getId())
+                    .nickname(ranking.getBeggar().getNickname())
+                    .level(ranking.getBeggar().getLevel())
+                    .acc_url(accImage)
+                    .top_url(topImage)
+                    .total(ranking.getTotal())
+                    .accountType(ranking.getAccountType())
+                    .date(ranking.getDate())
+                    .build();
+
+            rankingResponseDtoList.add(rankingResponseDto);
         }
         return new ResponseEntity<>(rankingResponseDtoList, HttpStatus.OK);
     }

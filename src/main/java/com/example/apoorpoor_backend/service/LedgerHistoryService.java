@@ -35,14 +35,14 @@ public class LedgerHistoryService {
     private final BalanceRepository balanceRepository;
     private final BeggarRepository beggarRepository;
     private final BeggarService beggarService;
-    private final NotificationService notificationService;////
+    private final NotificationService notificationService;
 
     private final Random random = new Random();
 
     public ResponseEntity<StatusResponseDto> createLedgerHistory(LedgerHistoryRequestDto requestDto, String username) {
         User user = userCheck(username);
         Account account = accountCheck(requestDto.getAccountId());
-        Beggar beggar = beggarCheck(username);   /////////////////////////////
+        Beggar beggar = beggarCheck(username);
 
 
         String title = requestDto.getTitle();
@@ -53,8 +53,6 @@ public class LedgerHistoryService {
         Long income = requestDto.getIncome();
         Long expenditure = requestDto.getExpenditure();
         LocalDate localDate = LocalDate.parse(requestDto.getDate());
-
-        //notificationService.notifyGetBadgeEvent(user, beggar, expenditureType.getBadgeTitle());////////////////////////////
 
         if(accountType == AccountType.INCOME){
             expenditureType = null;
@@ -70,7 +68,17 @@ public class LedgerHistoryService {
             income = 0L;
         }
 
-        LedgerHistory ledgerHistory = new LedgerHistory(account, title, accountType, incomeType, expenditureType, paymentMethod, income, expenditure, localDate);
+        LedgerHistory ledgerHistory = LedgerHistory.builder()
+                .account(account)
+                .title(title)
+                .accountType(accountType)
+                .incomeType(incomeType)
+                .expenditureType(expenditureType)
+                .paymentMethod(paymentMethod)
+                .income(income)
+                .expenditure(expenditure)
+                .date(localDate)
+                .build();
 
         ledgerHistoryRepository.save(ledgerHistory);
 
@@ -82,22 +90,21 @@ public class LedgerHistoryService {
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
-            Balance balance = new Balance(income, expenditure, account);
+            Balance balance = Balance.builder()
+                    .incomeTotal(income)
+                    .expenditureTotal(expenditure)
+                    .account(account)
+                    .build();
+
             balanceRepository.save(balance);
         }
 
         ExpType expType = ExpType.FILL_LEDGER;
-        /////////////////////////////////////////////////////////////////////////
         if(expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
             expType = ExpType.BEST_SAVER;
         }
-        ////////////////////////////////////////////////////////////////////////
+        beggarService.updateExpNew(user.getUsername(), expType);
 
-        // 1개 등록시 point +10, exp +10 (누적), 레벨업 확인
-        beggarService.updateExpNew(user.getUsername(), expType);  /////////////////////////////////////////
-
-
-        // 지출/수입 구분에 따라 랜덤 멘트 프론트에 전달하기
         String randomMENT = getMent(accountType);
         return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
 
@@ -113,8 +120,7 @@ public class LedgerHistoryService {
             mentType = incompeMentTypes.get(random.nextInt(incompeMentTypes.size()));
         }
         List<String> ments = mentType.getMents();
-        String randomMENT = ments.get(random.nextInt(ments.size()));
-        return randomMENT;
+        return ments.get(random.nextInt(ments.size()));
     }
 
     public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {
@@ -154,10 +160,14 @@ public class LedgerHistoryService {
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
-            Balance balance = new Balance(income, expenditure, account);
+            Balance balance = Balance.builder()
+                    .incomeTotal(income)
+                    .expenditureTotal(expenditure)
+                    .account(account)
+                    .build();
+
             balanceRepository.save(balance);
         }
-
 
         LedgerHistoryResponseDto responseDto = LedgerHistoryResponseDto.builder()
                 .title(title)
@@ -179,7 +189,19 @@ public class LedgerHistoryService {
         User user = userCheck(username);
         LedgerHistory ledgerHistory = ledgerHistoryCheck(id);
 
-        return new ResponseEntity<>(LedgerHistoryResponseDto.of(ledgerHistory), HttpStatus.OK);
+        LedgerHistoryResponseDto ledgerHistoryResponseDto = LedgerHistoryResponseDto.builder()
+                .id(ledgerHistory.getId())
+                .title(ledgerHistory.getTitle())
+                .accountType(ledgerHistory.getAccountType())
+                .incomeType(ledgerHistory.getIncomeType())
+                .expenditureType(ledgerHistory.getExpenditureType())
+                .paymentMethod(ledgerHistory.getPaymentMethod())
+                .income(ledgerHistory.getIncome())
+                .expenditure(ledgerHistory.getExpenditure())
+                .date(String.valueOf(ledgerHistory.getDate()))
+                .build();
+
+        return new ResponseEntity<>(ledgerHistoryResponseDto, HttpStatus.OK);
     }
 
     public ResponseEntity<StatusResponseDto> deleteLedgerHistory(Long id, String username){
@@ -220,8 +242,7 @@ public class LedgerHistoryService {
     }
 
     private Optional<Balance> getBalance(Account account) {
-        Optional<Balance> findBalance = balanceRepository.findByAccountId(account.getId());
-        return findBalance;
+        return balanceRepository.findByAccountId(account.getId());
     }
 
     public Beggar beggarCheck(String username) {
@@ -229,6 +250,5 @@ public class LedgerHistoryService {
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
-
 
 }

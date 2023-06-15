@@ -36,11 +36,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     public Long getExpenditure(SocialSearchCondition condition, User findUser) {
 
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(findUser.getId()))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
 
@@ -61,11 +57,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     @Override
     public Long getIncome(SocialSearchCondition condition, User findUser) {
         // user_id로 생성된 account_id 찾기
-        List<Long> accountIdList = queryFactory
-                .select(account.id)
-                .from(account)
-                .where(account.user.id.eq(findUser.getId()))
-                .fetch();
+        List<Long> accountIdList = getAccountIdList(findUser);
 
         AccountType accountType = condition.getAccountType();
 
@@ -96,6 +88,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
     @Override
     public Long getPercent(SocialSearchCondition condition, User findUser) {
+
         return null;
     }
 
@@ -331,6 +324,48 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     }
 
     @Override
+    public Long getExpSum(SocialSearchCondition condition, User findUser) {
+        Long age = findUser.getAge();
+        String gender = findUser.getGender();
+
+        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return queryFactory
+                .select(social.exp_sum.coalesce(0L))
+                .from(social)
+                .where(
+                        social.age_abb.eq(age_abb),
+                        social.gender.eq(gender),
+                        social.date.eq(date)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long getIncSum(SocialSearchCondition condition, User findUser) {
+        Long age = findUser.getAge();
+        String gender = findUser.getGender();
+
+        Long age_abb = age-(age%10); //10, 20, 30대.. 인지 구하기
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        return queryFactory
+                .select(social.inc_sum.coalesce(0L))
+                .from(social)
+                .where(
+                        social.age_abb.eq(age_abb),
+                        social.gender.eq(gender),
+                        social.date.eq(date)
+                )
+                .fetchOne();
+    }
+
+    @Override
     public List<Ranking> getRank(SocialSearchCondition condition) {
 
         return queryFactory
@@ -361,5 +396,13 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
 
     private BooleanExpression accountTypeRankingEq(AccountType accountType){
         return accountType != null ? ranking.accountType.eq(accountType) : null;
+    }
+
+    private List<Long> getAccountIdList(User findUser) {
+        return queryFactory
+                .select(account.id)
+                .from(account)
+                .where(account.user.id.eq(findUser.getId()))
+                .fetch();
     }
 }

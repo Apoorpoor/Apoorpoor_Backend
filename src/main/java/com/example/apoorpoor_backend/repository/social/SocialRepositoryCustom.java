@@ -29,4 +29,8 @@ public interface SocialRepositoryCustom {
     List<IncomeAvgDto> getPercentIncomeAvg();
 
     Social findByAgeAndDateAndGender(Long ageAbb, String date, String gender);
+
+    Long getExpSum(SocialSearchCondition condition, User findUser);
+
+    Long getIncSum(SocialSearchCondition condition, User findUser);
 }

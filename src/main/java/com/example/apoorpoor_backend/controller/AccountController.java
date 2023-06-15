@@ -6,6 +6,8 @@ import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -49,13 +51,13 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{id}/status")
-    public ResponseEntity<List<LedgerHistoryResponseDto>> getStatus(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return accountService.getStatus(id, condition, userDetails.getUsername());
+    public Page<LedgerHistoryResponseDto> getStatus(@PathVariable Long id, AccountSearchCondition condition, Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getStatus(id, condition, userDetails.getUsername(), pageable);
     }
 
     @GetMapping("/accounts/{id}/statistics")
-    public ResponseEntity<List<MonthSumResponseDto>> getStatistics(@PathVariable Long id, AccountSearchCondition condition, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return accountService.getStatistics(id, condition, userDetails.getUsername());
+    public Page<MonthSumResponseDto> getStatistics(@PathVariable Long id, AccountSearchCondition condition, Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return accountService.getStatistics(id, condition, userDetails.getUsername(), pageable);
     }
 
     @GetMapping("/accounts/{id}/difference")

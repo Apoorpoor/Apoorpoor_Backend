@@ -12,6 +12,8 @@ import com.example.apoorpoor_backend.repository.BalanceRepository;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -122,17 +124,15 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<LedgerHistoryResponseDto>> getStatus(Long accountId, AccountSearchCondition condition, String username) {
+    public Page<LedgerHistoryResponseDto> getStatus(Long accountId, AccountSearchCondition condition, String username, Pageable pageable) {
         User user = userCheck(username);
-        List<LedgerHistoryResponseDto> status = ledgerHistoryRepository.getStatus(accountId, condition);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+        return ledgerHistoryRepository.getStatus(accountId, condition, pageable);
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getStatistics(Long accountId, AccountSearchCondition condition, String username) {
+    public Page<MonthSumResponseDto> getStatistics(Long accountId, AccountSearchCondition condition, String username, Pageable pageable) {
         User user = userCheck(username);
-        List<MonthSumResponseDto> statistic = ledgerHistoryRepository.getStatistic(accountId, condition);
-        return new ResponseEntity<>(statistic, HttpStatus.OK);
+        return ledgerHistoryRepository.getStatistic(accountId, condition, pageable);
     }
 
     @Transactional(readOnly = true)

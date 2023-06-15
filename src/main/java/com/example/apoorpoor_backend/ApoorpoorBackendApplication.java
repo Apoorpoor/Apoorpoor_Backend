@@ -30,7 +30,7 @@ public class ApoorpoorBackendApplication {
             public void addCorsMappings(CorsRegistry registry){
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:3000", "http://3.34.85.5:8080", "http://192.168.25.2:3000",
-                                "https://apoorpoor.vercel.app", "https://apoorpoor.com")
+                                "https://apoorpoor.vercel.app","https://api.apoorpoor.com" ,"https://www.apoorpoor.com","https://apoorpoor.com")
                         .allowedOriginPatterns("*")
                         .exposedHeaders("Set-Cookie", "USER_ROLE", "ACCESS_KEY", "REFRESH_KEY", "NICKNAME_FLAG", "USER_ID")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")

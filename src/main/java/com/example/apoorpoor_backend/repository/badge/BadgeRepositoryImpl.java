@@ -4,8 +4,9 @@ import com.example.apoorpoor_backend.model.Badge;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+
 import static com.example.apoorpoor_backend.model.QBadge.badge;
-import static com.example.apoorpoor_backend.model.QGetBadge.*;
+import static com.example.apoorpoor_backend.model.QGetBadge.getBadge;
 
 public class BadgeRepositoryImpl implements BadgeRepositoryCustom{
     private final JPAQueryFactory queryFactory;

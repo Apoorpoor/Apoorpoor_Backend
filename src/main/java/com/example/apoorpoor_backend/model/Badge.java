@@ -2,8 +2,7 @@ package com.example.apoorpoor_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "BADGE")
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class Badge extends Timestamped {
 
@@ -35,4 +32,9 @@ public class Badge extends Timestamped {
     @OneToMany(mappedBy = "badge")
     private List<GetBadge> getBadgeList = new ArrayList<>();
 
+    public Badge(Long badgeNum, String badgeTitle, String badgeImage) {
+        this.badgeNum = badgeNum;
+        this.badgeTitle = badgeTitle;
+        this.badgeImage = badgeImage;
+    }
 }

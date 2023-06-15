@@ -233,11 +233,7 @@ public class BeggarService {
 
         if(!hasBadge) {
 
-            Badge badge = Badge.builder()
-                    .badgeNum(badgeNum)
-                    .badgeTitle(badgeTitle)
-                    .badgeImage(badgeImage)
-                    .build();
+            Badge badge = new Badge(badgeNum, badgeTitle, badgeImage);
 
             badgeRepository.save(badge);
 

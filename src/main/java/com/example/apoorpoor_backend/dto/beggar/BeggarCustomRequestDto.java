@@ -9,5 +9,4 @@ public class BeggarCustomRequestDto {
     private ItemListEnum itemListEnum;
 
     private UnWearEnum unWearEnum;
-
 }

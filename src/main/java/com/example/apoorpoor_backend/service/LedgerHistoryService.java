@@ -111,13 +111,12 @@ public class LedgerHistoryService {
     }
 
     public String getMent(AccountType accountType) {
-       MentType mentType;
+        Random random = new Random();
+        MentType mentType;
         if (accountType == AccountType.EXPENDITURE) {
-            List<MentType> expenditureMentTypes = Arrays.asList(MentType.MENT1, MentType.MENT2, MentType.MENT3, MentType.MENT4, MentType.MENT5, MentType.MENT6,MentType.MENT7, MentType.MENT8, MentType.MENT9, MentType.MENT10, MentType.MENT11);
-            mentType = expenditureMentTypes.get(random.nextInt(expenditureMentTypes.size()));
+            mentType = MentType.values()[random.nextInt(MentType.MENT11.ordinal() + 1)];
         } else {
-            List<MentType> incompeMentTypes = Arrays.asList(MentType.MENT12, MentType.MENT13, MentType.MENT14, MentType.MENT15, MentType.MENT16, MentType.MENT17, MentType.MENT18);
-            mentType = incompeMentTypes.get(random.nextInt(incompeMentTypes.size()));
+            mentType = MentType.values()[random.nextInt(MentType.MENT18.ordinal() - MentType.MENT12.ordinal() + 1) + MentType.MENT12.ordinal()];
         }
         List<String> ments = mentType.getMents();
         return ments.get(random.nextInt(ments.size()));

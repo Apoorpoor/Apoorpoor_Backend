@@ -1,12 +1,12 @@
 package com.example.apoorpoor_backend.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "ITEM")
-@NoArgsConstructor
+@Builder
 public class Item {
 
     @Id
@@ -29,11 +29,4 @@ public class Item {
     @JoinColumn(name ="beggar_id")
     private Beggar beggar;
 
-    public Item(Long itemNum, String itemName, Long levelLimit, String itemType, Beggar beggar) {
-        this.itemNum = itemNum;
-        this.itemName = itemName;
-        this.levelLimit = levelLimit;
-        this.itemType = itemType;
-        this.beggar = beggar;
-    }
 }

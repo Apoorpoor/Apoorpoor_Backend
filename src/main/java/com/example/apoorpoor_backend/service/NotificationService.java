@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,30 +14,15 @@ import static com.example.apoorpoor_backend.controller.SseController.sseEmitters
 @RequiredArgsConstructor
 public class NotificationService {
 
-    public void notifyGetBadgeEvent(User user, Beggar beggar, String expenditureTitle) {
+    public void notifyGetBadgeEvent(User user, String expenditureTitle) {
         String username = user.getUsername();
-        //Long beggarId =beggar.getId();
-        String nickName = beggar.getNickname();
 
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"nickName\":\"" + nickName + "\", " + "\"msg :" + expenditureTitle + "뱃지를 획득 하였습니다!" + "\","
-                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\" }"));
-            } catch (Exception e) {
-                sseEmitters.remove(username);
-            }
-        }
-    }
-
-    public void notifyTestEvent(User user) {
-        String username = user.getUsername();
-        //Long beggarId =beggar.getId();
-
-        if(sseEmitters.containsKey(username)) {
-            SseEmitter sseEmitter = sseEmitters.get(username);
-            try {
-                sseEmitter.send(SseEmitter.event().name("sse test 알람!!"));
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"소비뱃지\", " +
+                        "\"msg\":\"" + expenditureTitle + "\"," +
+                        "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
             }

@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 
 @Entity(name = "USERS")
 @Getter
-@NoArgsConstructor
+@Builder
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +41,8 @@ public class User extends Timestamped{
     @CreationTimestamp
     private Timestamp createDate;
 
-    @Builder
-    public User(String username, String password, UserRoleEnum role, Long kakaoId) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.kakaoId = kakaoId;
-    }
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Beggar beggar;
 
     public User kakaoIdUpdate(Long kakaoId) {
         this.kakaoId = kakaoId;
@@ -60,5 +55,10 @@ public class User extends Timestamped{
 
     public void updateGender(String gender) {
         this.gender = gender;
+    }
+
+    public void setBeggar(Beggar beggar) {
+        this.beggar = beggar;
+        beggar.setUser(this);
     }
 }

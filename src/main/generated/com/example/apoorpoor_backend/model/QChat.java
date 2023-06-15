@@ -26,6 +26,8 @@ public class QChat extends EntityPathBase<Chat> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final NumberPath<Long> level = createNumber("level", Long.class);
+
     public final StringPath message = createString("message");
 
     public final StringPath sender = createString("sender");

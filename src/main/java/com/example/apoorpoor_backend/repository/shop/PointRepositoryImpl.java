@@ -3,19 +3,13 @@ package com.example.apoorpoor_backend.repository.shop;
 import com.example.apoorpoor_backend.dto.shop.PointResponseDto;
 import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
 import com.example.apoorpoor_backend.dto.shop.QPointResponseDto;
-import com.example.apoorpoor_backend.model.Point;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.ConstantImpl;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +23,6 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    /* String query = "SELECT p FROM POINT p WHERE p.beggar.id = :beggarId AND p.createdAt BETWEEN :startDate AND :endDate"; */
     @Override
     public Page<PointResponseDto> findAllByPeriodAndBeggar(Long beggarId, PointSearchCondition condition, Pageable pageable) {
 

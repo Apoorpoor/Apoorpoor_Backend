@@ -17,11 +17,9 @@ public class BadgeRepositoryImpl implements BadgeRepositoryCustom{
     @Override
     public List<Badge> findByBadgeList(Long beggarId) {
 
-        List<Badge> result = queryFactory.selectFrom(badge)
+        return queryFactory.selectFrom(badge)
                 .innerJoin(getBadge).on(badge.id.eq(getBadge.badge.id))
                 .where(getBadge.beggar.id.eq(beggarId))
                 .fetch();
-
-        return result;
     }
 }

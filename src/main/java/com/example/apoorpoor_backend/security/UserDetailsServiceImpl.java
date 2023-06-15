@@ -21,9 +21,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new UserDetailsImpl(user, user.getUsername());
     }
-//스프링시큐리 session -> Authentication -> userDetails, Oauth2User
-    //username
-    //user_id
-    //userId
-
 }

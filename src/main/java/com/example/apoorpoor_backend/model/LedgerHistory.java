@@ -6,15 +6,15 @@ import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 
 @Getter
 @Entity(name = "LEDGER_HISTORY")
-@NoArgsConstructor
+@Builder
 @Table
 public class LedgerHistory extends Timestamped{
 
@@ -50,20 +50,6 @@ public class LedgerHistory extends Timestamped{
 
     @Column
     private LocalDate date;
-
-    public LedgerHistory(Account account, String title, AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType,
-                         PaymentMethod paymentMethod, Long income, Long expenditure, LocalDate date){
-        this.account = account;
-        this.title = title;
-        this.accountType = accountType;
-        this.incomeType = incomeType;
-        this.expenditureType = expenditureType;
-        this.paymentMethod = paymentMethod;
-        this.income = income;
-        this.expenditure = expenditure;
-        this.date = date;
-
-    }
 
     public void update(LedgerHistoryResponseDto responseDto) {
         this.title = responseDto.getTitle();

@@ -37,7 +37,7 @@ public class BeggarController {
     @Operation(summary = "마이 거지 캐릭터 API" , description = "내 거지 캐릭터 검색")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
     @GetMapping("/beggar/{userId}")
-    public ResponseEntity<BeggarSearchResponseDto> getUserBeggar(@PathVariable Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<BeggarSearchResponseDto> getUserBeggar(@PathVariable Long userId){
         return beggarService.getUserBeggar(userId);
     }
 
@@ -47,13 +47,6 @@ public class BeggarController {
     public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
-
-//    @Operation(summary = "거지 캐릭터 경험치, 포인트 획득 API" , description = "거지 경험치, 포인트 획득")
-//    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "획득 완료" )})
-//    @PatchMapping("/beggar/point")
-//    public ResponseEntity<BeggarExpUpResponseDto> updateExp(@RequestBody BeggarExpUpRequestDto beggarExpUpRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return beggarService.updateExp(beggarExpUpRequestDto, userDetails.getUsername());
-//    }
 
     @Operation(summary = "거지 캐릭터 커스텀 API" , description = "거지캐릭터에게 구매한 옷 입히기")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "옷 입히기 완료" )})

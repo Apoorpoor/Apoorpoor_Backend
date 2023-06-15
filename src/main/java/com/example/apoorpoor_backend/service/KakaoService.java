@@ -27,6 +27,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Ref;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,14 +59,16 @@ public class KakaoService {
         if(refreshToken.isPresent()){
             refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto2.getRefreshToken()));
         } else{
-            RefreshToken newToken = new RefreshToken(tokenDto2.getRefreshToken(), kakaoUser.getUsername());
+            RefreshToken newToken = RefreshToken.builder()
+                    .refreshToken(tokenDto2.getRefreshToken())
+                    .username(kakaoUser.getUsername())
+                    .build();
             refreshTokenRepository.save(newToken);
         }
 
         response.addHeader(JwtUtil.ACCESS_KEY, tokenDto2.getAccessToken());
         response.addHeader(JwtUtil.REFRESH_KEY, tokenDto2.getRefreshToken());
 
-        // 거지 불러오기
         Optional<Beggar> findBeggar = beggarRepository.findByUserId(kakaoUser.getId());
 
         String nickname_flag = "false";
@@ -85,7 +88,7 @@ public class KakaoService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b285dc18b3ecd8e4bc2dcc9a9460a12d");
         body.add("client_secret", "3AvD4HWtT4ZrHjrd9pC9TcyyjGtBKNQV");
-        body.add("redirect_uri", "https://apoorpoor.vercel.app/oauth/kakao");
+        body.add("redirect_uri", "http://localhost:3000/oauth/kakao");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
@@ -127,7 +130,12 @@ public class KakaoService {
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
 
-        return new KakaoUserInfoDto(id, nickname);
+        KakaoUserInfoDto kakaoUserInfoDto = KakaoUserInfoDto.builder()
+                .id(id)
+                .nickname(nickname)
+                .build();
+
+        return kakaoUserInfoDto;
     }
 
     @Transactional
@@ -139,7 +147,13 @@ public class KakaoService {
 
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
-            kakaoUser = new User("kakao"+kakaoId, encodedPassword, UserRoleEnum.USER, kakaoId);
+
+            kakaoUser = User.builder()
+                    .username("kakao"+kakaoId)
+                    .password(encodedPassword)
+                    .role(UserRoleEnum.USER)
+                    .kakaoId(kakaoId)
+                    .build();
 
             userRepository.save(kakaoUser);
             kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);

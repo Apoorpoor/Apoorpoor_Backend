@@ -191,8 +191,7 @@ public class BeggarService {
         List<ExpenditureType> badgeList = Arrays.asList(ExpenditureType.values());
 
         for (ExpenditureType expenditureType : badgeList) {
-            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
-            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
+            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(user, expenditureType, beggar);
         }
 
     }
@@ -223,7 +222,7 @@ public class BeggarService {
     }
 
 
-    public void saveBadgeNew(ExpenditureType expenditureType, Beggar beggar) {
+    public void saveBadgeNew(User user, ExpenditureType expenditureType, Beggar beggar) {
         Long badgeNum = expenditureType.getBadgeNum();
         String badgeTitle = expenditureType.getBadgeTitle();
         String badgeImage = badgeUrl + expenditureType.getBadgeImage();
@@ -243,6 +242,8 @@ public class BeggarService {
             getBadgeRepository.save(getBadge);
 
             updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
+
+            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
 
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");

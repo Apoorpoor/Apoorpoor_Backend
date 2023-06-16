@@ -318,12 +318,20 @@ public class BeggarService {
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<StatusResponseDto> checkNickname(String nickname, String username) {
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(String username) {
         User user = userCheck(username);
-        Optional<Beggar> beggar = beggarRepository.findByNickname(nickname);
-        if(beggar.isPresent())
-            return new ResponseEntity<>(new StatusResponseDto("중복된 닉네임이 존재합니다."), HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(new StatusResponseDto("사용 가능한 닉네임입니다."), HttpStatus.OK);
+
+        List<BeggarInfoDto> beggarInfoDtoList = new ArrayList<>();
+
+        List<Beggar> beggarList = beggarRepository.findAll();
+        for (Beggar beggar : beggarList) {
+            BeggarInfoDto beggarInfoDto = BeggarInfoDto.builder()
+                    .beggar_id(beggar.getId())
+                    .nickname(beggar.getNickname())
+                    .build();
+            beggarInfoDtoList.add(beggarInfoDto);
+        }
+        return new ResponseEntity<>(beggarInfoDtoList, HttpStatus.OK);
     }
 
     public User userCheck(String username) {

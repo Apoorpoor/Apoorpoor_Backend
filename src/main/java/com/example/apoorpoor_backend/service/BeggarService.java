@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.*;
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
@@ -39,11 +40,14 @@ public class BeggarService {
     private final ItemRepository itemRepository;
     private final LedgerHistoryRepository ledgerHistoryRepository;
     private final PointRepository pointRepository;
-
     private final NotificationService notificationService;
+    private final BadWordFiltering badWordFiltering;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
+        boolean badWordCheck = badWordFiltering.checkBadId(beggarRequestDto.getNickname());
+
+        if(badWordCheck) throw new IllegalArgumentException("사용할 수 없는 닉네임입니다.");
 
         Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
         if(findBeggar.isPresent())

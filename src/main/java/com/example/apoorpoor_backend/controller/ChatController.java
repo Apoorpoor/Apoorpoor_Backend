@@ -19,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @RequiredArgsConstructor
 @Controller
@@ -26,7 +29,6 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
     private final S3Uploader s3Uploader;
-
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")

@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.apoorpoor_backend.model.QPoint.*;
+import static com.example.apoorpoor_backend.model.QPoint.point;
 import static io.jsonwebtoken.lang.Strings.hasText;
 public class PointRepositoryImpl implements PointRepositoryCustom{
 

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "BALANCE")
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Balance {
 
     @Id

@@ -112,6 +112,7 @@ public class LedgerHistoryService {
         return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
     }
 
+
     public class MentManager {
         public String getMent(AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType) {
 
@@ -218,7 +219,7 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();;
+            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
             Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
 
             findBalance.get().update(incomeTotal, expenditureTotal);

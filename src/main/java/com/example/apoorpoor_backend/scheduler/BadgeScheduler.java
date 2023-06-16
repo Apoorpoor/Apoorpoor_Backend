@@ -21,7 +21,7 @@ public class BadgeScheduler {
     private final BeggarService beggarService;
     private final SocialService socialService;
 
-    @Scheduled(cron = "0 42 23 * * *")
+    @Scheduled(cron = "0 0 0 1 * *")
     public void grantBadge(){
 
         List<User> userList = userService.getUserList();

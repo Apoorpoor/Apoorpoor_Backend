@@ -6,6 +6,7 @@ import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
 import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -175,7 +175,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(ledgerHistory.date.asc())
+                .orderBy(ledgerHistory.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

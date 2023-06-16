@@ -44,9 +44,9 @@ public class BeggarController {
     }
 
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
-    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 수정 완료" )})
     @PatchMapping("/beggar")
-    public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
 

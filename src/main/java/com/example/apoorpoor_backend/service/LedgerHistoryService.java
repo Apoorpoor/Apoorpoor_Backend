@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -85,8 +86,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = income + findBalance.get().getIncomeTotal();
-            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal();
+            Long incomeTotal = Optional.ofNullable(income).orElse(0L) + Optional.ofNullable(findBalance.get().getIncomeTotal()).orElse(0L);
+            Long expenditureTotal = Optional.ofNullable(expenditure).orElse(0L) + Optional.ofNullable(findBalance.get().getExpenditureTotal()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
@@ -109,7 +110,7 @@ public class LedgerHistoryService {
 
         beggarService.updateExpNew(user.getUsername(), expType);
 
-        return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto(randomMENT, expType.getAmount()), HttpStatus.OK);
     }
 
 
@@ -219,8 +220,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
-            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+            Long incomeTotal = Optional.ofNullable(income).orElse(0L) + Optional.ofNullable(findBalance.get().getIncomeTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getIncome()).orElse(0L);
+            Long expenditureTotal = Optional.ofNullable(expenditure).orElse(0L) + Optional.ofNullable(findBalance.get().getExpenditureTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getExpenditure()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
@@ -276,8 +277,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(ledgerHistory.getAccount());
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
-            Long expenditureTotal = findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+            Long incomeTotal = Optional.of(findBalance.get().getIncomeTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getIncome()).orElse(0L);
+            Long expenditureTotal = Optional.of(findBalance.get().getExpenditureTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getExpenditure()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }

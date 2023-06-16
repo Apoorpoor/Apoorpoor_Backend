@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.service.ChatService;
 import com.example.apoorpoor_backend.service.S3Uploader;
@@ -27,6 +28,7 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
     private final S3Uploader s3Uploader;
+    private final BadWordFiltering badWordFiltering;
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
@@ -40,8 +42,9 @@ public class ChatController {
     @SendTo("/sub/chat/room")
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
+        ChatDto newChatDto = badWordFiltering.change(chatDto);
         chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", chatDto);
+        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
     }
 
     @EventListener

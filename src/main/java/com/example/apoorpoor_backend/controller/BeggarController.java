@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "BeggarController", description = "거지 캐릭터 controller")
 @RestController
 @RequiredArgsConstructor
@@ -42,9 +44,9 @@ public class BeggarController {
     }
 
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
-    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 수정 완료" )})
     @PatchMapping("/beggar")
-    public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
@@ -60,5 +62,10 @@ public class BeggarController {
     @GetMapping("/beggar/custom")
     public ResponseEntity<BeggarCustomListResponseDto> customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customList(userDetails.getUsername());
+    }
+
+    @GetMapping("/beggar/info")
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.getBeggarInfo(userDetails.getUsername());
     }
 }

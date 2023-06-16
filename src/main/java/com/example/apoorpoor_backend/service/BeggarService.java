@@ -11,6 +11,7 @@ import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepos
 import com.example.apoorpoor_backend.repository.shop.ItemRepository;
 import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
+import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class BeggarService {
         if(findBeggar.isPresent())
             return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
 
-        Beggar beggar =Beggar.builder()
+        Beggar beggar = Beggar.builder()
                 .nickname(beggarRequestDto.getNickname())
                 .user(findUser)
                 .point(0L)
@@ -133,19 +134,16 @@ public class BeggarService {
     }
 
 
-    public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
+    public ResponseEntity<StatusResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
+
+        Optional<Beggar> findBeggar = beggarRepository.findByNickname(beggarRequestDto.getNickname());
+        if(findBeggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("중복된 푸어의 이름이 존재합니다."), HttpStatus.BAD_REQUEST);
+
         beggar.update(beggarRequestDto);
 
-        BeggarResponseDto beggarResponseDto = BeggarResponseDto.builder()
-                .beggar_id(beggar.getId())
-                .nickname(beggar.getNickname())
-                .point(beggar.getPoint())
-                .level(beggar.getLevel())
-                .description(beggar.getDescription())
-                .build();
-
-        return new ResponseEntity<>(beggarResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto("닉네임 변경 완료"), HttpStatus.OK);
     }
 
 
@@ -315,6 +313,22 @@ public class BeggarService {
                 .build();
 
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(String username) {
+        User user = userCheck(username);
+
+        List<BeggarInfoDto> beggarInfoDtoList = new ArrayList<>();
+
+        List<Beggar> beggarList = beggarRepository.findAll();
+        for (Beggar beggar : beggarList) {
+            BeggarInfoDto beggarInfoDto = BeggarInfoDto.builder()
+                    .beggar_id(beggar.getId())
+                    .nickname(beggar.getNickname())
+                    .build();
+            beggarInfoDtoList.add(beggarInfoDto);
+        }
+        return new ResponseEntity<>(beggarInfoDtoList, HttpStatus.OK);
     }
 
     public User userCheck(String username) {

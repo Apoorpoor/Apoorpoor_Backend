@@ -26,13 +26,6 @@ public class ChatService{
         headerAccessor.getSessionAttributes().put("nickName", chatDto.getSender());
         headerAccessor.getSessionAttributes().put("userId", chatDto.getUserId());
         chatDto.setMessage(chatDto.getSender() + "님이 입장하셨습니다.");
-
-        Set<Long> chatList = chatDto.getChatList();
-        Long beggarId = chatDto.getBeggar_id();
-        chatList.add(beggarId);
-        int beggarCount = chatList != null ? chatList.size() + 1 : 0;
-        chatDto.setChatCount(beggarCount);
-
         return chatDto;
     }
 

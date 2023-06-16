@@ -21,7 +21,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
 
-
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
@@ -29,6 +28,7 @@ public class ChatController {
     private final SimpMessagingTemplate msgOperation;
     private final S3Uploader s3Uploader;
     private final BadWordFiltering badWordFiltering;
+
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")

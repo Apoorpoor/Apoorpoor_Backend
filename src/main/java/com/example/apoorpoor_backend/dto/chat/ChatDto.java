@@ -3,6 +3,8 @@ package com.example.apoorpoor_backend.dto.chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Getter
 @Setter
@@ -17,4 +19,6 @@ public class ChatDto {
     private String image;
     private Long userId;
     private Long level;
+    private Set<Long> chatList;
+    private int chatCount;
 }

@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "BeggarController", description = "거지 캐릭터 controller")
 @RestController
 @RequiredArgsConstructor
@@ -62,8 +64,8 @@ public class BeggarController {
         return beggarService.customList(userDetails.getUsername());
     }
 
-    @GetMapping("/beggar/info/{nickname}")
-    public ResponseEntity<StatusResponseDto> checkNickname(@PathVariable String nickname, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return beggarService.checkNickname(nickname, userDetails.getUsername());
+    @GetMapping("/beggar/info")
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.getBeggarInfo(userDetails.getUsername());
     }
 }

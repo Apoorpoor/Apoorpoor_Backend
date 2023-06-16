@@ -141,6 +141,7 @@ public class KakaoService {
     @Transactional
     public User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
         Long kakaoId = kakaoUserInfo.getId();
+        String kakaoname = kakaoUserInfo.getNickname();
         User kakaoUser = userRepository.findByKakaoId(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
@@ -153,6 +154,7 @@ public class KakaoService {
                     .password(encodedPassword)
                     .role(UserRoleEnum.USER)
                     .kakaoId(kakaoId)
+                    .kakaoname(kakaoname)
                     .build();
 
             userRepository.save(kakaoUser);

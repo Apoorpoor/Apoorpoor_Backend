@@ -23,6 +23,9 @@ public class User extends Timestamped{
     @Column
     private String username;
 
+    @Column(nullable = false)
+    private String kakaoname;
+
     @Column
     private String password;
 
@@ -46,11 +49,12 @@ public class User extends Timestamped{
     private Beggar beggar;
 
     @Builder
-    public User(String username, String password, UserRoleEnum role, Long kakaoId) {
+    public User(String username, String password, UserRoleEnum role, Long kakaoId, String kakaoname) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.kakaoId = kakaoId;
+        this.kakaoname = kakaoname;
     }
 
     public User kakaoIdUpdate(Long kakaoId) {

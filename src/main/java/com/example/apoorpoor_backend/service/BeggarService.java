@@ -49,7 +49,7 @@ public class BeggarService {
         if(findBeggar.isPresent())
             return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
 
-        Beggar beggar =Beggar.builder()
+        Beggar beggar = Beggar.builder()
                 .nickname(beggarRequestDto.getNickname())
                 .user(findUser)
                 .point(0L)
@@ -134,19 +134,16 @@ public class BeggarService {
     }
 
 
-    public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
+    public ResponseEntity<StatusResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
+
+        Optional<Beggar> findBeggar = beggarRepository.findByNickname(beggarRequestDto.getNickname());
+        if(findBeggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("중복된 푸어의 이름이 존재합니다."), HttpStatus.BAD_REQUEST);
+
         beggar.update(beggarRequestDto);
 
-        BeggarResponseDto beggarResponseDto = BeggarResponseDto.builder()
-                .beggar_id(beggar.getId())
-                .nickname(beggar.getNickname())
-                .point(beggar.getPoint())
-                .level(beggar.getLevel())
-                .description(beggar.getDescription())
-                .build();
-
-        return new ResponseEntity<>(beggarResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto("닉네임 변경 완료"), HttpStatus.OK);
     }
 
 

@@ -37,6 +37,7 @@ public class ShopService {
 
     private final PointRepository pointRepository;
 
+    @Transactional(readOnly = true)
     public ResponseEntity<ItemListResponseDto> getItemList(String itemType, String username) {
         Beggar beggar = beggarCheck(username);
         List<Item> hasItemList = itemRepository.findItemsByBeggar_Id(beggar.getId());
@@ -73,8 +74,6 @@ public class ShopService {
             throw new IllegalArgumentException("포인트가 부족하여 구매할 수 없습니다.");
         }
 
-        String pointDescription = payRequestDto.getItemListEnum().getItemName() + "구매!!";
-
         Long itemNum = payRequestDto.getItemListEnum().getItemNum();
         String itemName = payRequestDto.getItemListEnum().getItemName();
         Long levelLimit = payRequestDto.getItemListEnum().getLevelLimit();
@@ -83,6 +82,8 @@ public class ShopService {
         if (itemRepository.existsDistinctByBeggar_IdAndItemNum(beggar.getId(), itemNum)) {
             throw new IllegalArgumentException("이미 존재하는 아이템 입니다.");
         }
+
+        String pointDescription = payRequestDto.getItemListEnum().getItemName() + "구매!!";
 
         Item item = Item.builder()
                 .itemNum(itemNum)

@@ -54,10 +54,10 @@ public enum ItemListEnum {
     shoes_lv6_05(42L, "구두", 60L, 6L, "shoes", "shoes_lv6_05.svg"),
 
     //accessories
-    acc_lv4_01(46L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),
-    acc_lv6_01(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01.svg"),
-    acc_lv6_02(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
-    acc_lv6_03(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
+    acc_lv4_01(43L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),
+    acc_lv6_01(44L, "면도기", 60L, 6L, "acc", "acc_lv6_01.svg"),
+    acc_lv6_02(45L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
+    acc_lv6_03(46L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
 
 
     //customs

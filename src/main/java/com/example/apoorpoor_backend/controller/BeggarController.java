@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 생성 API" , description = "거지 캐릭터 생성")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 생성 완료" )})
     @PostMapping("/beggar")
-    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> createBeggar(@Valid @RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
@@ -46,7 +47,7 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 수정 완료" )})
     @PatchMapping("/beggar")
-    public ResponseEntity<StatusResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> updateBeggar(@Valid @RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
 

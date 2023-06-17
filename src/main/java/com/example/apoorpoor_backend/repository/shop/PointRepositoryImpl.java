@@ -84,7 +84,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                         formattedDate.between(startDateformat, endDateformat),
                         builder
                 )
-                .orderBy(point.createdAt.asc())
+                .orderBy(point.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

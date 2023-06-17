@@ -84,9 +84,64 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
     }
 
     @Override
-    public Long getPercent(SocialSearchCondition condition, User findUser) {
+    public List<ExpenditurePercentDto> getPercent(SocialSearchCondition condition, User findUser) {
 
-        return null;
+        Long age = findUser.getAge();
+        String gender = findUser.getGender();
+
+        Long age_abb = age-(age%10);
+
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        List<ExpenditurePercentDto> result = queryFactory.
+                select(new QExpenditurePercentDto(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        Expressions.stringTemplate("date_format({0}, '%Y-%m')", ledgerHistory.date),
+                        ledgerHistory.expenditure.sum(),
+                        user.gender,
+                        user.id,
+                        Expressions.template(Long.class, "dense_rank() over (order by sum(expenditure))")
+                ))
+                .from(account)
+                .join(account.user, user)
+                .join(account.ledgerHistories, ledgerHistory)
+                .where(
+                        ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
+                        formattedDate.eq(date)
+                )
+                .groupBy(
+                        new CaseBuilder()
+                                .when(user.age.lt(20)).then(10L)
+                                .when(user.age.lt(30)).then(20L)
+                                .when(user.age.lt(40)).then(30L)
+                                .when(user.age.lt(50)).then(40L)
+                                .when(user.age.lt(60)).then(50L)
+                                .when(user.age.lt(70)).then(60L)
+                                .when(user.age.lt(80)).then(70L)
+                                .when(user.age.lt(90)).then(80L)
+                                .when(user.age.lt(100)).then(90L)
+                                .otherwise(0L),
+                        user.gender,
+                        user.id
+                ).fetch();
+        return result;
     }
 
     @Override

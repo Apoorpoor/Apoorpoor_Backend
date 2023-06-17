@@ -44,6 +44,13 @@ public class BeggarController {
         return beggarService.getUserBeggar(userId);
     }
 
+    @Operation(summary = "마이 거지 캐릭터 닉테임 체크 API" , description = "내 거지 캐릭터 닉네임 체크(중복, 욕설, 음란단어 체크)")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 닉네임 체크 완료" )})
+    @GetMapping("/beggar/check/{nickname}")
+    public ResponseEntity<String> nicknameCheck(@PathVariable String nickname){
+        return beggarService.nicknameCheck(nickname);
+    }
+
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 수정 완료" )})
     @PatchMapping("/beggar")

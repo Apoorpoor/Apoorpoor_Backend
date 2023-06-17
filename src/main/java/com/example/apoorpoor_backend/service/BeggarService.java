@@ -44,7 +44,9 @@ public class BeggarService {
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
-        badIdCheck(beggarRequestDto.getNickname());
+        boolean badWordCheck = badIdCheck(beggarRequestDto.getNickname());
+
+        if(badWordCheck) throw new IllegalArgumentException("사회적으로 부적절한 언어가 포함되어 있습니다.");
 
         Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
         if(findBeggar.isPresent())
@@ -132,6 +134,24 @@ public class BeggarService {
                 .build();
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<String> nicknameCheck(String nickname) {
+
+        boolean badWordCheck = badIdCheck(nickname);
+
+        if(badWordCheck) {
+            return new ResponseEntity<>("사회적으로 부적절한 언어가 포함되어 있습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        boolean duplicateCheck = beggarRepository.existsBeggarByNickname(nickname);
+
+        if(duplicateCheck) {
+            return new ResponseEntity<>("이미 존재 하는 아이디 입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("사용 가능한 아이디 입니다.", HttpStatus.OK);
     }
 
 
@@ -361,10 +381,8 @@ public class BeggarService {
         getBadgeRepository.deleteAll();
     }
 
-    public void badIdCheck(String nickname) {
-        boolean badWordCheck = badWordFiltering.checkBadId(nickname);
-
-        if(badWordCheck) throw new IllegalArgumentException("비속어 및 성희록적인 단어는 사용할 수 없습니다.");
+    public boolean badIdCheck(String nickname) {
+        return badWordFiltering.checkBadId(nickname);
     }
 
 }

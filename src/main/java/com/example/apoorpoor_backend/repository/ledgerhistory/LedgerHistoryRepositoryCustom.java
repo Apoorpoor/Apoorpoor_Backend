@@ -1,9 +1,6 @@
 package com.example.apoorpoor_backend.repository.ledgerhistory;
 
-import com.example.apoorpoor_backend.dto.account.AccountSearchCondition;
-import com.example.apoorpoor_backend.dto.account.AccountTotalResponseDto;
-import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
-import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.*;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import org.springframework.data.domain.Page;
@@ -15,7 +12,10 @@ import java.util.List;
 public interface LedgerHistoryRepositoryCustom {
 
     List<TotalSumResponseDto> getMypageStatus(Long userId);
-    List<MonthSumResponseDto> getRecentStatus(Long userId);
+
+    List<ExpenditureSumResponseDto> getExpenditureRecentStatus(Long userId);
+
+    List<IncomeSumResponseDto> getIncomeRecentStatus(Long userId);
 
     List<AccountTotalResponseDto> getTotalStatus(Long accountId, AccountSearchCondition condition);
 

@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
-import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
-import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.*;
 import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
@@ -55,9 +54,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<MonthSumResponseDto>> getRecentStatus(String username) {
+    public ResponseEntity<RecentSumResponseDto> getRecentStatus(String username) {
         User findUser = userCheck(username);
-        List<MonthSumResponseDto> recentStatus = ledgerHistoryRepository.getRecentStatus(findUser.getId());
+        List<ExpenditureSumResponseDto> expenditureRecentStatus = ledgerHistoryRepository.getExpenditureRecentStatus(findUser.getId());
+        List<IncomeSumResponseDto> incomeRecentStatus = ledgerHistoryRepository.getIncomeRecentStatus(findUser.getId());
+
+        RecentSumResponseDto recentStatus = RecentSumResponseDto.builder()
+                .expenditureSum(expenditureRecentStatus)
+                .incomeSum(incomeRecentStatus)
+                .build();
 
         return new ResponseEntity<>(recentStatus, HttpStatus.OK);
     }

@@ -13,9 +13,4 @@ public class AccountTotalListResponseDto {
     private Long expenditure_sum;
     private Long income_sum;
 
-//    public AccountTotalListResponseDto(List<AccountTotalResponseDto> accountTotalResponseDtoList, Long expenditure_sum, Long income_sum) {
-//        this.accountTotalResponseDtoList = accountTotalResponseDtoList;
-//        this.expenditure_sum = expenditure_sum;
-//        this.income_sum = income_sum;
-//    }
 }

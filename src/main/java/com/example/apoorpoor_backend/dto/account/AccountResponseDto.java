@@ -17,26 +17,4 @@ public class AccountResponseDto {
     private List<LedgerHistoryResponseDto> ledgerHistoryResponseDtoList;
     private Balance balance;
 
-//    public AccountResponseDto(Account account, List<LedgerHistoryResponseDto> ledgerHistories){
-//        this.id = account.getId();
-//        this.title = account.getTitle();
-//        this.userId = account.getUser().getId();
-//        this.balance = account.getBalance();
-//        this.ledgerHistoryResponseDtoList = ledgerHistories;
-//    }
-//
-//    public AccountResponseDto(Account account){
-//        this.id = account.getId();
-//        this.title = account.getTitle();
-//        this.userId = account.getUser().getId();
-//        this.balance = account.getBalance();
-//    }
-//
-//    public AccountResponseDto(Long id, String title, Long userId, List<LedgerHistoryResponseDto> ledgerHistories, Balance balance) {
-//        this.id = id;
-//        this.title = title;
-//        this.userId = userId;
-//        this.ledgerHistoryResponseDtoList = ledgerHistories;
-//        this.balance = balance;
-//    }
 }

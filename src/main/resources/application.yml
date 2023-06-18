@@ -1,7 +1,7 @@
 spring:
   config.activate.on-profile: default
   config:
-    import: application-secret.yml
+    import: application-secret.yml, application-test.yml
   jpa:
     properties:
       hibernate:
@@ -17,4 +17,5 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+
 

@@ -5,6 +5,7 @@ import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.LedgerHistoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +17,7 @@ public class LedgerHistoryController {
     private final LedgerHistoryService ledgerHistoryService;
 
     @PostMapping("/ledgerhistory")
-    public ResponseEntity<StatusResponseDto> createLedgerHistory(@RequestBody LedgerHistoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> createLedgerHistory(@RequestBody @Valid LedgerHistoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ledgerHistoryService.createLedgerHistory(requestDto, userDetails.getUsername());
     }
 

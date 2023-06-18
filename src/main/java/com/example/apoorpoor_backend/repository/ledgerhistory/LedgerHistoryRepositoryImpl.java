@@ -139,14 +139,20 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                 startDate = endDate.minusMonths(3);
             }
 
-            builder.and(ledgerHistory.date.between(startDate, endDate));
+            String startDateformat = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endDateformat = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            builder.and(formattedDate.between(startDateformat, endDateformat));
         }
 
         if(dateType == null && inputStartDate != null && inputEndDate != null){
             LocalDate endDate = LocalDate.parse(inputEndDate);
             LocalDate startDate = LocalDate.parse(inputStartDate);
 
-            builder.and(ledgerHistory.date.between(startDate, endDate));
+            String startDateformat = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endDateformat = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            builder.and(formattedDate.between(startDateformat, endDateformat));
         }
 
         QueryResults<LedgerHistoryResponseDto> results = queryFactory
@@ -169,7 +175,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(ledgerHistory.date.asc())
+                .orderBy(ledgerHistory.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

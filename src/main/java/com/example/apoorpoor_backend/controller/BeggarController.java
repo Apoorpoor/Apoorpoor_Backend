@@ -8,10 +8,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "BeggarController", description = "거지 캐릭터 controller")
 @RestController
@@ -23,7 +26,7 @@ public class BeggarController {
     @Operation(summary = "거지 캐릭터 생성 API" , description = "거지 캐릭터 생성")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 생성 완료" )})
     @PostMapping("/beggar")
-    public ResponseEntity<StatusResponseDto> createBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> createBeggar(@Valid @RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
@@ -41,10 +44,17 @@ public class BeggarController {
         return beggarService.getUserBeggar(userId);
     }
 
+    @Operation(summary = "마이 거지 캐릭터 닉테임 체크 API" , description = "내 거지 캐릭터 닉네임 체크(중복, 욕설, 음란단어 체크)")
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 닉네임 체크 완료" )})
+    @GetMapping("/beggar/check/{nickname}")
+    public ResponseEntity<String> nicknameCheck(@PathVariable String nickname){
+        return beggarService.nicknameCheck(nickname);
+    }
+
     @Operation(summary = "거지 캐릭터 업데이트 API" , description = "거지 캐릭터 update")
-    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
+    @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 수정 완료" )})
     @PatchMapping("/beggar")
-    public ResponseEntity<BeggarResponseDto> updateBeggar(@RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> updateBeggar(@Valid @RequestBody BeggarRequestDto beggarRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return beggarService.updateBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
@@ -60,5 +70,10 @@ public class BeggarController {
     @GetMapping("/beggar/custom")
     public ResponseEntity<BeggarCustomListResponseDto> customList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return beggarService.customList(userDetails.getUsername());
+    }
+
+    @GetMapping("/beggar/info")
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return beggarService.getBeggarInfo(userDetails.getUsername());
     }
 }

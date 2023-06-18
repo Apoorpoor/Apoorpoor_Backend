@@ -3,6 +3,8 @@ package com.example.apoorpoor_backend.dto.chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Getter
 @Setter

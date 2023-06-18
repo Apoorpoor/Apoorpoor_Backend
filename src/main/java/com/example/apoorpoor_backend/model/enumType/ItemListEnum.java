@@ -48,16 +48,16 @@ public enum ItemListEnum {
     shoes_lv5_07(36L, "에어포숙", 40L, 5L, "shoes", "shoes_lv5_07.svg"),
     shoes_lv5_08(37L, "된장포숙", 40L, 5L, "shoes", "shoes_lv5_08.svg"),
     shoes_lv6_01(38L, "조단", 70L, 6L, "shoes", "shoes_lv6_01.svg"),
-    shoes_lv6_02(39L, "독일군 스니커즈", 6L, 6L, "shoes", "shoes_lv6_02.svg"),
+    shoes_lv6_02(39L, "독일군 스니커즈", 60L, 6L, "shoes", "shoes_lv6_02.svg"),
     shoes_lv6_03(40L, "구두", 60L, 6L, "shoes", "shoes_lv6_03.svg"),
     shoes_lv6_04(41L, "구두", 60L, 6L, "shoes", "shoes_lv6_04.svg"),
     shoes_lv6_05(42L, "구두", 60L, 6L, "shoes", "shoes_lv6_05.svg"),
 
     //accessories
-    acc_lv4_01(46L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),
-    acc_lv6_01(43L, "면도기", 60L, 6L, "acc", "acc_lv6_01.svg"),
-    acc_lv6_02(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
-    acc_lv6_03(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
+    acc_lv4_01(43L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),
+    acc_lv6_01(44L, "면도기", 60L, 6L, "acc", "acc_lv6_01.svg"),
+    acc_lv6_02(45L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
+    acc_lv6_03(46L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
 
 
     //customs

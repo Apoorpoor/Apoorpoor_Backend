@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface BeggarRepository extends JpaRepository<Beggar, Long>, BeggarRepositoryCustom{
     Optional<Beggar> findByUserId(Long id);
 
+    Optional<Beggar> findByNickname(String nickname);
+
+    boolean existsBeggarByNickname(String nickname);
 }

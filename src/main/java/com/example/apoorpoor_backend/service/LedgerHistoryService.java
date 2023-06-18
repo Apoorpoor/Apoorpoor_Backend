@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -85,8 +86,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = income + findBalance.get().getIncomeTotal();
-            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal();
+            Long incomeTotal = Optional.ofNullable(income).orElse(0L) + Optional.ofNullable(findBalance.get().getIncomeTotal()).orElse(0L);
+            Long expenditureTotal = Optional.ofNullable(expenditure).orElse(0L) + Optional.ofNullable(findBalance.get().getExpenditureTotal()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
@@ -100,27 +101,91 @@ public class LedgerHistoryService {
         }
 
         ExpType expType = ExpType.FILL_LEDGER;
-        if(expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
+        if (expenditureType != null && expenditureType.equals(ExpenditureType.SAVINGS)) {
             expType = ExpType.BEST_SAVER;
         }
+
+        MentManager mentManager = new MentManager();
+        String randomMENT = mentManager.getMent(accountType, incomeType, expenditureType);
+
         beggarService.updateExpNew(user.getUsername(), expType);
 
-        String randomMENT = getMent(accountType);
-        return new ResponseEntity<>(new StatusResponseDto(randomMENT), HttpStatus.OK);
-
+        return new ResponseEntity<>(new StatusResponseDto(randomMENT, expType.getAmount()), HttpStatus.OK);
     }
 
-    public String getMent(AccountType accountType) {
-       MentType mentType;
-        if (accountType == AccountType.EXPENDITURE) {
-            List<MentType> expenditureMentTypes = Arrays.asList(MentType.MENT1, MentType.MENT2, MentType.MENT3, MentType.MENT4, MentType.MENT5, MentType.MENT6,MentType.MENT7, MentType.MENT8, MentType.MENT9, MentType.MENT10, MentType.MENT11);
-            mentType = expenditureMentTypes.get(random.nextInt(expenditureMentTypes.size()));
-        } else {
-            List<MentType> incompeMentTypes = Arrays.asList(MentType.MENT12, MentType.MENT13, MentType.MENT14, MentType.MENT15, MentType.MENT16, MentType.MENT17, MentType.MENT18);
-            mentType = incompeMentTypes.get(random.nextInt(incompeMentTypes.size()));
+
+    public class MentManager {
+        public String getMent(AccountType accountType, IncomeType incomeType, ExpenditureType expenditureType) {
+
+            if (accountType == AccountType.EXPENDITURE) {
+                MentType mentType = getExpenditureMentType(expenditureType);
+                if (mentType != null) {
+                    List<String> ments = mentType.getMents();
+                    if (ments != null && !ments.isEmpty()) {
+                        return ments.get(random.nextInt(ments.size()));
+                    }
+                }
+            } else {
+                MentType mentType = getIncomeMentType(incomeType);
+                if (mentType != null) {
+                    List<String> ments = mentType.getMents();
+                    if (ments != null && !ments.isEmpty()) {
+                        return ments.get(random.nextInt(ments.size()));
+                    }
+                }
+            }
+            return null;
         }
-        List<String> ments = mentType.getMents();
-        return ments.get(random.nextInt(ments.size()));
+
+        private MentType getExpenditureMentType(ExpenditureType expenditureType) {
+            switch (expenditureType) {
+                case UTILITY_BILL:
+                    return MentType.MENT1;
+                case CONDOLENCE_EXPENSE:
+                    return MentType.MENT2;
+                case TRANSPORTATION:
+                    return MentType.MENT3;
+                case COMMUNICATION_EXPENSES:
+                    return MentType.MENT4;
+                case INSURANCE:
+                    return MentType.MENT5;
+                case EDUCATION:
+                    return MentType.MENT6;
+                case SAVINGS:
+                    return MentType.MENT7;
+                case CULTURE:
+                    return MentType.MENT8;
+                case HEALTH:
+                    return MentType.MENT9;
+                case FOOD_EXPENSES:
+                    return MentType.MENT10;
+                case SHOPPING:
+                    return MentType.MENT11;
+                default:
+                    return null;
+            }
+        }
+
+        private MentType getIncomeMentType(IncomeType incomeType) {
+            switch (incomeType) {
+                case EMPLOYMENT_INCOME:
+                    return MentType.MENT12;
+                case BUSINESS:
+                    return MentType.MENT13;
+                case STOCKS:
+                    return MentType.MENT14;
+                case INVESTMENT:
+                    return MentType.MENT15;
+                case ALLOWANCE:
+                    return MentType.MENT16;
+                case FIXED_DEPOSIT_MATURITY:
+                    return MentType.MENT17;
+                case OTHER:
+                    return MentType.MENT18;
+                default:
+                    return null;
+            }
+        }
     }
 
     public ResponseEntity<LedgerHistoryResponseDto> updateLedgerHistory(Long id, LedgerHistoryRequestDto requestDto, String username) {
@@ -155,8 +220,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(account);
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = income + findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
-            Long expenditureTotal = expenditure + findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+            Long incomeTotal = Optional.ofNullable(income).orElse(0L) + Optional.ofNullable(findBalance.get().getIncomeTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getIncome()).orElse(0L);
+            Long expenditureTotal = Optional.ofNullable(expenditure).orElse(0L) + Optional.ofNullable(findBalance.get().getExpenditureTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getExpenditure()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }else{
@@ -212,8 +277,8 @@ public class LedgerHistoryService {
         Optional<Balance> findBalance = getBalance(ledgerHistory.getAccount());
 
         if(findBalance.isPresent()) {
-            Long incomeTotal = findBalance.get().getIncomeTotal()-ledgerHistory.getIncome();
-            Long expenditureTotal = findBalance.get().getExpenditureTotal()-ledgerHistory.getExpenditure();
+            Long incomeTotal = Optional.of(findBalance.get().getIncomeTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getIncome()).orElse(0L);
+            Long expenditureTotal = Optional.of(findBalance.get().getExpenditureTotal()).orElse(0L)-Optional.ofNullable(ledgerHistory.getExpenditure()).orElse(0L);
 
             findBalance.get().update(incomeTotal, expenditureTotal);
         }

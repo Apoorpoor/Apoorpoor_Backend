@@ -5,14 +5,19 @@ import com.example.apoorpoor_backend.dto.shop.PointSearchCondition;
 import com.example.apoorpoor_backend.dto.shop.QPointResponseDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.example.apoorpoor_backend.model.QLedgerHistory.ledgerHistory;
 import static com.example.apoorpoor_backend.model.QPoint.point;
 import static io.jsonwebtoken.lang.Strings.hasText;
 public class PointRepositoryImpl implements PointRepositoryCustom{
@@ -25,6 +30,12 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
 
     @Override
     public Page<PointResponseDto> findAllByPeriodAndBeggar(Long beggarId, PointSearchCondition condition, Pageable pageable) {
+
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,point.createdAt
+                , ConstantImpl.create("%Y-%m-%d")
+        );
 
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate;
@@ -42,6 +53,9 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         }else if(type.equals("year")){
             startDate = endDate.minusYears(1);
         }
+
+        String startDateformat = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String endDateformat = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -67,9 +81,10 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .from(point)
                 .where(
                         point.beggar.id.eq(beggarId),
-                        point.createdAt.between(startDate, endDate),
+                        formattedDate.between(startDateformat, endDateformat),
                         builder
                 )
+                .orderBy(point.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

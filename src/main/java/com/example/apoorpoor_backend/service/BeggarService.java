@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.*;
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
@@ -38,17 +39,20 @@ public class BeggarService {
     private final ItemRepository itemRepository;
     private final LedgerHistoryRepository ledgerHistoryRepository;
     private final PointRepository pointRepository;
-
     private final NotificationService notificationService;
+    private final BadWordFiltering badWordFiltering;
 
     public ResponseEntity<StatusResponseDto> createBeggar(BeggarRequestDto beggarRequestDto, String username) {
         User findUser = userCheck(username);
+        boolean badWordCheck = badIdCheck(beggarRequestDto.getNickname());
+
+        if(badWordCheck) throw new IllegalArgumentException("사회적으로 부적절한 언어가 포함되어 있습니다.");
 
         Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
         if(findBeggar.isPresent())
             return new ResponseEntity<>(new StatusResponseDto("이미 푸어가 존재합니다."), HttpStatus.BAD_REQUEST);
 
-        Beggar beggar =Beggar.builder()
+        Beggar beggar = Beggar.builder()
                 .nickname(beggarRequestDto.getNickname())
                 .user(findUser)
                 .point(0L)
@@ -134,20 +138,36 @@ public class BeggarService {
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<String> nicknameCheck(String nickname) {
 
-    public ResponseEntity<BeggarResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
+        boolean badWordCheck = badIdCheck(nickname);
+
+        if(badWordCheck) {
+            return new ResponseEntity<>("사회적으로 부적절한 언어가 포함되어 있습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        boolean duplicateCheck = beggarRepository.existsBeggarByNickname(nickname);
+
+        if(duplicateCheck) {
+            return new ResponseEntity<>("이미 존재 하는 아이디 입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("사용 가능한 아이디 입니다.", HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<StatusResponseDto> updateBeggar(BeggarRequestDto beggarRequestDto, String username) {
         Beggar beggar = beggarCheck(username);
+        badIdCheck(beggarRequestDto.getNickname());
+
+        Optional<Beggar> findBeggar = beggarRepository.findByNickname(beggarRequestDto.getNickname());
+        if(findBeggar.isPresent())
+            return new ResponseEntity<>(new StatusResponseDto("중복된 푸어의 이름이 존재합니다."), HttpStatus.BAD_REQUEST);
+
         beggar.update(beggarRequestDto);
 
-        BeggarResponseDto beggarResponseDto = BeggarResponseDto.builder()
-                .beggar_id(beggar.getId())
-                .nickname(beggar.getNickname())
-                .point(beggar.getPoint())
-                .level(beggar.getLevel())
-                .description(beggar.getDescription())
-                .build();
-
-        return new ResponseEntity<>(beggarResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new StatusResponseDto("닉네임 변경 완료"), HttpStatus.OK);
     }
 
 
@@ -193,8 +213,7 @@ public class BeggarService {
         List<ExpenditureType> badgeList = Arrays.asList(ExpenditureType.values());
 
         for (ExpenditureType expenditureType : badgeList) {
-            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(expenditureType, beggar);
-            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
+            if(badgeCriteriaCheck(expenditureType, user.getId())) saveBadgeNew(user, expenditureType, beggar);
         }
 
     }
@@ -225,7 +244,7 @@ public class BeggarService {
     }
 
 
-    public void saveBadgeNew(ExpenditureType expenditureType, Beggar beggar) {
+    public void saveBadgeNew(User user, ExpenditureType expenditureType, Beggar beggar) {
         Long badgeNum = expenditureType.getBadgeNum();
         String badgeTitle = expenditureType.getBadgeTitle();
         String badgeImage = badgeUrl + expenditureType.getBadgeImage();
@@ -245,6 +264,8 @@ public class BeggarService {
             getBadgeRepository.save(getBadge);
 
             updateExpNew(beggar.getUser().getUsername(), ExpType.GET_BADGE);
+
+            notificationService.notifyGetBadgeEvent(user, expenditureType.getBadgeTitle());
 
         } else {
             throw new IllegalArgumentException("이미 뱃지를 가지고 있습니다.");
@@ -318,6 +339,22 @@ public class BeggarService {
         return new ResponseEntity<>(beggarCustomListResponseDto, HttpStatus.OK);
     }
 
+    public ResponseEntity<List<BeggarInfoDto>> getBeggarInfo(String username) {
+        User user = userCheck(username);
+
+        List<BeggarInfoDto> beggarInfoDtoList = new ArrayList<>();
+
+        List<Beggar> beggarList = beggarRepository.findAll();
+        for (Beggar beggar : beggarList) {
+            BeggarInfoDto beggarInfoDto = BeggarInfoDto.builder()
+                    .beggar_id(beggar.getId())
+                    .nickname(beggar.getNickname())
+                    .build();
+            beggarInfoDtoList.add(beggarInfoDto);
+        }
+        return new ResponseEntity<>(beggarInfoDtoList, HttpStatus.OK);
+    }
+
     public User userCheck(String username) {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저 입니다.")
@@ -344,6 +381,10 @@ public class BeggarService {
 
     public void resetBadge() {
         getBadgeRepository.deleteAll();
+    }
+
+    public boolean badIdCheck(String nickname) {
+        return badWordFiltering.checkBadId(nickname);
     }
 
 }

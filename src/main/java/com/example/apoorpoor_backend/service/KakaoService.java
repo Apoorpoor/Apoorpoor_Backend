@@ -88,7 +88,7 @@ public class KakaoService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b285dc18b3ecd8e4bc2dcc9a9460a12d");
         body.add("client_secret", "3AvD4HWtT4ZrHjrd9pC9TcyyjGtBKNQV");
-        body.add("redirect_uri", "https://www.apoorpoor.com/oauth/kakao");
+        body.add("redirect_uri", "https://apoorpoor.com/oauth/kakao");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
@@ -141,6 +141,7 @@ public class KakaoService {
     @Transactional
     public User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
         Long kakaoId = kakaoUserInfo.getId();
+        String kakaoname = kakaoUserInfo.getNickname();
         User kakaoUser = userRepository.findByKakaoId(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
@@ -153,6 +154,7 @@ public class KakaoService {
                     .password(encodedPassword)
                     .role(UserRoleEnum.USER)
                     .kakaoId(kakaoId)
+                    .kakaoname(kakaoname)
                     .build();
 
             userRepository.save(kakaoUser);

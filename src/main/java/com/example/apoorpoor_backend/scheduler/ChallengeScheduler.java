@@ -2,8 +2,11 @@ package com.example.apoorpoor_backend.scheduler;
 
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Challenge;
+import com.example.apoorpoor_backend.model.Point;
+import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.service.BeggarService;
 import com.example.apoorpoor_backend.service.ChallengeService;
+import com.example.apoorpoor_backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +25,8 @@ public class ChallengeScheduler {
 
     private final ChallengeService challengeService;
     private final BeggarService beggarService;
+    private final NotificationService notificationService;
+    private final PointRepository pointRepository;
 
     @Scheduled(cron = "0 0 0 * * 1")
     public void expenditureMondayCheck() {
@@ -71,7 +76,7 @@ public class ChallengeScheduler {
 
         challengeService.resetChallenge();
 
-        for(Beggar beggar : beggarList) {
+        for (Beggar beggar : beggarList) {
             beggarService.resetChallengeTitle(beggar);
         }
         log.info(LocalDate.now() + " challenge reset 완료!");
@@ -89,37 +94,90 @@ public class ChallengeScheduler {
     }
 
     private void updateMissionResultForDayOfWeek(Challenge challenge, DayOfWeek dayOfWeek, Boolean missionResult) {
+        Long point = 5L;
         switch (dayOfWeek) {
             case MONDAY -> {
                 challenge.updateIsMonday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(point);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "월요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+
+                }
+
             }
             case TUESDAY -> {
                 challenge.updateIsTuesday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "화요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
             }
             case WEDNESDAY -> {
                 challenge.updateIsWednesday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "수요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
             }
             case THURSDAY -> {
                 challenge.updateIsThursday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "목요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
             }
             case FRIDAY -> {
                 challenge.updateIsFriday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "금요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
             }
             case SATURDAY -> {
                 challenge.updateIsSaturday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "토요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
             }
             case SUNDAY -> {
                 challenge.updateIsSunday(missionResult);
-                if(missionResult) challenge.getBeggar().updatePoint(5L);
+                if (missionResult) {
+                    challenge.getBeggar().updatePoint(5L);
+                    notificationService.notifyChallengeResultEvent(challenge, point);
+                    String pointDescription = "일요일 목표 달성";
+                    updateRecordPoint(pointDescription, point, challenge.getBeggar());
+                }
                 challengeService.challengeResult(challenge);
+
             }
             default -> throw new IllegalArgumentException("올바르지 않은 요일입니다.");
         }
     }
+
+    @Transactional
+    public void updateRecordPoint(String pointDescription, Long point, Beggar beggar) {
+        Point recordPoint = Point.builder()
+                .pointDescription(pointDescription)
+                .earnedPoint(point)
+                .usedPoints(null)
+                .beggar(beggar)
+                .build();
+
+        pointRepository.save(recordPoint);
+    }
+
+
 }

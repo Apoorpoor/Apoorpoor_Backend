@@ -14,7 +14,7 @@ public interface SocialRepositoryCustom {
 
     List<Ranking> getRank(SocialSearchCondition condition);
 
-    Long getPercent(SocialSearchCondition condition, User findUser);
+    List<ExpenditurePercentDto> getPercent(SocialSearchCondition condition, User findUser);
 
     Double getExpAverage(SocialSearchCondition condition, User findUser);
 

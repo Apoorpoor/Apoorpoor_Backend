@@ -12,6 +12,7 @@ import com.example.apoorpoor_backend.repository.BalanceRepository;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -89,6 +90,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
+    //@Cacheable(key = "#id", value = "account")
     public ResponseEntity<AccountResponseDto> getAccount(Long id, String username) {
         User user = userCheck(username);
         Account account = getAccount(id);

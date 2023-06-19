@@ -2,11 +2,13 @@ package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.service.ChatService;
 import com.example.apoorpoor_backend.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -20,6 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
+import java.util.List;
+
+
+
 
 @RequiredArgsConstructor
 @Controller
@@ -32,10 +38,16 @@ public class ChatController {
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
-    public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor, ChatListDto chatListDto) throws Exception {
         Thread.sleep(500);
-        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
+        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor, chatListDto);
         msgOperation.convertAndSend("/sub/chat/room", newchatdto);
+    }
+
+    @GetMapping("/chat/list")
+    public ResponseEntity<List<ChatListDto>> getChatList() {
+        List<ChatListDto> chatListDtoList = chatService.getChatParticipants();
+        return ResponseEntity.ok(chatListDtoList);
     }
 
     @MessageMapping("/chat/send")

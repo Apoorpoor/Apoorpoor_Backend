@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.dto.ledgerhistory;
 
-import com.example.apoorpoor_backend.model.LedgerHistory;
 import com.example.apoorpoor_backend.model.enumType.AccountType;
 import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.example.apoorpoor_backend.model.enumType.IncomeType;
@@ -8,7 +7,9 @@ import com.example.apoorpoor_backend.model.enumType.PaymentMethod;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 @Builder
 public class LedgerHistoryResponseDto {

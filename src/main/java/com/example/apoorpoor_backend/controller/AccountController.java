@@ -5,7 +5,9 @@ import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/account")
-    public ResponseEntity<StatusResponseDto> createAccount(@RequestBody AccountRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<StatusResponseDto> createAccount(@Valid @RequestBody AccountRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return accountService.createAccount(requestDto, userDetails.getUsername());
     }
 

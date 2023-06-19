@@ -35,7 +35,7 @@ public class SocialService {
     public ResponseEntity<SocialResponseDto> getPercent(SocialSearchCondition condition, String username) {
         User findUser = userCheck(username);
 
-        Long percent = 0L;
+        double percent = 0.0;
         Long expenditure_sum = 0L;
         Long income_sum = 0L;
         Double expenditure_avg = 0.0;
@@ -57,7 +57,21 @@ public class SocialService {
             income_total = socialRepository.getIncSum(condition, findUser);
         }
 
-        //percent = socialRepository.getPercent(condition, findUser);
+        List<ExpenditurePercentDto> percentList = socialRepository.getPercent(condition, findUser);
+        // age_abb, date, exp_sum, gender, user_id, my_rank
+
+        Long totalCnt = (long) percentList.size();
+        Long myRank = 0L;
+
+        for (ExpenditurePercentDto expenditurePercentDto : percentList) {
+            if(expenditurePercentDto.getUser_id().equals(findUser.getId())){
+                myRank = expenditurePercentDto.getMy_rank();
+            }
+        }
+
+        percent = (double) (myRank / totalCnt) * 100;
+
+        System.out.println("totalCnt: "+totalCnt+" myRank: "+myRank+" percent: "+percent);
 
         SocialResponseDto socialResponseDto = SocialResponseDto.builder()
                         .percent(percent)

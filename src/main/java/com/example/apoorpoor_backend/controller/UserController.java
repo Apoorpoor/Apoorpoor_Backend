@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
+import com.example.apoorpoor_backend.dto.account.RecentSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.user.AgeRequestDto;
 import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/mypage/recentStatus")
-    public ResponseEntity<List<MonthSumResponseDto>> getRecentStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<RecentSumResponseDto> getRecentStatus(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return userService.getRecentStatus(username);
     }

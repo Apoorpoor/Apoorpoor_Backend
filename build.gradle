@@ -35,6 +35,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -72,8 +73,9 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
     //Google Guava
     implementation 'com.google.guava:guava:30.1-jre'
+
     //Redis
-    //implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //implementation 'org.springframework.boot:spring-boot-starter-cache'
     //mongoDB
    //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

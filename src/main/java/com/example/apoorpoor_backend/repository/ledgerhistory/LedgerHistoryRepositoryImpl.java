@@ -57,7 +57,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
 
 
     @Override
-    public List<MonthSumResponseDto> getRecentStatus(Long userId) {
+    public List<ExpenditureSumResponseDto> getExpenditureRecentStatus(Long userId) {
         
         List<Long> accountIdList = getAccountIdList(userId);
         
@@ -68,13 +68,40 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
         );
 
         return queryFactory
-                .select(new QMonthSumResponseDto(
+                .select(new QExpenditureSumResponseDto(
                         formattedDate.as("month"),
-                        ledgerHistory.expenditure.sum().as("month_sum")
+                        ledgerHistory.expenditure.sum().as("expenditure_sum")
                 ))
                 .from(ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
+                        ledgerHistory.account.id.in(accountIdList)
+                )
+                .groupBy(formattedDate)
+                .orderBy(formattedDate.desc())
+                .limit(6)
+                .fetch();
+    }
+
+    @Override
+    public List<IncomeSumResponseDto> getIncomeRecentStatus(Long userId) {
+
+        List<Long> accountIdList = getAccountIdList(userId);
+
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                ,ledgerHistory.date
+                ,ConstantImpl.create("%Y-%m")
+        );
+
+        return queryFactory
+                .select(new QIncomeSumResponseDto(
+                        formattedDate.as("month"),
+                        ledgerHistory.income.sum().as("income_sum")
+                ))
+                .from(ledgerHistory)
+                .where(
+                        ledgerHistory.accountType.eq(AccountType.INCOME),
                         ledgerHistory.account.id.in(accountIdList)
                 )
                 .groupBy(formattedDate)
@@ -175,7 +202,7 @@ public class LedgerHistoryRepositoryImpl implements LedgerHistoryRepositoryCusto
                         expenditureTypeEq(condition.getExpenditureType()),
                         incomeTypeEq(condition.getIncomeType())
                 )
-                .orderBy(ledgerHistory.date.asc())
+                .orderBy(ledgerHistory.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

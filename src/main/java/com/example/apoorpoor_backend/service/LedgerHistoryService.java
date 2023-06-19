@@ -322,15 +322,16 @@ public class LedgerHistoryService {
     }
 
     public void challengeEventCheck(Beggar beggar, Long weekExpenditure) {
-        Challenge challenge = challengeCheck(beggar.getId());
-        if(challenge != null) {
+        Optional<Challenge> challengeOptional = challengeCheck(beggar.getId());
+        if(challengeOptional.isPresent()) {
+            Challenge challenge = challengeOptional.get();
             UpdateChallengeLedgerEvent event = new UpdateChallengeLedgerEvent(beggar, challenge, weekExpenditure);
             challengeEventHandler.updateChallengeLedger(event);
         }
     }
 
 
-    public Challenge challengeCheck(Long beggarId) {
+    public Optional<Challenge> challengeCheck(Long beggarId) {
         return challengeRepository.findChallengeByBeggarId(beggarId);
     }
 

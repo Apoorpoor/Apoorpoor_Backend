@@ -1,15 +1,18 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryRequestDto;
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.dto.common.StatusResponseDto;
 import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.*;
-import com.example.apoorpoor_backend.repository.*;
+import com.example.apoorpoor_backend.repository.BalanceRepository;
 import com.example.apoorpoor_backend.repository.account.AccountRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.challenge.ChallengeRepository;
 import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
 import com.example.apoorpoor_backend.repository.user.UserRepository;
+import com.example.apoorpoor_backend.service.event.ChallengeEventHandler;
+import com.example.apoorpoor_backend.service.event.UpdateChallengeLedgerEvent;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -37,6 +38,8 @@ public class LedgerHistoryService {
     private final BeggarRepository beggarRepository;
     private final BeggarService beggarService;
     private final NotificationService notificationService;
+    private final ChallengeEventHandler challengeEventHandler;
+    private final ChallengeRepository challengeRepository;
 
     private final Random random = new Random();
 
@@ -82,6 +85,8 @@ public class LedgerHistoryService {
                 .build();
 
         ledgerHistoryRepository.save(ledgerHistory);
+
+        challengeEventCheck(beggar, expenditure);
 
         Optional<Balance> findBalance = getBalance(account);
 
@@ -314,6 +319,19 @@ public class LedgerHistoryService {
         return beggarRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
+    }
+
+    public void challengeEventCheck(Beggar beggar, Long weekExpenditure) {
+        Challenge challenge = challengeCheck(beggar.getId());
+        if(challenge != null) {
+            UpdateChallengeLedgerEvent event = new UpdateChallengeLedgerEvent(beggar, challenge, weekExpenditure);
+            challengeEventHandler.updateChallengeLedger(event);
+        }
+    }
+
+
+    public Challenge challengeCheck(Long beggarId) {
+        return challengeRepository.findChallengeByBeggarId(beggarId);
     }
 
 }

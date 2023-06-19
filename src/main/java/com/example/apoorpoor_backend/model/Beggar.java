@@ -67,6 +67,9 @@ public class Beggar extends Timestamped{
     @Column
     private ItemListEnum custom;
 
+    @Column
+    private String challengeTitle;
+
     public void update(BeggarRequestDto beggarRequestDto) {
         this.nickname = beggarRequestDto.getNickname();
     }
@@ -79,8 +82,12 @@ public class Beggar extends Timestamped{
     }
 
     public void updatePointAndExp(Long plusPoint){
-        this.point += plusPoint;
         this.exp += plusPoint;
+        this.point += plusPoint;
+    }
+
+    public void updatePoint(Long plusPoint){
+        this.point += plusPoint;
     }
 
     public void updateCustomTops(ItemListEnum itemListEnum) {
@@ -115,5 +122,13 @@ public class Beggar extends Timestamped{
     public void setUser(User user) {
         this.user = user;
         user.setBeggar(this);
+    }
+
+    public void updateChallenge(String challengeTitle) {
+        this.challengeTitle = challengeTitle;
+    }
+
+    public void resetChallenge() {
+        this.challengeTitle = null;
     }
 }

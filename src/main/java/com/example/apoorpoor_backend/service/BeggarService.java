@@ -385,4 +385,11 @@ public class BeggarService {
         return badWordFiltering.checkBadId(nickname);
     }
 
+    public void resetChallengeTitle(Beggar beggar) {
+        beggar.resetChallenge();
+    }
+
+    public List<Beggar> getBeggarList() {
+        return beggarRepository.findAll();
+    }
 }

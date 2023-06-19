@@ -28,6 +28,8 @@ public class QBeggar extends EntityPathBase<Beggar> {
 
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.ItemListEnum> bottom = createEnum("bottom", com.example.apoorpoor_backend.model.enumType.ItemListEnum.class);
 
+    public final StringPath challengeTitle = createString("challengeTitle");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

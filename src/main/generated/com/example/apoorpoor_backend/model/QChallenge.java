@@ -36,8 +36,6 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public final BooleanPath isSaturday = createBoolean("isSaturday");
 
-    public final BooleanPath isSuccess = createBoolean("isSuccess");
-
     public final BooleanPath isSunday = createBoolean("isSunday");
 
     public final BooleanPath isThursday = createBoolean("isThursday");
@@ -45,6 +43,8 @@ public class QChallenge extends EntityPathBase<Challenge> {
     public final BooleanPath isTuesday = createBoolean("isTuesday");
 
     public final BooleanPath isWednesday = createBoolean("isWednesday");
+
+    public final NumberPath<Integer> successCount = createNumber("successCount", Integer.class);
 
     public final StringPath title = createString("title");
 

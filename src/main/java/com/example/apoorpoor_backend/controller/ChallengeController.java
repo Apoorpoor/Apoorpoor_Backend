@@ -24,8 +24,4 @@ public class ChallengeController {
         return challengeService.createChallenge(challengeRequestDto.getChallengeType(), userDetails.getUsername());
     }
 
-//    public ResponseEntity<String> createChallenge(@RequestBody ChallengeRequestDto challengeRequestDto) {
-//        String username = "user";
-//        return challengeService.createChallenge(challengeRequestDto.getChallengeType(), username);
-//    }
 }

@@ -30,11 +30,6 @@ public class BeggarController {
         return beggarService.createBeggar(beggarRequestDto, userDetails.getUsername());
     }
 
-//    public ResponseEntity<StatusResponseDto> createBeggar(@Valid @RequestBody BeggarRequestDto beggarRequestDto){
-//        String username = "user";
-//        return beggarService.createBeggar(beggarRequestDto, username);
-//    }
-
     @Operation(summary = "마이 거지 캐릭터 API" , description = "내 거지 캐릭터 검색")
     @ApiResponses(value ={@ApiResponse(responseCode= "200", description = "거지 캐릭터 검색 완료" )})
     @GetMapping("/beggar")

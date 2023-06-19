@@ -4,9 +4,12 @@ import com.example.apoorpoor_backend.model.enumType.ChallengeType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,31 +32,69 @@ public class Challenge {
     private Long challengeAmount;
 
     @Column
+    @ColumnDefault("0")
     private Long weekExpenditure;
 
     @Column
-    private boolean isSuccess;
+    private Boolean isMonday;
 
     @Column
-    private boolean isMonday;
+    private Boolean isTuesday;
 
     @Column
-    private boolean isTuesday;
+    private Boolean isWednesday;
 
     @Column
-    private boolean isWednesday;
+    private Boolean isThursday;
 
     @Column
-    private boolean isThursday;
+    private Boolean isFriday;
 
     @Column
-    private boolean isFriday;
+    private Boolean isSaturday;
 
     @Column
-    private boolean isSaturday;
+    private Boolean isSunday;
 
     @Column
-    private boolean isSunday;
+    private int successCount;
 
+    public void updateWeekExpenditure(Long weekExpenditure) {
+        this.weekExpenditure += weekExpenditure;
+    }
 
+    public void updateIsMonday(Boolean isMonday) {
+        this.isMonday = isMonday;
+        if(isMonday) this.successCount += 1;
+    }
+
+    public void updateIsTuesday(Boolean isTuesday) {
+        this.isTuesday = isTuesday;
+        if(isTuesday) this.successCount += 1;
+    }
+
+    public void updateIsWednesday(Boolean isWednesday) {
+        this.isWednesday = isWednesday;
+        if(isWednesday) this.successCount += 1;
+    }
+
+    public void updateIsThursday(Boolean isThursday) {
+        this.isThursday = isThursday;
+        if(isThursday) this.successCount += 1;
+    }
+
+    public void updateIsFriday(Boolean isFriday) {
+        this.isFriday = isFriday;
+        if(isFriday) this.successCount += 1;
+    }
+
+    public void updateIsSaturday(Boolean isSaturday) {
+        this.isSaturday = isSaturday;
+        if(isSaturday) this.successCount += 1;
+    }
+
+    public void updateIsSunday(Boolean isSunday) {
+        this.isSunday = isSunday;
+        if(isSunday) this.successCount += 1;
+    }
 }

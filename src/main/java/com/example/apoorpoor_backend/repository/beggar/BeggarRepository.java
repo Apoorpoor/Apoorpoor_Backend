@@ -11,4 +11,5 @@ public interface BeggarRepository extends JpaRepository<Beggar, Long>, BeggarRep
     Optional<Beggar> findByNickname(String nickname);
 
     boolean existsBeggarByNickname(String nickname);
+
 }

@@ -12,7 +12,10 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -21,7 +24,8 @@ import java.util.HashMap;
 public class ChatService{
 
     private final BeggarRepository beggarRepository;
-    private final HashMap<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
+    private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
+
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
         headerAccessor.getSessionAttributes().put("nickName", chatDto.getSender());
@@ -37,13 +41,13 @@ public class ChatService{
         addChatParticipant(chatListDto);
         return chatDto;
     }
+
     public void addChatParticipant(ChatListDto participant) {
         chatParticipantsMap.put(participant.getBeggarId(), participant);
     }
 
-    public HashMap<Long, ChatListDto> getChatParticipants() {
-
-        return chatParticipantsMap;
+    public List<ChatListDto> getChatParticipants() {
+        return new ArrayList<>(chatParticipantsMap.values());
     }
 
     public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
@@ -76,7 +80,6 @@ public class ChatService{
                 .type(type)
                 .build();
     }
-
 
     public Beggar beggarCheck(Long beggar_id) {
         return beggarRepository.findById(beggar_id).orElseThrow(

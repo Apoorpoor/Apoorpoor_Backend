@@ -22,13 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
-
-
-
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
@@ -38,16 +37,14 @@ public class ChatController {
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")
-    public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor, ChatListDto chatListDto) throws Exception {
+    public void enterChatRoom(@RequestBody ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
-        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor, chatListDto);
+        ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
         msgOperation.convertAndSend("/sub/chat/room", newchatdto);
     }
-
     @GetMapping("/chat/list")
-    public ResponseEntity<List<ChatListDto>> getChatList() {
-        List<ChatListDto> chatListDtoList = chatService.getChatParticipants();
-        return ResponseEntity.ok(chatListDtoList);
+    public HashMap<Long, ChatListDto> getChatList() {
+        return chatService.getChatParticipants();
     }
 
     @MessageMapping("/chat/send")
@@ -69,8 +66,7 @@ public class ChatController {
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadImage(@RequestParam(value = "image", required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
-        String image_url = s3Uploader.uploadImage(image);
-        return image_url;
+    public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
+        return s3Uploader.uploadImage(image);
     }
 }

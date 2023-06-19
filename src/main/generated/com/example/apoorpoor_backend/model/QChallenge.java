@@ -48,6 +48,8 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public final StringPath title = createString("title");
 
+    public final StringPath username = createString("username");
+
     public final NumberPath<Long> weekExpenditure = createNumber("weekExpenditure", Long.class);
 
     public QChallenge(String variable) {

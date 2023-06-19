@@ -23,6 +23,9 @@ public class Challenge {
     private Beggar beggar;
 
     @Column
+    private String username;
+
+    @Column
     private ChallengeType challengeType;
 
     @Column

@@ -55,16 +55,15 @@ public enum ItemListEnum {
 
     //accessories
     acc_lv4_01(43L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),
-    acc_lv6_01(44L, "면도기", 60L, 6L, "acc", "acc_lv6_01.svg"),
-    acc_lv6_02(45L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
-    acc_lv6_03(46L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
+    acc_lv6_02(44L, "로락스 시계", 60L, 6L, "acc", "acc_lv6_02.svg"),
+    acc_lv6_03(45L, "사과 워치", 60L, 6L, "acc", "acc_lv6_03.svg"),
 
 
     //customs
-    custom_lv7_01(47L, "의사 거지", 20L, 7L, "custom", "custom_lv7_01.svg"),
-    custom_lv8_01(48L, "우주인 거지", 20L, 8L, "custom", "custom_lv8_01.svg"),
-    custom_lv9_01(49L, "산타 거지", 20L, 9L, "custom", "custom_lv9_01.svg"),
-    custom_lv10_01(50L, "석유왕", 20L, 10L, "custom", "custom_lv10_01.svg");
+    custom_lv7_01(46L, "의사 거지", 20L, 7L, "custom", "custom_lv7_01.svg"),
+    custom_lv8_01(47L, "우주인 거지", 20L, 8L, "custom", "custom_lv8_01.svg"),
+    custom_lv9_01(48L, "산타 거지", 20L, 9L, "custom", "custom_lv9_01.svg"),
+    custom_lv10_01(49L, "석유왕", 20L, 10L, "custom", "custom_lv10_01.svg");
 
 
     private final Long itemNum;

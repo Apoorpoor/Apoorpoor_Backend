@@ -7,6 +7,7 @@ import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

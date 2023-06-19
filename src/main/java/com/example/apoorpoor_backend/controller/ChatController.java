@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.service.ChatService;
 import com.example.apoorpoor_backend.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +15,16 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
+import java.util.List;
+
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
@@ -36,6 +38,12 @@ public class ChatController {
         Thread.sleep(500);
         ChatDto newchatdto = chatService.enterChatRoom(chatDto, headerAccessor);
         msgOperation.convertAndSend("/sub/chat/room", newchatdto);
+    }
+
+    @GetMapping("/chat/list")
+    public List<ChatListDto> getChatList() {
+        List<ChatListDto> chatParticipantsList = chatService.getChatParticipants();
+        return chatParticipantsList;
     }
 
     @MessageMapping("/chat/send")

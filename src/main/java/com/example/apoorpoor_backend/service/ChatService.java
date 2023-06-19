@@ -8,15 +8,14 @@ import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -25,20 +24,31 @@ import java.util.Set;
 public class ChatService{
 
     private final BeggarRepository beggarRepository;
-    private final List<ChatListDto> chatParticipantsList = new ArrayList<>();
+    private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
 
-    public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor, ChatListDto chatListDto) {
+
+    public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
         headerAccessor.getSessionAttributes().put("nickName", chatDto.getSender());
         headerAccessor.getSessionAttributes().put("userId", chatDto.getUserId());
         chatDto.setMessage(chatDto.getSender() + "님이 입장하셨습니다.");
 
-        Long beggarId = chatDto.getBeggar_id();
-        chatListDto.getChatList().add(beggarId);
-
-        chatParticipantsList.add(chatListDto);
-
+        ChatListDto chatListDto = new ChatListDto(
+                chatDto.getBeggar_id(),
+                chatDto.getSender(),
+                chatDto.getUserId(),
+                chatDto.getLevel()
+        );
+        addChatParticipant(chatListDto);
         return chatDto;
+    }
+
+    public void addChatParticipant(ChatListDto participant) {
+        chatParticipantsMap.put(participant.getBeggarId(), participant);
+    }
+
+    public List<ChatListDto> getChatParticipants() {
+        return new ArrayList<>(chatParticipantsMap.values());
     }
 
     public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
@@ -53,17 +63,14 @@ public class ChatService{
                 .message(nickName + "님이 퇴장하셨습니다.")
                 .userId(userId)
                 .build();
-
-
-        chatParticipantsList.stream()
-                .filter(chatListDto -> chatListDto.getChatList().contains(beggar_id))
-                .findFirst()
-                .ifPresent(chatListDto -> {
-                    chatListDto.getChatList().remove(beggar_id);
-                });
-
+        removeChatParticipant(beggar_id);
         return chatDto;
     }
+
+    public void removeChatParticipant(Long beggar_id) {
+        chatParticipantsMap.remove(beggar_id);
+    }
+
 
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
@@ -74,10 +81,6 @@ public class ChatService{
                 .beggar(beggar)
                 .type(type)
                 .build();
-    }
-
-    public List<ChatListDto> getChatParticipants() {
-        return new ArrayList<>(chatParticipantsList);
     }
 
     public Beggar beggarCheck(Long beggar_id) {

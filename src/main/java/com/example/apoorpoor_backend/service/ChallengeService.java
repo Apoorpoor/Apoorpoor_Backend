@@ -88,6 +88,7 @@ public class ChallengeService {
         List<ChallengeLedgerDto> challengeLedgerDtoList = new ArrayList<>();
 
         for (LedgerHistory ledgerHistory : findLedgerHistoryList) {
+            if(ledgerHistory.getExpenditureType() == null) continue;
             ChallengeLedgerDto challengeLedgerDto = ChallengeLedgerDto.builder()
                     .title(ledgerHistory.getTitle())
                     .expenditureType(ledgerHistory.getExpenditureType())

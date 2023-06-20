@@ -17,6 +17,7 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+
     mongodb:
       authentication-database: admin
       username: apoorpoor
@@ -24,6 +25,7 @@ spring:
       password: jCwFrgKdmtgm7ppl
       port: '27017'
       host: localhost
+
 
 
 

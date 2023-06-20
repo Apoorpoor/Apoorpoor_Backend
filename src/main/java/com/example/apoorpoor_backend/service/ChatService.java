@@ -6,6 +6,7 @@ import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -24,8 +25,8 @@ import java.util.Map;
 public class ChatService{
 
     private final BeggarRepository beggarRepository;
+    private final ChatRepository chatRepository;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
-
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -81,6 +82,7 @@ public class ChatService{
                 .beggar(beggar)
                 .type(type)
                 .build();
+        chatRepository.save(chat);
     }
 
     public Beggar beggarCheck(Long beggar_id) {

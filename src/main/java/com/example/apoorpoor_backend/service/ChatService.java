@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.model.Beggar;
@@ -10,6 +11,7 @@ import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,8 @@ public class ChatService{
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
+    private final SimpMessagingTemplate msgOperation;
+    private final BadWordFiltering badWordFiltering;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
@@ -72,17 +76,19 @@ public class ChatService{
         chatParticipantsMap.remove(beggar_id);
     }
 
-
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
+        ChatDto newChatDto = badWordFiltering.change(chatDto);
         Chat chat = Chat.builder()
-                .sender(chatDto.getSender())
-                .message(chatDto.getMessage())
+                .sender(newChatDto.getSender())
+                .message(newChatDto.getMessage())
+                .level(newChatDto.getLevel())
                 .beggar(beggar)
                 .type(type)
                 .build();
         chatRepository.save(chat);
+        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
     }
 
     public Beggar beggarCheck(Long beggar_id) {

@@ -54,6 +54,8 @@ public class QBeggar extends EntityPathBase<Beggar> {
 
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.ItemListEnum> shoes = createEnum("shoes", com.example.apoorpoor_backend.model.enumType.ItemListEnum.class);
 
+    public final NumberPath<Long> successCount = createNumber("successCount", Long.class);
+
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.ItemListEnum> top = createEnum("top", com.example.apoorpoor_backend.model.enumType.ItemListEnum.class);
 
     public final QUser user;

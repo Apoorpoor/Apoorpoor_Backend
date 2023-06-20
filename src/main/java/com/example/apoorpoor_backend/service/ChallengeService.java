@@ -21,8 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +54,6 @@ public class ChallengeService {
 
         challengeRepository.save(newChallenge);
 
-
         notificationService.notifyStartChallengeEvent(username, challengeType.getTitle());
 
         return new ResponseEntity<>(challengeType.getTitle() + " 도전!!", HttpStatus.OK);
@@ -70,11 +72,15 @@ public class ChallengeService {
 
     public ResponseEntity<ChallengeInfoResponseDto> getChallengeInfo(String username) {
         Beggar beggar = beggarCheck(username);
+        Challenge challenge = challengeCheck(beggar.getId());
 
         String challengeTitle = beggar.getChallengeTitle();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(E)", Locale.ENGLISH);
+        String startTime = challenge.getCreatedAt().format(formatter);
 
         ChallengeInfoResponseDto challengeInfoResponseDto = ChallengeInfoResponseDto.builder()
                 .challengeTitle(challengeTitle)
+                .startTime(startTime)
                 .build();
 
         return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);

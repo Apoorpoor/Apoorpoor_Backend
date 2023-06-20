@@ -20,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -43,17 +41,16 @@ public class ChatController {
 
     @GetMapping("/chat/list")
     public List<ChatListDto> getChatList() {
-        List<ChatListDto> chatParticipantsList = chatService.getChatParticipants();
-        return chatParticipantsList;
+        return chatService.getChatParticipants();
     }
 
     @MessageMapping("/chat/send")
     @SendTo("/sub/chat/room")
-    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public ChatDto sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
         ChatDto newChatDto = badWordFiltering.change(chatDto);
-        chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
+        chatService.sendChatRoom(newChatDto, headerAccessor);
+        return newChatDto;
     }
 
     @EventListener

@@ -30,21 +30,7 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isFriday = createBoolean("isFriday");
-
-    public final BooleanPath isMonday = createBoolean("isMonday");
-
-    public final BooleanPath isSaturday = createBoolean("isSaturday");
-
-    public final BooleanPath isSunday = createBoolean("isSunday");
-
-    public final BooleanPath isThursday = createBoolean("isThursday");
-
-    public final BooleanPath isTuesday = createBoolean("isTuesday");
-
-    public final BooleanPath isWednesday = createBoolean("isWednesday");
-
-    public final NumberPath<Integer> successCount = createNumber("successCount", Integer.class);
+    public final BooleanPath successStatus = createBoolean("successStatus");
 
     public final StringPath title = createString("title");
 

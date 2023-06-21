@@ -12,6 +12,7 @@ public class Image extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imageUrl;
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }

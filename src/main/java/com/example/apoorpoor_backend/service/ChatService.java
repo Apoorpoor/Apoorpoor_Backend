@@ -2,12 +2,13 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
-import com.example.apoorpoor_backend.dto.chat.ChatImageDto;
+import com.example.apoorpoor_backend.dto.chat.ChatImagesDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.Image;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
+import com.example.apoorpoor_backend.repository.ImageRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
+    private final ImageRepository imageRepository;
     private final SimpMessagingTemplate msgOperation;
     private final BadWordFiltering badWordFiltering;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
@@ -108,12 +110,24 @@ public class ChatService {
         }
         return chatDtoList;
     }
-    public List<ChatImageDto> saveImageList(){
-    }
 
     public Beggar beggarCheck(Long beggar_id) {
         return beggarRepository.findById(beggar_id).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
+    }
+
+    public List<ChatImagesDto> saveChatImageList() {
+        List<Image> imageList = imageRepository.findAll();
+        List<ChatImagesDto> chatImagesList = new ArrayList<>();
+
+        for(Image image : imageList){
+            ChatImagesDto imagesDto = ChatImagesDto.builder()
+                    .imageId(image.getId())
+                    .imageUrl(image.getImageUrl())
+                    .build();
+            chatImagesList.add(imagesDto);
+        }
+        return chatImagesList;
     }
 }

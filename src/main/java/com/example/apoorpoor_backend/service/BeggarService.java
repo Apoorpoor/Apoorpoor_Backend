@@ -67,7 +67,7 @@ public class BeggarService {
 
     public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
         User user = userCheck(username);
-        Beggar beggar = beggarCheck(username);
+        Beggar beggar = beggarCheckExp(username);
 
         Long beggarId = beggar.getId();
         Long userId = user.getId();
@@ -98,6 +98,7 @@ public class BeggarService {
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
+
 
     private List<Badge> getBadgeList(Long beggarId) {
         return badgeRepository.findByBadgeList(beggarId);
@@ -366,6 +367,14 @@ public class BeggarService {
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
+
+    private Beggar beggarCheckExp(String username) {
+
+        Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
+        if(findBeggar.isPresent()) return findBeggar.get();
+        else return null;
+    }
+
 
     public User userIdCheck(Long userId) {
         return userRepository.findById(userId).orElseThrow(

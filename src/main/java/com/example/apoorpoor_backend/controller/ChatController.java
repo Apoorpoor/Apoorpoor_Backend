@@ -45,7 +45,6 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/send")
-    @SendTo("/sub/chat/room")
     public ChatDto sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
         ChatDto newChatDto = badWordFiltering.change(chatDto);

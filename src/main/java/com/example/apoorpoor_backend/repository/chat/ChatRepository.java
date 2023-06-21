@@ -7,5 +7,4 @@ import java.util.Optional;
 
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-   // boolean findByMessage(String message);
 }

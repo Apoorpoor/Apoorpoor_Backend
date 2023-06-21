@@ -15,16 +15,13 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class ChatService{
+public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
@@ -89,6 +86,23 @@ public class ChatService{
                 .build();
         chatRepository.save(chat);
         msgOperation.convertAndSend("/sub/chat/room", newChatDto);
+    }
+
+    public List<ChatDto> saveChatList () {
+        List<Chat> chatList = chatRepository.findAll();
+        List<ChatDto> chatDtoList = new ArrayList<>();
+
+        for (Chat chat : chatList) {
+            ChatDto chatDto = ChatDto.builder()
+                    .type(chat.getType())
+                    .beggar_id(chat.getBeggar().getId())
+                    .sender(chat.getSender())
+                    .message(chat.getMessage())
+                    .level(chat.getLevel())
+                    .build();
+            chatDtoList.add(chatDto);
+        }
+        return chatDtoList;
     }
 
     public Beggar beggarCheck(Long beggar_id) {

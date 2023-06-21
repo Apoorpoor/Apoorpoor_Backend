@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,12 +48,18 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/send")
-    @SendTo("/sub/chat/room")
     public ChatDto sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
         ChatDto newChatDto = badWordFiltering.change(chatDto);
         chatService.sendChatRoom(newChatDto, headerAccessor);
         return newChatDto;
+    }
+    /*
+    채팅 내역 불러오기
+    */
+    @GetMapping("/chat/messageList")
+    public List<ChatDto> saveChatList() {
+        return chatService.saveChatList();
     }
 
     @EventListener

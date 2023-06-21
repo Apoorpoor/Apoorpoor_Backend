@@ -1,21 +1,21 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -23,9 +23,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChatService{
 
+    private final BadWordFiltering badWordFiltering;
+    private final SimpMessagingTemplate msgOperation;
     private final BeggarRepository beggarRepository;
+    private final ChatRepository chatRepository;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
-
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -71,16 +73,19 @@ public class ChatService{
         chatParticipantsMap.remove(beggar_id);
     }
 
-
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
+        ChatDto newChatDto = badWordFiltering.change(chatDto);
         Chat chat = Chat.builder()
-                .sender(chatDto.getSender())
-                .message(chatDto.getMessage())
+                .sender(newChatDto.getSender())
+                .message(newChatDto.getMessage())
+                .level(newChatDto.getLevel())
                 .beggar(beggar)
                 .type(type)
                 .build();
+        chatRepository.save(chat);
+        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
     }
 
     public Beggar beggarCheck(Long beggar_id) {

@@ -28,6 +28,8 @@ public class QLedgerHistory extends EntityPathBase<LedgerHistory> {
 
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.AccountType> accountType = createEnum("accountType", com.example.apoorpoor_backend.model.enumType.AccountType.class);
 
+    public final NumberPath<Long> challengeId = createNumber("challengeId", Long.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

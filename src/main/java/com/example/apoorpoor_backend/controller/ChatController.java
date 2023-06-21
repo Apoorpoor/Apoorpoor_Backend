@@ -22,7 +22,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import java.io.IOException;
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @RestController
 public class ChatController {
@@ -42,17 +41,16 @@ public class ChatController {
 
     @GetMapping("/chat/list")
     public List<ChatListDto> getChatList() {
-        List<ChatListDto> chatParticipantsList = chatService.getChatParticipants();
-        return chatParticipantsList;
+        return chatService.getChatParticipants();
     }
 
     @MessageMapping("/chat/send")
     @SendTo("/sub/chat/room")
-    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public ChatDto sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
         ChatDto newChatDto = badWordFiltering.change(chatDto);
-        chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
+        chatService.sendChatRoom(newChatDto, headerAccessor);
+        return newChatDto;
     }
 
     @EventListener
@@ -65,8 +63,7 @@ public class ChatController {
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadImage(@RequestParam(value = "image", required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
-        String image_url = s3Uploader.uploadImage(image);
-        return image_url;
+    public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
+        return s3Uploader.uploadImage(image);
     }
 }

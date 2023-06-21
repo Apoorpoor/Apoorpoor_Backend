@@ -89,7 +89,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
         Long age = findUser.getAge();
         String gender = findUser.getGender();
 
-        Long age_abb = age-(age%10);
+        String age_abb = String.valueOf(age/10);
 
         LocalDate minusMonths = LocalDate.now().minusMonths(1);
         String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -117,7 +117,7 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                         ledgerHistory.expenditure.sum(),
                         user.gender,
                         user.id,
-                        Expressions.template(Long.class, "dense_rank() over (order by sum(expenditure))")
+                        Expressions.template(Long.class, "dense_rank() over (order by sum(expenditure) desc)")
                 ))
                 .from(account)
                 .join(account.user, user)
@@ -126,7 +126,9 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
                         formattedDate.eq(date),
                         user.age.isNotNull(),
-                        user.gender.isNotNull()
+                        user.gender.isNotNull(),
+                        user.age.like(age_abb+"%"),
+                        user.gender.eq(gender)
                 )
                 .groupBy(
                         new CaseBuilder()

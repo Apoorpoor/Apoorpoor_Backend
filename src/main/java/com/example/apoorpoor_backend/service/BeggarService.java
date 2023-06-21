@@ -67,7 +67,7 @@ public class BeggarService {
         boolean beggarCheck = beggarRepository.existsBeggarByUserId(user.getId());
 
         if(!beggarCheck) {
-           return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+           return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         Beggar beggar = beggarCheck(username);
 

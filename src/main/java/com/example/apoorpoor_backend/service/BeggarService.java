@@ -19,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +64,13 @@ public class BeggarService {
 
     public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
         User user = userCheck(username);
-        Beggar beggar = beggarCheckExp(username);
+        boolean beggarCheck = beggarRepository.existsBeggarByUserId(user.getId());
+
+        if(!beggarCheck) {
+           return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        Beggar beggar = beggarCheck(username);
 
         Long beggarId = beggar.getId();
         Long userId = user.getId();
@@ -367,14 +370,6 @@ public class BeggarService {
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
     }
-
-    private Beggar beggarCheckExp(String username) {
-
-        Optional<Beggar> findBeggar = beggarRepository.findByUsername(username);
-        if(findBeggar.isPresent()) return findBeggar.get();
-        else return null;
-    }
-
 
     public User userIdCheck(Long userId) {
         return userRepository.findById(userId).orElseThrow(

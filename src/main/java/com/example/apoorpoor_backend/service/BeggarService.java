@@ -19,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +64,11 @@ public class BeggarService {
 
     public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
         User user = userCheck(username);
+        boolean beggarCheck = beggarRepository.existsBeggarByUserId(user.getId());
+
+        if(!beggarCheck) {
+           return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         Beggar beggar = beggarCheck(username);
 
         Long beggarId = beggar.getId();
@@ -98,6 +100,7 @@ public class BeggarService {
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }
+
 
     private List<Badge> getBadgeList(Long beggarId) {
         return badgeRepository.findByBadgeList(beggarId);

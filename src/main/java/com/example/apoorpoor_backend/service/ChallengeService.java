@@ -1,11 +1,18 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.challenge.ChallengeInfoResponseDto;
+import com.example.apoorpoor_backend.dto.challenge.ChallengeLedgerDto;
+import com.example.apoorpoor_backend.dto.challenge.ChallengeLedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.challenge.ChallengeStampResponseDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Challenge;
+import com.example.apoorpoor_backend.model.LedgerHistory;
+import com.example.apoorpoor_backend.model.Point;
 import com.example.apoorpoor_backend.model.enumType.ChallengeType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.challenge.ChallengeRepository;
+import com.example.apoorpoor_backend.repository.ledgerhistory.LedgerHistoryRepository;
+import com.example.apoorpoor_backend.repository.shop.PointRepository;
 import com.example.apoorpoor_backend.service.event.ChallengeButtonClickEvent;
 import com.example.apoorpoor_backend.service.event.ChallengeEventHandler;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +35,8 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeEventHandler challengeEventHandler;
     private final NotificationService notificationService;
+    private final LedgerHistoryRepository ledgerHistoryRepository;
+    private final PointRepository pointRepository;
 
     public ResponseEntity<String> createChallenge(ChallengeType challengeType, String username) {
         Beggar beggar = beggarCheck(username);
@@ -49,19 +62,53 @@ public class ChallengeService {
     @Transactional(readOnly = true)
     public ResponseEntity<ChallengeStampResponseDto> getChallengeStamp(String username) {
         Beggar beggar = beggarCheck(username);
-        Challenge challenge = challengeCheck(beggar.getId());
 
         ChallengeStampResponseDto challengeStampResponseDto = ChallengeStampResponseDto.builder()
-                .isMonday(challenge.getIsMonday())
-                .isTuesday(challenge.getIsTuesday())
-                .isWednesday(challenge.getIsWednesday())
-                .isThursday(challenge.getIsThursday())
-                .isFriday(challenge.getIsFriday())
-                .isSaturday(challenge.getIsSaturday())
-                .isSunday(challenge.getIsSunday())
+                .successCount(beggar.getSuccessCount())
                 .build();
 
         return new ResponseEntity<>(challengeStampResponseDto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<ChallengeInfoResponseDto> getChallengeInfo(String username) {
+        Beggar beggar = beggarCheck(username);
+        Challenge challenge = challengeCheck(beggar.getId());
+
+        String challengeTitle = beggar.getChallengeTitle();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(E)", Locale.ENGLISH);
+        String startTime = challenge.getCreatedAt().format(formatter);
+
+        ChallengeInfoResponseDto challengeInfoResponseDto = ChallengeInfoResponseDto.builder()
+                .challengeTitle(challengeTitle)
+                .startTime(startTime)
+                .build();
+
+        return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<ChallengeLedgerHistoryResponseDto> getChallengeLedgerHistory(String username) {
+        Beggar beggar = beggarCheck(username);
+        Challenge challenge = challengeCheck(beggar.getId());
+
+        List<LedgerHistory> findLedgerHistoryList = ledgerHistoryRepository.findAllByChallengeId(challenge.getId());
+        List<ChallengeLedgerDto> challengeLedgerDtoList = new ArrayList<>();
+
+        for (LedgerHistory ledgerHistory : findLedgerHistoryList) {
+            if(ledgerHistory.getExpenditureType() == null) continue;
+            ChallengeLedgerDto challengeLedgerDto = ChallengeLedgerDto.builder()
+                    .title(ledgerHistory.getTitle())
+                    .expenditureType(ledgerHistory.getExpenditureType())
+                    .expenditure(ledgerHistory.getExpenditure())
+                    .date(ledgerHistory.getDate())
+                    .build();
+
+            challengeLedgerDtoList.add(challengeLedgerDto);
+        }
+
+        ChallengeLedgerHistoryResponseDto challengeLedgerHistoryResponseDto = ChallengeLedgerHistoryResponseDto.builder()
+                .challengeLedgerHistoryList(challengeLedgerDtoList)
+                .build();
+        return new ResponseEntity<>(challengeLedgerHistoryResponseDto, HttpStatus.OK);
     }
 
     public Beggar beggarCheck(String username) {
@@ -79,26 +126,46 @@ public class ChallengeService {
         return challengeRepository.findAll();
     }
 
-    public Boolean expenditureCheck(Long weekExpenditure, Long challengeAmount) {
-        return challengeAmount >= weekExpenditure;
-    }
+    public void challengeResult(Challenge challenge, Long weekExpenditure, Long challengeAmount) {
+        Beggar beggar = challenge.getBeggar();
 
-    public void challengeResult(Challenge challenge) {
-        if(challenge.getSuccessCount() >= 7) {
-            challenge.getBeggar().updatePoint(challenge.getChallengeType().getReward());
+        if (challengeAmount >= weekExpenditure) {
+            beggar.updateSuccessCount();
+            challenge.updateSuccessStatus(true);
+            if (beggar.getSuccessCount() >= 10) {
+                String description = "stamp 10개 수집";
+                Long point = 100L;
+                beggar.updatePoint(point);
+                updateRecordPoint(description, point, beggar);
+
+                notificationService.notifyCollectStampComplete(challenge);
+
+                beggar.updateResetSuccessCount();
+
+            }
             notificationService.notifyFinishChallengeSuccessEvent(challenge);
         } else {
+            challenge.updateSuccessStatus(false);
             notificationService.notifyFinishChallengeFailureEvent(challenge);
         }
+        beggar.resetChallenge();
     }
 
     public Challenge challengeCheck(Long beggarId) {
-        return challengeRepository.findChallengeByBeggarId(beggarId).orElseThrow(
+        return challengeRepository.findChallengeBySuccessStatusIsNullAndBeggarId(beggarId).orElseThrow(
                 () -> new IllegalArgumentException("챌린지에 도전하지 않았습니다.")
         );
     }
 
-    public void resetChallenge() {
-        challengeRepository.deleteAll();
+    @Transactional
+    public void updateRecordPoint(String pointDescription, Long point, Beggar beggar) {
+        Point recordPoint = Point.builder()
+                .pointDescription(pointDescription)
+                .earnedPoint(point)
+                .usedPoints(null)
+                .beggar(beggar)
+                .build();
+
+        pointRepository.save(recordPoint);
     }
 }

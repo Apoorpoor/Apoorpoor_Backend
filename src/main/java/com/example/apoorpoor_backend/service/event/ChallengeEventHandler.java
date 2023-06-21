@@ -1,7 +1,5 @@
 package com.example.apoorpoor_backend.service.event;
 
-import com.example.apoorpoor_backend.model.Challenge;
-import com.example.apoorpoor_backend.repository.challenge.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -24,5 +22,4 @@ public class ChallengeEventHandler {
             event.getChallenge().updateWeekExpenditure(event.getWeekExpenditure());
         }
     }
-
 }

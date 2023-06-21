@@ -124,7 +124,9 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        formattedDate.eq(date)
+                        formattedDate.eq(date),
+                        user.age.isNotNull(),
+                        user.gender.isNotNull()
                 )
                 .groupBy(
                         new CaseBuilder()
@@ -285,7 +287,9 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.EXPENDITURE),
-                        formattedDate.eq(date)
+                        formattedDate.eq(date),
+                        user.age.isNotNull(),
+                        user.gender.isNotNull()
                 )
                 .groupBy(
                         new CaseBuilder()
@@ -341,7 +345,9 @@ public class SocialRepositoryImpl implements SocialRepositoryCustom{
                 .join(account.ledgerHistories, ledgerHistory)
                 .where(
                         ledgerHistory.accountType.eq(AccountType.INCOME),
-                        formattedDate.eq(date)
+                        formattedDate.eq(date),
+                        user.age.isNotNull(),
+                        user.gender.isNotNull()
                 )
                 .groupBy(
                         new CaseBuilder()

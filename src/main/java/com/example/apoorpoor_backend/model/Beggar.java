@@ -70,6 +70,9 @@ public class Beggar extends Timestamped{
     @Column
     private String challengeTitle;
 
+    @Column
+    private long successCount;
+
     public void update(BeggarRequestDto beggarRequestDto) {
         this.nickname = beggarRequestDto.getNickname();
     }
@@ -130,5 +133,13 @@ public class Beggar extends Timestamped{
 
     public void resetChallenge() {
         this.challengeTitle = null;
+    }
+
+    public void updateSuccessCount() {
+        this.successCount += 1;
+    }
+
+    public void updateResetSuccessCount() {
+        this.successCount = 0;
     }
 }

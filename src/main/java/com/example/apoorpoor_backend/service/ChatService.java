@@ -1,5 +1,6 @@
 package com.example.apoorpoor_backend.service;
 
+import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.model.Beggar;
@@ -10,22 +11,23 @@ import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class ChatService{
+public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
+    private final SimpMessagingTemplate msgOperation;
+    private final BadWordFiltering badWordFiltering;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
@@ -76,13 +78,33 @@ public class ChatService{
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
+        ChatDto newChatDto = badWordFiltering.change(chatDto);
         Chat chat = Chat.builder()
-                .sender(chatDto.getSender())
-                .message(chatDto.getMessage())
+                .sender(newChatDto.getSender())
+                .message(newChatDto.getMessage())
+                .level(newChatDto.getLevel())
                 .beggar(beggar)
                 .type(type)
                 .build();
         chatRepository.save(chat);
+        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
+    }
+
+    public List<ChatDto> saveChatList () {
+        List<Chat> chatList = chatRepository.findAll();
+        List<ChatDto> chatDtoList = new ArrayList<>();
+
+        for (Chat chat : chatList) {
+            ChatDto chatDto = ChatDto.builder()
+                    .type(chat.getType())
+                    .beggar_id(chat.getBeggar().getId())
+                    .sender(chat.getSender())
+                    .message(chat.getMessage())
+                    .level(chat.getLevel())
+                    .build();
+            chatDtoList.add(chatDto);
+        }
+        return chatDtoList;
     }
 
     public Beggar beggarCheck(Long beggar_id) {

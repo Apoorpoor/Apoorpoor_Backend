@@ -48,8 +48,8 @@ public class LedgerHistoryService {
         Account account = accountCheck(requestDto.getAccountId());
         Beggar beggar = beggarCheck(username);
 
-
         String title = requestDto.getTitle();
+        Long challengeId = null;
         AccountType accountType = requestDto.getAccountType();
         IncomeType incomeType = requestDto.getIncomeType();
         ExpenditureType expenditureType = requestDto.getExpenditureType();
@@ -72,8 +72,15 @@ public class LedgerHistoryService {
             income = 0L;
         }
 
+        Optional<Challenge> challenge = challengeCheck(beggar.getId());
+
+        if(challenge.isPresent()) {
+            challengeId = challenge.get().getId();
+        }
+
         LedgerHistory ledgerHistory = LedgerHistory.builder()
                 .account(account)
+                .challengeId(challengeId)
                 .title(title)
                 .accountType(accountType)
                 .incomeType(incomeType)
@@ -332,7 +339,7 @@ public class LedgerHistoryService {
 
 
     public Optional<Challenge> challengeCheck(Long beggarId) {
-        return challengeRepository.findChallengeByBeggarId(beggarId);
+        return challengeRepository.findChallengeBySuccessStatusIsNullAndBeggarId(beggarId);
     }
 
 }

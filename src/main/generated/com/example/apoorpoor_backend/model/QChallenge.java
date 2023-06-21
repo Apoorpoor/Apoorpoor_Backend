@@ -22,29 +22,23 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public static final QChallenge challenge = new QChallenge("challenge");
 
+    public final QTimestamped _super = new QTimestamped(this);
+
     public final QBeggar beggar;
 
     public final NumberPath<Long> challengeAmount = createNumber("challengeAmount", Long.class);
 
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.ChallengeType> challengeType = createEnum("challengeType", com.example.apoorpoor_backend.model.enumType.ChallengeType.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isFriday = createBoolean("isFriday");
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final BooleanPath isMonday = createBoolean("isMonday");
-
-    public final BooleanPath isSaturday = createBoolean("isSaturday");
-
-    public final BooleanPath isSunday = createBoolean("isSunday");
-
-    public final BooleanPath isThursday = createBoolean("isThursday");
-
-    public final BooleanPath isTuesday = createBoolean("isTuesday");
-
-    public final BooleanPath isWednesday = createBoolean("isWednesday");
-
-    public final NumberPath<Integer> successCount = createNumber("successCount", Integer.class);
+    public final BooleanPath successStatus = createBoolean("successStatus");
 
     public final StringPath title = createString("title");
 

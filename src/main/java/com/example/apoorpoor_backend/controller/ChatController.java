@@ -47,12 +47,18 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/send")
-    @SendTo("/sub/chat/room")
-    public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public ChatDto sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         Thread.sleep(500);
         ChatDto newChatDto = badWordFiltering.change(chatDto);
-        chatService.sendChatRoom(chatDto, headerAccessor);
-        msgOperation.convertAndSend("/sub/chat/room", newChatDto);
+        chatService.sendChatRoom(newChatDto, headerAccessor);
+        return newChatDto;
+    }
+    /*
+    채팅 내역 불러오기
+    */
+    @GetMapping("/chat/messageList")
+    public List<ChatDto> saveChatList() {
+        return chatService.saveChatList();
     }
 
     @EventListener
@@ -65,9 +71,8 @@ public class ChatController {
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadImage(@RequestParam(value = "image", required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
-        String image_url = s3Uploader.uploadImage(image);
-        return image_url;
+    public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
+        return s3Uploader.uploadImage(image);
     }
     
 

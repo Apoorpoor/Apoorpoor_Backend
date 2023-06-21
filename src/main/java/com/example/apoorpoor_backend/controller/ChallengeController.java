@@ -1,5 +1,7 @@
 package com.example.apoorpoor_backend.controller;
 
+import com.example.apoorpoor_backend.dto.challenge.ChallengeInfoResponseDto;
+import com.example.apoorpoor_backend.dto.challenge.ChallengeLedgerHistoryResponseDto;
 import com.example.apoorpoor_backend.dto.challenge.ChallengeRequestDto;
 import com.example.apoorpoor_backend.dto.challenge.ChallengeStampResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
@@ -25,8 +27,18 @@ public class ChallengeController {
     }
 
     @GetMapping("/challenge")
+    public ResponseEntity<ChallengeInfoResponseDto> getChallengeInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return challengeService.getChallengeInfo(userDetails.getUsername());
+    }
+
+    @GetMapping("/challenge/stamp")
     public ResponseEntity<ChallengeStampResponseDto> getChallengeStamp(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return challengeService.getChallengeStamp(userDetails.getUsername());
+    }
+
+    @GetMapping("/challenge/ledger")
+    public ResponseEntity<ChallengeLedgerHistoryResponseDto> getChallengeLedgerHistory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return challengeService.getChallengeLedgerHistory(userDetails.getUsername());
     }
 
 }

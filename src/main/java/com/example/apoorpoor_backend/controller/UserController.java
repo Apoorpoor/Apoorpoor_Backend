@@ -8,6 +8,7 @@ import com.example.apoorpoor_backend.dto.user.GenderRequestDto;
 import com.example.apoorpoor_backend.dto.user.UserResponseDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
 import com.example.apoorpoor_backend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,13 +24,13 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/age")
-    public ResponseEntity<Long> setAge(@RequestBody AgeRequestDto ageRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Long> setAge(@Valid @RequestBody AgeRequestDto ageRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long age = ageRequestDto.getAge();
         return userService.setAge(age, userDetails.getUsername());
     }
 
     @PutMapping("/gender")
-    public ResponseEntity<String> setGender(@RequestBody GenderRequestDto genderRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> setGender(@Valid @RequestBody GenderRequestDto genderRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String gender = genderRequestDto.getGender();
         return userService.setGender(gender, userDetails.getUsername());
     }

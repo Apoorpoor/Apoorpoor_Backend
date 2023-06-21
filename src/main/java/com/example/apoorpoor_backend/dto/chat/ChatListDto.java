@@ -18,4 +18,6 @@ public class ChatListDto {
         this.userId = userId;
         this.level = level;
     }
+
 }
+

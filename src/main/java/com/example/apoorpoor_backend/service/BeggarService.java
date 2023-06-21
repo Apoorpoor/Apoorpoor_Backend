@@ -123,6 +123,7 @@ public class BeggarService {
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
 
 
+
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
                 .userId(userId).nickname(nickname)
@@ -132,6 +133,7 @@ public class BeggarService {
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
                 .build();
+
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
     }

@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.*;
 
 @Service
@@ -72,6 +73,7 @@ public class ChatService {
     public void removeChatParticipant(Long beggar_id) {
         chatParticipantsMap.remove(beggar_id);
     }
+
 
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());

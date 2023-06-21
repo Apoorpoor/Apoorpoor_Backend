@@ -57,6 +57,7 @@ public class S3Uploader {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             image_url = amazonS3.getUrl(bucketName, imageName).toString();
         }
+
         return image_url;
     }
 

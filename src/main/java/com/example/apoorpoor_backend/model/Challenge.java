@@ -13,7 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Challenge {
+public class Challenge extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,65 +39,15 @@ public class Challenge {
     private Long weekExpenditure;
 
     @Column
-    private Boolean isMonday;
+    private Boolean successStatus;
 
-    @Column
-    private Boolean isTuesday;
-
-    @Column
-    private Boolean isWednesday;
-
-    @Column
-    private Boolean isThursday;
-
-    @Column
-    private Boolean isFriday;
-
-    @Column
-    private Boolean isSaturday;
-
-    @Column
-    private Boolean isSunday;
-
-    @Column
-    private int successCount;
 
     public void updateWeekExpenditure(Long weekExpenditure) {
         this.weekExpenditure += weekExpenditure;
     }
 
-    public void updateIsMonday(Boolean isMonday) {
-        this.isMonday = isMonday;
-        if(isMonday) this.successCount += 1;
+    public void updateSuccessStatus(Boolean successStatus) {
+        this.successStatus = successStatus;
     }
 
-    public void updateIsTuesday(Boolean isTuesday) {
-        this.isTuesday = isTuesday;
-        if(isTuesday) this.successCount += 1;
-    }
-
-    public void updateIsWednesday(Boolean isWednesday) {
-        this.isWednesday = isWednesday;
-        if(isWednesday) this.successCount += 1;
-    }
-
-    public void updateIsThursday(Boolean isThursday) {
-        this.isThursday = isThursday;
-        if(isThursday) this.successCount += 1;
-    }
-
-    public void updateIsFriday(Boolean isFriday) {
-        this.isFriday = isFriday;
-        if(isFriday) this.successCount += 1;
-    }
-
-    public void updateIsSaturday(Boolean isSaturday) {
-        this.isSaturday = isSaturday;
-        if(isSaturday) this.successCount += 1;
-    }
-
-    public void updateIsSunday(Boolean isSunday) {
-        this.isSunday = isSunday;
-        if(isSunday) this.successCount += 1;
-    }
 }

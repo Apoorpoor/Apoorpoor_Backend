@@ -6,6 +6,7 @@ import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.service.ChatService;
 import com.example.apoorpoor_backend.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,8 +72,7 @@ public class ChatController {
 
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadImage(@RequestParam(value = "image", required = false)MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
-        String image_url = s3Uploader.uploadImage(image);
-        return image_url;
+    public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
+        return s3Uploader.uploadImage(image);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.model.enumType.MessageType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,7 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "beggar_id")
     private Beggar beggar;

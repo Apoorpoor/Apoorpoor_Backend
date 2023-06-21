@@ -34,7 +34,7 @@ public class BadgeScheduler {
         }
     }
 
-    @Scheduled(cron = "0 19 16 * * *")
+    @Scheduled(cron = "0 0 0 1 * *")
     public void social(){
 
         socialService.updatePercent();

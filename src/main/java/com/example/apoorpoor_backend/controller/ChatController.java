@@ -6,6 +6,7 @@ import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.service.ChatService;
 import com.example.apoorpoor_backend.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.IOException;
 import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +43,8 @@ public class ChatController {
 
     @GetMapping("/chat/list")
     public List<ChatListDto> getChatList() {
-        return chatService.getChatParticipants();
+        List<ChatListDto> chatParticipantsList = chatService.getChatParticipants();
+        return chatParticipantsList;
     }
 
     @MessageMapping("/chat/send")
@@ -50,6 +53,13 @@ public class ChatController {
         ChatDto newChatDto = badWordFiltering.change(chatDto);
         chatService.sendChatRoom(newChatDto, headerAccessor);
         return newChatDto;
+    }
+    /*
+    채팅 내역 불러오기
+    */
+    @GetMapping("/chat/messageList")
+    public List<ChatDto> saveChatList() {
+        return chatService.saveChatList();
     }
 
     @EventListener

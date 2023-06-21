@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +60,6 @@ public class SocialService {
         }
 
         List<ExpenditurePercentDto> percentList = socialRepository.getPercent(condition, findUser);
-        // age_abb, date, exp_sum, gender, user_id, my_rank
 
         Long totalCnt = (long) percentList.size();
         Long myRank = 0L;
@@ -142,6 +143,9 @@ public class SocialService {
 
     public void updateRank() {
 
+        LocalDate minusMonths = LocalDate.now().minusMonths(1);
+        String date = minusMonths.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
         List<Ranking> rankingList = rankingRepository.findAll(); // 2개로 분기 타야됨
 
         // 지난달 지출 총합 업데이트
@@ -153,6 +157,13 @@ public class SocialService {
             rankingList.get(i).updateExpenditureTotal(expenditureTotalDto.getDate(), expenditureTotalDto.getExpSum(), beggar);
         }
 
+        if(rankExpenditureSum.size()<10){
+            for(int i=9; i>=rankExpenditureSum.size(); i--){
+                Beggar beggar = beggarIdCheck(1L);
+                rankingList.get(i).updateExpenditureTotal(date, 0L, beggar);
+            }
+        }
+
         // 지난달 수입 총합 업데이트
         List<IncomeTotalDto> rankIncomeSum = socialRepository.getRankIncomeSum();
 
@@ -160,6 +171,13 @@ public class SocialService {
             IncomeTotalDto incomeTotalDto = rankIncomeSum.get(i);
             Beggar beggar = beggarIdCheck(incomeTotalDto.getBeggarId());
             rankingList.get(10+i).updateIncomeTotal(incomeTotalDto.getDate(), incomeTotalDto.getIncSum(), beggar);
+        }
+
+        if(rankIncomeSum.size() < 10){
+            for(int i=9; i>=rankIncomeSum.size(); i--){
+                Beggar beggar = beggarIdCheck(1L);
+                rankingList.get(10+i).updateIncomeTotal(date, 0L, beggar);
+            }
         }
 
     }

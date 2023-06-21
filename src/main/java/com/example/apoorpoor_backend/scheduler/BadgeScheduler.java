@@ -30,11 +30,11 @@ public class BadgeScheduler {
 
         for (User user : userList) {
             beggarService.badgeCheck(user);
-            log.info(LocalDate.now()+"cron job 완료");
+            log.info(LocalDate.now()+"뱃지 부여 완료");
         }
     }
 
-    @Scheduled(cron = "0 49 20 * * *")
+    @Scheduled(cron = "0 0 0 1 * *")
     public void social(){
 
         socialService.updatePercent();

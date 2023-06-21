@@ -2,9 +2,11 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatImageDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
+import com.example.apoorpoor_backend.model.Image;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
@@ -105,6 +107,8 @@ public class ChatService {
             chatDtoList.add(chatDto);
         }
         return chatDtoList;
+    }
+    public List<ChatImageDto> saveImageList(){
     }
 
     public Beggar beggarCheck(Long beggar_id) {

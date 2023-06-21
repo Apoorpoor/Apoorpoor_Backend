@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.apoorpoor_backend.dto.chat.ChatImageDto;
 import com.example.apoorpoor_backend.model.Image;
 import com.example.apoorpoor_backend.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,7 @@ public class S3Uploader {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         }
 
+
         String imageUrl = amazonS3.getUrl(bucketName, imageName).toString();
         saveImageToDatabase(imageUrl);
 
@@ -80,5 +82,6 @@ public class S3Uploader {
 
         imageRepository.save(image);
     }
+
 
 }

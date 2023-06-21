@@ -34,9 +34,8 @@ public class BadgeScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 1 * *")
+    @Scheduled(cron = "0 0 12 * * *")
     public void social(){
-
         socialService.updatePercent();
         log.info(LocalDate.now()+"해당 월의 나이대 별 소비/저축 업데이트 완료");
         socialService.updateRank();

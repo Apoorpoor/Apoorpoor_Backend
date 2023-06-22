@@ -4,15 +4,18 @@ import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.dto.chat.ChatImagesDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
+import com.example.apoorpoor_backend.dto.chat.ChatRoomDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.Image;
+import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.ImageRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -32,7 +35,9 @@ public class ChatService {
     private final ImageRepository imageRepository;
     private final SimpMessagingTemplate msgOperation;
     private final BadWordFiltering badWordFiltering;
+    private final RedisService redisService;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
+    private static Long index = 0L;
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -50,12 +55,23 @@ public class ChatService {
         return chatDto;
     }
 
-    public void addChatParticipant(ChatListDto participant) {
-        chatParticipantsMap.put(participant.getBeggarId(), participant);
-    }
-
+    public void addChatParticipant(ChatListDto participant) {chatParticipantsMap.put(participant.getBeggarId(), participant);}
     public List<ChatListDto> getChatParticipants() {
         return new ArrayList<>(chatParticipantsMap.values());
+    }
+
+    public ResponseEntity<ChatRoomDto> enterChatRoomGetChat(User user, Long beggarId) {
+        Long chatRoomId = 1L;
+        List<Chat> chatList = redisService.getChats(chatRoomId);
+        List<ChatDto> chatDtoList = new ArrayList<>();
+
+        for (Chat chat : chatList) {
+            ChatDto historyChatDto = ChatDto.fromChat(chat);
+            chatDtoList.add(historyChatDto);
+        }
+
+        ChatRoomDto chatRoomDto = new ChatRoomDto(chatRoomId, chatDtoList);
+        return ResponseEntity.ok(chatRoomDto);
     }
 
     public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
@@ -83,14 +99,18 @@ public class ChatService {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
         ChatDto newChatDto = badWordFiltering.change(chatDto);
+
         Chat chat = Chat.builder()
+                .id(index++)
                 .sender(newChatDto.getSender())
                 .message(newChatDto.getMessage())
                 .level(newChatDto.getLevel())
-                .beggar(beggar)
+                .beggar_id(chatDto.getBeggar_id())
                 .type(type)
                 .build();
-        chatRepository.save(chat);
+        String chatId = 1+UUID.randomUUID().toString();
+        chat.setChatId(chatId);
+        redisService.setChatValues(chat, chatDto.getChatRoomId(), chatId);
         msgOperation.convertAndSend("/sub/chat/room", newChatDto);
     }
 

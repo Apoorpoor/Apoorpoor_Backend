@@ -1,9 +1,9 @@
 package com.example.apoorpoor_backend.dto.chat;
 
+import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import lombok.*;
 
-import java.util.Set;
 
 @Builder
 @Getter
@@ -19,4 +19,16 @@ public class ChatDto {
     private String image;
     private Long userId;
     private Long level;
+    private Long chatRoomId = 1L;
+
+    public static ChatDto fromChat(Chat chat) {
+        ChatDto chatDto = new ChatDto();
+        chatDto.setType(chat.getType());
+        chatDto.setBeggar_id(chat.getBeggar_id());
+        chatDto.setSender(chat.getSender());
+        chatDto.setMessage(chat.getMessage());
+        chatDto.setLevel(chat.getLevel());
+        chatDto.setChatRoomId(1L);
+        return chatDto;
+    }
 }

@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @Entity(name = "CHAT")
 @Getter
@@ -33,8 +31,13 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "beggar_id")
-    private Beggar beggar;
+    @Column(nullable = false)
+    private Long beggar_id;
+
+    private String chatId;
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
 }

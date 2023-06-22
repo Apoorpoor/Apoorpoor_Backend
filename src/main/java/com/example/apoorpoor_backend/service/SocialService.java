@@ -70,7 +70,8 @@ public class SocialService {
             }
         }
 
-        percent = (double) (myRank / totalCnt) * 100;
+        if(totalCnt != 0L)
+            percent = (double) (myRank / totalCnt) * 100;
 
         System.out.println("totalCnt: "+totalCnt+" myRank: "+myRank+" percent: "+percent);
 

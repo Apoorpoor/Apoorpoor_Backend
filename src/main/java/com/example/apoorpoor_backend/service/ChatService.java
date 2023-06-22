@@ -65,7 +65,7 @@ public class ChatService {
             ChatDto historyChatDto = ChatDto.fromChat(chat);
             chatDtoList.add(historyChatDto);
         }
-        // ChatRoomDto에 chatRoomId와 ChatDto 리스트 설정
+
         ChatRoomDto chatRoomDto = new ChatRoomDto(chatRoomId, chatDtoList);
         return ResponseEntity.ok(chatRoomDto);
     }

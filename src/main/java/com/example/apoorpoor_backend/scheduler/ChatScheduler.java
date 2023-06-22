@@ -15,9 +15,10 @@ public class ChatScheduler {
     private final RedisService redisService;
     private final ChatRepository chatRepository;
 
-    @Scheduled(fixedDelay = 60000) // 60초마다 실행되도록 설정
+    @Scheduled(cron = "0 0 0 * * *") //자정
     public void saveChat() {
         Long chatRoomId = 1L;
         redisService.saveChat(chatRoomId);
     }
+
 }

@@ -4,9 +4,6 @@ package com.example.apoorpoor_backend.service;
 import com.example.apoorpoor_backend.model.Chat;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +19,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RedisService {
 
-    //    private final RedisTemplate<String, String> redisTemplate;
     private final ChatRepository chatRepository;
     private final ObjectMapper objectMapper;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    /*
-    Redis에 채팅 내역 가져오기
-    */
     public List<Chat> getChats(Long chatRoomId){
 
         String chatListIdKey = "ChatListId" + chatRoomId;
@@ -59,9 +52,6 @@ public class RedisService {
 
     }
 
-    /*
-    Redis에 채팅 저장
-    */
     public void setChatValues(Chat chat, Long chatRoomId, String chatId) {
         try{
             String chatKey = "Chats" + chatRoomId+":"+chatId;
@@ -76,10 +66,6 @@ public class RedisService {
         }
     }
 
-
-    /*
-    Redis에 저장된 채팅 정보를 데이터베이스에 저장하는 역할
-     */
     public void saveChat(Long chatRoomId){
         List<Chat> chats = getChats(chatRoomId);
         chatRepository.saveAll(chats);

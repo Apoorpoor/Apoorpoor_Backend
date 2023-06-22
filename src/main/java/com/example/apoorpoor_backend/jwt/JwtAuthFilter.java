@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 jwtUtil.setHeaderAccessToken(response, newAccessToken);
                 setAuthentication(username);
             } else if (refresh_token == null) {
-                jwtExceptionHandler(response, "AccessToken Expired.", HttpStatus.BAD_REQUEST.value());
+                jwtExceptionHandler(response, "AccessToken Expired.", HttpStatus.FORBIDDEN.value());
                 return;
             } else {
                 jwtExceptionHandler(response, "RefreshToken Expired.", HttpStatus.BAD_REQUEST.value());

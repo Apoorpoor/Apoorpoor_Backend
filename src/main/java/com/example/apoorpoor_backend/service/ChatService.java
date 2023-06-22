@@ -2,17 +2,17 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
-import com.example.apoorpoor_backend.dto.chat.ChatImagesDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
+import com.example.apoorpoor_backend.dto.chat.ChatRoomDto;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.Chat;
-import com.example.apoorpoor_backend.model.Image;
+import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
-import com.example.apoorpoor_backend.repository.ImageRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,11 @@ public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
-    private final ImageRepository imageRepository;
     private final SimpMessagingTemplate msgOperation;
     private final BadWordFiltering badWordFiltering;
+    private final RedisService redisService;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
+    private static Long index = 0L;
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -50,12 +51,23 @@ public class ChatService {
         return chatDto;
     }
 
-    public void addChatParticipant(ChatListDto participant) {
-        chatParticipantsMap.put(participant.getBeggarId(), participant);
-    }
-
+    public void addChatParticipant(ChatListDto participant) {chatParticipantsMap.put(participant.getBeggarId(), participant);}
     public List<ChatListDto> getChatParticipants() {
         return new ArrayList<>(chatParticipantsMap.values());
+    }
+
+    public ResponseEntity<ChatRoomDto> enterChatRoomGetChat(User user, Long beggarId) {
+        Long chatRoomId = 1L;
+        List<Chat> chatList = redisService.getChats(chatRoomId);
+        List<ChatDto> chatDtoList = new ArrayList<>();
+
+        for (Chat chat : chatList) {
+            ChatDto historyChatDto = ChatDto.fromChat(chat);
+            chatDtoList.add(historyChatDto);
+        }
+        // ChatRoomDto에 chatRoomId와 ChatDto 리스트 설정
+        ChatRoomDto chatRoomDto = new ChatRoomDto(chatRoomId, chatDtoList);
+        return ResponseEntity.ok(chatRoomDto);
     }
 
     public ChatDto disconnectChatRoom(SimpMessageHeaderAccessor headerAccessor) {
@@ -80,54 +92,26 @@ public class ChatService {
 
 
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
-        Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
         ChatDto newChatDto = badWordFiltering.change(chatDto);
+
         Chat chat = Chat.builder()
+                .id(index++)
                 .sender(newChatDto.getSender())
                 .message(newChatDto.getMessage())
                 .level(newChatDto.getLevel())
-                .beggar(beggar)
+                .beggar_id(chatDto.getBeggar_id())
                 .type(type)
                 .build();
-        chatRepository.save(chat);
+        String chatId = 1+UUID.randomUUID().toString();
+        chat.setChatId(chatId);
+        redisService.setChatValues(chat, chatDto.getChatRoomId(), chatId);
         msgOperation.convertAndSend("/sub/chat/room", newChatDto);
-    }
-
-    public List<ChatDto> saveChatList () {
-        List<Chat> chatList = chatRepository.findAll();
-        List<ChatDto> chatDtoList = new ArrayList<>();
-
-        for (Chat chat : chatList) {
-            ChatDto chatDto = ChatDto.builder()
-                    .type(chat.getType())
-                    .beggar_id(chat.getBeggar().getId())
-                    .sender(chat.getSender())
-                    .message(chat.getMessage())
-                    .level(chat.getLevel())
-                    .build();
-            chatDtoList.add(chatDto);
-        }
-        return chatDtoList;
     }
 
     public Beggar beggarCheck(Long beggar_id) {
         return beggarRepository.findById(beggar_id).orElseThrow(
                 () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
         );
-    }
-
-    public List<ChatImagesDto> saveChatImageList() {
-        List<Image> imageList = imageRepository.findAll();
-        List<ChatImagesDto> chatImagesList = new ArrayList<>();
-
-        for(Image image : imageList){
-            ChatImagesDto imagesDto = ChatImagesDto.builder()
-                    .imageId(image.getId())
-                    .imageUrl(image.getImageUrl())
-                    .build();
-            chatImagesList.add(imagesDto);
-        }
-        return chatImagesList;
     }
 }

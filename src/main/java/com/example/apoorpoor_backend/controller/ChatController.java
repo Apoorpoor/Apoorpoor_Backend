@@ -2,6 +2,7 @@ package com.example.apoorpoor_backend.controller;
 
 import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.dto.chat.ChatDto;
+import com.example.apoorpoor_backend.dto.chat.ChatImagesDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.dto.chat.ChatRoomDto;
 import com.example.apoorpoor_backend.security.UserDetailsImpl;
@@ -69,10 +70,14 @@ public class ChatController {
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
-
     @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
         return s3Uploader.uploadImage(image);
+    }
+
+    @GetMapping(value = "/chat/images")
+    public List<ChatImagesDto> saveChatImagesList(){
+        return chatService.saveChatImageList();
     }
 }

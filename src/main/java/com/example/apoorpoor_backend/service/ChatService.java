@@ -93,8 +93,7 @@ public class ChatService {
     public void removeChatParticipant(Long beggar_id) {
         chatParticipantsMap.remove(beggar_id);
     }
-
-
+    
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
@@ -112,23 +111,6 @@ public class ChatService {
         chat.setChatId(chatId);
         redisService.setChatValues(chat, chatDto.getChatRoomId(), chatId);
         msgOperation.convertAndSend("/sub/chat/room", newChatDto);
-    }
-
-    public List<ChatDto> saveChatList () {
-        List<Chat> chatList = chatRepository.findAll();
-        List<ChatDto> chatDtoList = new ArrayList<>();
-
-        for (Chat chat : chatList) {
-            ChatDto chatDto = ChatDto.builder()
-                    .type(chat.getType())
-                    .beggar_id(chat.getBeggar().getId())
-                    .sender(chat.getSender())
-                    .message(chat.getMessage())
-                    .level(chat.getLevel())
-                    .build();
-            chatDtoList.add(chatDto);
-        }
-        return chatDtoList;
     }
 
     public Beggar beggarCheck(Long beggar_id) {

@@ -86,6 +86,7 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : itemUrl  + beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : itemUrl  + beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : itemUrl  + beggar.getAcc().getItemImage();
+        String customImage = beggar.getCustom() == null ? null : itemUrl + beggar.getCustom().getItemImage();
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
@@ -96,6 +97,7 @@ public class BeggarService {
                 .description(description).gender(gender)
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
+                .customImage(customImage)
                 .build();
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
@@ -124,6 +126,7 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
+        String customImage = beggar.getCustom() == null ? null : beggar.getCustom().getItemImage();
 
 
 
@@ -135,6 +138,7 @@ public class BeggarService {
                 .description(description).gender(gender)
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
+                .customImage(customImage)
                 .build();
 
 

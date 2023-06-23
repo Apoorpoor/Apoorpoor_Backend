@@ -20,8 +20,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.*;
 
 @Service
@@ -38,11 +36,13 @@ public class ChatService {
     private final RedisService redisService;
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
     private static Long index = 0L;
+    private static Long chatRoomId = 1L;
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
         headerAccessor.getSessionAttributes().put("nickName", chatDto.getSender());
         headerAccessor.getSessionAttributes().put("userId", chatDto.getUserId());
+        headerAccessor.getSessionAttributes().put("date", chatDto.getDate());
         chatDto.setMessage(chatDto.getSender() + "님이 입장하셨습니다.");
 
         ChatListDto chatListDto = new ChatListDto(
@@ -52,6 +52,23 @@ public class ChatService {
                 chatDto.getLevel()
         );
         addChatParticipant(chatListDto);
+
+        MessageType type = MessageType.ENTER;
+
+        Chat chat = Chat.builder()
+                .id(index++)
+                .sender(chatDto.getSender())
+                .message(chatDto.getMessage())
+                .level(chatDto.getLevel())
+                .beggar_id(chatDto.getBeggar_id())
+                .type(type)
+                .image(chatDto.getImage())
+                .date(chatDto.getDate())
+                .build();
+        String chatId = 1+UUID.randomUUID().toString();
+        chat.setChatId(chatId);
+        redisService.setChatValues(chat, chatDto.getChatRoomId(), chatId);
+
         return chatDto;
     }
 
@@ -61,7 +78,7 @@ public class ChatService {
     }
 
     public ResponseEntity<ChatRoomDto> enterChatRoomGetChat(User user, Long beggarId) {
-        Long chatRoomId = 1L;
+
         List<Chat> chatList = redisService.getChats(chatRoomId);
         List<ChatDto> chatDtoList = new ArrayList<>();
 
@@ -78,15 +95,37 @@ public class ChatService {
         String nickName = (String) headerAccessor.getSessionAttributes().get("nickName");
         Long beggar_id = (Long) headerAccessor.getSessionAttributes().get("beggar_id");
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
+        String date = (String) headerAccessor.getSessionAttributes().get("date");
+
+        Beggar beggar = beggarCheck(beggar_id);
+
         ChatDto chatDto = ChatDto.builder()
                 .type(MessageType.LEAVE)
                 .sender(nickName)
                 .beggar_id(beggar_id)
-                .level(1L)
+                .level(beggar.getLevel())
                 .message(nickName + "님이 퇴장하셨습니다.")
                 .userId(userId)
+                .chatRoomId(chatRoomId)
+                .date(date)
                 .build();
         removeChatParticipant(beggar_id);
+
+
+        Chat chat = Chat.builder()
+                .id(index++)
+                .sender(chatDto.getSender())
+                .message(chatDto.getMessage())
+                .level(chatDto.getLevel())
+                .beggar_id(chatDto.getBeggar_id())
+                .type(chatDto.getType())
+                .image(chatDto.getImage())
+                .date(chatDto.getDate())
+                .build();
+        String chatId = 1+UUID.randomUUID().toString();
+        chat.setChatId(chatId);
+        redisService.setChatValues(chat, chatDto.getChatRoomId(), chatId);
+
         return chatDto;
     }
 
@@ -106,6 +145,8 @@ public class ChatService {
                 .level(newChatDto.getLevel())
                 .beggar_id(chatDto.getBeggar_id())
                 .type(type)
+                .image(chatDto.getImage())
+                .date(chatDto.getDate())
                 .build();
         String chatId = 1+UUID.randomUUID().toString();
         chat.setChatId(chatId);

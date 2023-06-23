@@ -72,6 +72,16 @@ public class ChallengeService {
 
     public ResponseEntity<ChallengeInfoResponseDto> getChallengeInfo(String username) {
         Beggar beggar = beggarCheck(username);
+        boolean existsChallengeCheck = challengeRepository.existsChallengeBySuccessStatusIsNullAndBeggarId(beggar.getId());
+
+        if(!existsChallengeCheck) {
+            ChallengeInfoResponseDto challengeInfoResponseDto = ChallengeInfoResponseDto.builder()
+                    .challengeTitle(null)
+                    .startTime(null)
+                    .build();
+            return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
+        }
+
         Challenge challenge = challengeCheck(beggar.getId());
 
         String challengeTitle = beggar.getChallengeTitle();
@@ -88,10 +98,23 @@ public class ChallengeService {
 
     public ResponseEntity<ChallengeLedgerHistoryResponseDto> getChallengeLedgerHistory(String username) {
         Beggar beggar = beggarCheck(username);
+
+        List<ChallengeLedgerDto> challengeLedgerDtoList = new ArrayList<>();
+
+        boolean existsChallengeCheck = challengeRepository.existsChallengeBySuccessStatusIsNullAndBeggarId(beggar.getId());
+
+        if(!existsChallengeCheck) {
+            ChallengeLedgerHistoryResponseDto challengeLedgerHistoryResponseDto = ChallengeLedgerHistoryResponseDto.builder()
+                    .challengeLedgerHistoryList(challengeLedgerDtoList)
+                    .build();
+            return new ResponseEntity<>(challengeLedgerHistoryResponseDto, HttpStatus.OK);
+        }
+
+
         Challenge challenge = challengeCheck(beggar.getId());
 
         List<LedgerHistory> findLedgerHistoryList = ledgerHistoryRepository.findAllByChallengeId(challenge.getId());
-        List<ChallengeLedgerDto> challengeLedgerDtoList = new ArrayList<>();
+
 
         for (LedgerHistory ledgerHistory : findLedgerHistoryList) {
             if(ledgerHistory.getExpenditureType() == null) continue;

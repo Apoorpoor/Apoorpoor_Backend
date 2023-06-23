@@ -61,6 +61,7 @@ public class ChatService {
                 .message(chatDto.getMessage())
                 .level(chatDto.getLevel())
                 .beggar_id(chatDto.getBeggar_id())
+                .userId(chatDto.getUserId())
                 .type(type)
                 .image(chatDto.getImage())
                 .date(chatDto.getDate())
@@ -118,6 +119,7 @@ public class ChatService {
                 .message(chatDto.getMessage())
                 .level(chatDto.getLevel())
                 .beggar_id(chatDto.getBeggar_id())
+                .userId(chatDto.getUserId())
                 .type(chatDto.getType())
                 .image(chatDto.getImage())
                 .date(chatDto.getDate())
@@ -132,8 +134,7 @@ public class ChatService {
     public void removeChatParticipant(Long beggar_id) {
         chatParticipantsMap.remove(beggar_id);
     }
-
-
+    
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
@@ -145,6 +146,7 @@ public class ChatService {
                 .message(newChatDto.getMessage())
                 .level(newChatDto.getLevel())
                 .beggar_id(chatDto.getBeggar_id())
+                .userId(chatDto.getUserId())
                 .type(type)
                 .image(chatDto.getImage())
                 .date(chatDto.getDate())

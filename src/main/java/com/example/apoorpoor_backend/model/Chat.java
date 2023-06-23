@@ -36,6 +36,9 @@ public class Chat {
 
     private String chatId;
 
+    @Column(nullable = false)
+    private Long userId;
+
     private String image;
 
     private String date;

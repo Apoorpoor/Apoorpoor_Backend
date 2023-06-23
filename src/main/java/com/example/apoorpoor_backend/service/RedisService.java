@@ -25,7 +25,6 @@ public class RedisService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-
     public List<Chat> getChats(Long chatRoomId){
 
         String chatListIdKey = "ChatListId" + chatRoomId;

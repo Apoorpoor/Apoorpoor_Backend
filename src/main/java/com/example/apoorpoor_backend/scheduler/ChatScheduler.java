@@ -20,4 +20,5 @@ public class ChatScheduler {
         Long chatRoomId = 1L;
         redisService.saveChat(chatRoomId);
     }
+
 }

@@ -95,18 +95,22 @@ public class Beggar extends Timestamped{
 
     public void updateCustomTops(ItemListEnum itemListEnum) {
         this.top = itemListEnum;
+        this.custom = null;
     }
 
     public void updateCustomBottoms(ItemListEnum itemListEnum) {
         this.bottom = itemListEnum;
+        this.custom = null;
     }
 
     public void updateCustomShoes(ItemListEnum itemListEnum) {
         this.shoes = itemListEnum;
+        this.custom = null;
     }
 
     public void updateCustomAccessories(ItemListEnum itemListEnum) {
         this.acc = itemListEnum;
+        this.custom = null;
     }
 
 

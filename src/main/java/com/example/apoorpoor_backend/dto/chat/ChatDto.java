@@ -29,6 +29,8 @@ public class ChatDto {
         chatDto.setMessage(chat.getMessage());
         chatDto.setLevel(chat.getLevel());
         chatDto.setChatRoomId(1L);
+        chatDto.setDate(chat.getDate());
+        chatDto.setImage(chat.getImage());
         return chatDto;
     }
 }

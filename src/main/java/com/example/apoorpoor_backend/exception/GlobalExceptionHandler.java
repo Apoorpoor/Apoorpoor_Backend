@@ -42,4 +42,10 @@ public class GlobalExceptionHandler {
 
         return new ErrorResponse(status, field);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        String errorMessage = e.getMessage();
+        return new ResponseEntity<>(errorMessage, HttpStatus.OK);
+    }
 }

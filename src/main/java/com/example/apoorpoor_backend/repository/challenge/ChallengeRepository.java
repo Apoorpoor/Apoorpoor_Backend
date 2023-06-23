@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Optional<Challenge> findChallengeBySuccessStatusIsNullAndBeggarId(Long beggarId);
+    boolean existsChallengeBySuccessStatusIsNullAndBeggarId(Long beggarId);
 
 }

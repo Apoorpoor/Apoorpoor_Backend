@@ -82,6 +82,8 @@ public class ChallengeService {
             return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
         }
 
+
+
         Challenge challenge = challengeCheck(beggar.getId());
 
         String challengeTitle = beggar.getChallengeTitle();
@@ -92,6 +94,8 @@ public class ChallengeService {
                 .challengeTitle(challengeTitle)
                 .startTime(startTime)
                 .build();
+
+        notificationService.notifyGetChallengeInfo(challenge);
 
         return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
     }

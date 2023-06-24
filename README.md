@@ -5,7 +5,7 @@
 ## 🌊 배포 주소
 https://www.apoorpoor.com
 
-## 📺 You Tube 시연 영상
+## 🌊 You Tube 시연 영상
 추가예정
 
 ## 🌊 프로젝트 개요
@@ -32,7 +32,7 @@ https://www.apoorpoor.com
   </tbody>
 </table>
 
-## 🧰 기술 스택 & 협업
+## 🌊 기술 스택 & 협업
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/vscode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"><br />
 <img src="https://img.shields.io/badge/yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white"><br />
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> <br />

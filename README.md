@@ -59,6 +59,9 @@ https://www.apoorpoor.com
   <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 </div>
 
+## 🌊 서비스 아키텍쳐
+<img width="1299" alt="image" src="https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/3e7682a1-791c-419c-9b74-76eaacf74220">
+
 ## 🌊 ERD
 ![model](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/5ddca576-c2b7-456e-a017-fb6972dc0f0d)
 

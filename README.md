@@ -24,14 +24,15 @@ https://www.apoorpoor.com
 <table>
   <tbody>
     <tr>
-<!--       <td align="center"><a href="https://github.com/SAEMMM"><img src="https://avatars.githubusercontent.com/u/127721029?v=4" width="100px;" alt=""/><br /><sub><b>FE 리더 : 신샘</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/wlsud80"><img src="https://avatars.githubusercontent.com/u/128350568?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 김진영</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/WCL08"><img src="https://avatars.githubusercontent.com/u/122882419?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 이우철</b></sub></a><br /></td> -->
+      <td align="center"><a href="https://github.com/eivomin"><img src="https://avatars.githubusercontent.com/u/97949070?v=4" width="100px;" alt=""/><br /><sub><b>BE 리더 : 조유민</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/chaeeun0-o"><img src="https://avatars.githubusercontent.com/u/122453216?v=4" width="100px;" alt=""/><br /><sub><b>BE 팀원 : 김채은</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/leesco22"><img src="https://avatars.githubusercontent.com/u/127731995?v=4" width="100px;" alt=""/><br /><sub><b>BE 팀원 : 이세훈</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/OliveLover"><img src="https://avatars.githubusercontent.com/u/118647313?v=4" width="100px;" alt=""/><br /><sub><b>BE 팀원 : 이현규</b></sub></a><br /></td>
     </tr>
   </tbody>
 </table>
 
-## 🌊 기술 스택
+## 🧰 기술 스택 & 협업
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/vscode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"><br />
 <img src="https://img.shields.io/badge/yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white"><br />
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> <br />

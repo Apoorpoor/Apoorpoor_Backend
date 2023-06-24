@@ -11,9 +11,9 @@
 <table>
   <tbody>
     <tr>
-<!--       <td align="center"><a href="https://github.com/SAEMMM"><img src="https://avatars.githubusercontent.com/u/127721029?v=4" width="100px;" alt=""/><br /><sub><b>FE 리더 : 신샘</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/wlsud80)"><img src="https://avatars.githubusercontent.com/u/128350568?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 김진영</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/WCL08"><img src="https://avatars.githubusercontent.com/u/122882419?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 이우철</b></sub></a><br /></td> -->
+      <td align="center"><a href="https://github.com/SAEMMM"><img src="https://avatars.githubusercontent.com/u/127721029?v=4" width="100px;" alt=""/><br /><sub><b>FE 리더 : 신샘</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/wlsud80"><img src="https://avatars.githubusercontent.com/u/128350568?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 김진영</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/WCL08"><img src="https://avatars.githubusercontent.com/u/122882419?v=4" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 이우철</b></sub></a><br /></td>
     </tr>
   </tbody>
 </table>

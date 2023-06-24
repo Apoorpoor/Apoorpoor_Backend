@@ -1,12 +1,25 @@
-![Group 3898](https://github.com/Apoorpoor/Apoorpoor_Frontend/assets/127721029/8d371cc4-1283-4fe4-b3cf-4e72dd908561)
+# 🐳 어푸어푸 🐳
 
-## 🌊 프로젝트명
+![브로슈어 썸네일](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/e17530f8-ebad-4a09-a278-a1f65e80d045)
+
+## 🌊 배포 주소
+https://www.apoorpoor.com
+
+## 📺 You Tube 시연 영상
+추가예정
+
+## 🌊 프로젝트 개요
+
+### 프로젝트명
 나만의 거지 키우기 - 어푸어푸
 
-## 🌊 개발 기간
+### 프로젝트 한줄 소개
+기본적인 가계부 기능에 나만의 거지 캐릭터인 푸어의 포인트를 모아 옷을 입혀 자랑하고, 다른 이용자들과 지출 내용에 대한 오픈 채팅이 가능한 서비스입니다
+
+### 🌊 개발 기간
 2023년 5월 19일 ~ 6월 23일 (35일)
 
-## 🌊 팀원 소개
+### 🌊 팀원 소개
 항해99 14기 스프링반
 <table>
   <tbody>
@@ -17,12 +30,6 @@
     </tr>
   </tbody>
 </table>
-
-## 🌊 배포 주소
-https://www.apoorpoor.com
-
-## 🌊 프로젝트 소개
-기본적인 가계부 기능에 나만의 거지 캐릭터인 푸어의 포인트를 모아 옷을 입혀 자랑하고, 다른 이용자들과 지출 내용에 대한 오픈 채팅이 가능한 서비스입니다
 
 ## 🌊 기술 스택
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/vscode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"><br />

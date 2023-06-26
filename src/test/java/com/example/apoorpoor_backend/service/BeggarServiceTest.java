@@ -2,19 +2,17 @@ package com.example.apoorpoor_backend.service;
 
 import com.example.apoorpoor_backend.dto.beggar.BeggarExpUpResponseDto;
 import com.example.apoorpoor_backend.dto.beggar.BeggarRequestDto;
-import com.example.apoorpoor_backend.dto.chat.BadWordFiltering;
 import com.example.apoorpoor_backend.model.Beggar;
 import com.example.apoorpoor_backend.model.User;
 import com.example.apoorpoor_backend.model.enumType.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@Transactional
 class BeggarServiceTest {
 
     @Test

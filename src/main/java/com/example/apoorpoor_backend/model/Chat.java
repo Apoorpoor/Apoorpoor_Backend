@@ -36,6 +36,13 @@ public class Chat {
 
     private String chatId;
 
+    @Column(nullable = false)
+    private Long userId;
+
+    private String image;
+
+    private String date;
+
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }

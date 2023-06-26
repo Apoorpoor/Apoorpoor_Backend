@@ -25,10 +25,13 @@ public class ChatDto {
         ChatDto chatDto = new ChatDto();
         chatDto.setType(chat.getType());
         chatDto.setBeggar_id(chat.getBeggar_id());
+        chatDto.setUserId(chat.getUserId());
         chatDto.setSender(chat.getSender());
         chatDto.setMessage(chat.getMessage());
         chatDto.setLevel(chat.getLevel());
         chatDto.setChatRoomId(1L);
+        chatDto.setDate(chat.getDate());
+        chatDto.setImage(chat.getImage());
         return chatDto;
     }
 }

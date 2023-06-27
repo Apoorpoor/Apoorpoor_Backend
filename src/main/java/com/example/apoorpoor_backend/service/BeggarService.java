@@ -62,6 +62,7 @@ public class BeggarService {
         return new ResponseEntity<>(new StatusResponseDto("푸어가 생성되었어요..."), HttpStatus.OK );
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
         User user = userCheck(username);
         boolean beggarCheck = beggarRepository.existsBeggarByUserId(user.getId());
@@ -86,6 +87,7 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : itemUrl  + beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : itemUrl  + beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : itemUrl  + beggar.getAcc().getItemImage();
+        String customImage = beggar.getCustom() == null ? null : itemUrl + beggar.getCustom().getItemImage();
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
@@ -96,6 +98,7 @@ public class BeggarService {
                 .description(description).gender(gender)
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
+                .customImage(customImage)
                 .build();
 
         return new ResponseEntity<>(beggarSearchResponseDto, HttpStatus.OK);
@@ -124,7 +127,7 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
-
+        String customImage = beggar.getCustom() == null ? null : itemUrl + beggar.getCustom().getItemImage();
 
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
@@ -135,6 +138,7 @@ public class BeggarService {
                 .description(description).gender(gender)
                 .age(age).topImage(topImage).bottomImage(bottomImage)
                 .shoesImage(shoesImage).accImage(accImage)
+                .customImage(customImage)
                 .build();
 
 

@@ -95,8 +95,6 @@ public class ChallengeService {
                 .startTime(startTime)
                 .build();
 
-        notificationService.notifyGetChallengeInfo(challenge);
-
         return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
     }
 

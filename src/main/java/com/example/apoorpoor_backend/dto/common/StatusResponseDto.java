@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class StatusResponseDto {
-    private String meassage;
+    private String message;
     private Long point;
-    public StatusResponseDto(String meassage){
-        this.meassage = meassage;
+    public StatusResponseDto(String message){
+        this.message = message;
     }
 
-    public StatusResponseDto(String meassage, Long point) {
-        this.meassage = meassage;
+    public StatusResponseDto(String message, Long point) {
+        this.message = message;
         this.point = point;
     }
 }

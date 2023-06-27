@@ -53,18 +53,23 @@ public class Beggar extends Timestamped{
     private List<GetBadge> getBadgeList = new ArrayList<>();
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ItemListEnum top;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ItemListEnum bottom;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ItemListEnum shoes;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ItemListEnum acc;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ItemListEnum custom;
 
     @Column

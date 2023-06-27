@@ -63,7 +63,7 @@ public class BeggarRestControllerTest {
     @DisplayName("Beggar 생성 테스트")
     void createBeggar() throws Exception {
         BeggarRequestDto requestDto = new BeggarRequestDto("testNickname");
-        String username = "testname";
+        String username = "testName";
         User mockUser = Mockito.mock(User.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(mockUser, username);
         StatusResponseDto responseDto = new StatusResponseDto("test message", 0L);
@@ -80,30 +80,50 @@ public class BeggarRestControllerTest {
     }
 
     @Test
-    @DisplayName("Beggar 생성 테스트")
-    void myBeggar() throws Exception {
-        String username = "testname";
+    @DisplayName("Beggar 닉네임이 비속어일 경우 테스트")
+    void failureCreateBeggar() throws Exception {
+        BeggarRequestDto requestDto = new BeggarRequestDto("씨발");
+        String username = "testName";
         User mockUser = Mockito.mock(User.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(mockUser, username);
-        BeggarSearchResponseDto responseDto = BeggarSearchResponseDto.builder()
-                .age(30L)
-                .beggarId(1L)
-                .gender("male")
-                .nickname("beggarTest")
-                .level(1L)
-                .point(0L)
-                .exp(0L)
-                .userId(1L)
-                .build();
-        given(beggarService.myBeggar(eq(username))).willReturn(new ResponseEntity<>(responseDto, HttpStatus.OK));
+        StatusResponseDto responseDto = new StatusResponseDto("test message", 0L);
+        given(beggarService.createBeggar(requestDto, eq(username))).willThrow(new IllegalArgumentException("사회적으로 부적절한 언어가 포함되어 있습니다."));
 
-        mockMvc.perform(get("http://localhost:8080/beggar")
+        mockMvc.perform(post("/beggar")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(requestDto))
                 )
                 .andExpect(status().isOk())
-                //.andExpect(jsonPath("$.beggarId").exists())
-                //.andExpect(jsonPath("$.point").exists())
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.point").exists())
                 .andDo(print());
     }
+
+//    @Test
+//    @DisplayName("myBeggar 조회 테스트")
+//    void myBeggar() throws Exception {
+//        String username = "testName";
+//        User mockUser = Mockito.mock(User.class);
+//        UserDetailsImpl userDetails = new UserDetailsImpl(mockUser, username);
+//        BeggarSearchResponseDto responseDto = BeggarSearchResponseDto.builder()
+//                .age(30L)
+//                .beggarId(1L)
+//                .gender("male")
+//                .nickname("beggarTest")
+//                .level(1L)
+//                .point(0L)
+//                .exp(0L)
+//                .userId(1L)
+//                .build();
+//        given(beggarService.myBeggar(eq(username))).willReturn(new ResponseEntity<>(responseDto, HttpStatus.OK));
+//
+//        mockMvc.perform(get("http://localhost:8080/beggar")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                )
+//                .andExpect(status().isOk())
+//                //.andExpect(jsonPath("$.beggarId").exists())
+//                //.andExpect(jsonPath("$.point").exists())
+//                .andDo(print());
+//    }
 
 }

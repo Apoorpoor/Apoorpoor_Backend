@@ -62,6 +62,7 @@ public class BeggarService {
         return new ResponseEntity<>(new StatusResponseDto("푸어가 생성되었어요..."), HttpStatus.OK );
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<BeggarSearchResponseDto> myBeggar(String username) {
         User user = userCheck(username);
         boolean beggarCheck = beggarRepository.existsBeggarByUserId(user.getId());

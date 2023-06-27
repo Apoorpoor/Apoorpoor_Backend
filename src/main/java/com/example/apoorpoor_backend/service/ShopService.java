@@ -132,7 +132,7 @@ public class ShopService {
         Long bottomsNum = beggar.getBottom() == null ? null : beggar.getBottom().getItemNum();
         Long shoesNum = beggar.getShoes() == null ? null : beggar.getShoes().getItemNum();
         Long accessoriesNum = beggar.getAcc() == null ? null : beggar.getAcc().getItemNum();
-        Long customsNum = beggar.getCustom() == null? null : beggar.getCustom().getItemNum();
+        Long customsNum = beggar.getCustom() == null ? null : beggar.getCustom().getItemNum();
 
 
         String[] matches = new String[itemListEnumCount];

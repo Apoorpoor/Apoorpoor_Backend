@@ -58,7 +58,6 @@ public class WebSecurityConfig {
                 .and().ignoring().requestMatchers(PERMIT_URL_ARRAY);
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();

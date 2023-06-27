@@ -100,18 +100,4 @@ public class NotificationService {
             }
         }
     }
-    //시험용
-    public void notifyGetChallengeInfo(Challenge challenge) {
-        String username = challenge.getUsername();
-        if(sseEmitters.containsKey(username)) {
-            SseEmitter sseEmitter = sseEmitters.get(username);
-            try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"조회\", " +
-                        "\"msg\":\"" + challenge.getTitle() + "챌린지 도전중" + "\"," +
-                        "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
-            } catch (Exception e) {
-                sseEmitters.remove(username);
-            }
-        }
-    }
 }

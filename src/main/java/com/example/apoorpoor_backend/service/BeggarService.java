@@ -314,7 +314,7 @@ public class BeggarService {
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }
-
+        beggarRepository.save(beggar);
         return new ResponseEntity<>("착용 완료", HttpStatus.OK);
     }
 

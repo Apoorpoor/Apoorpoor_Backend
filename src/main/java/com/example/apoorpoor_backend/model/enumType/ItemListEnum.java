@@ -47,11 +47,11 @@ public enum ItemListEnum {
     shoes_lv5_06(35L, "컹버스", 40L, 5L, "shoes", "shoes_lv5_06.svg"),
     shoes_lv5_07(36L, "에어포숙", 40L, 5L, "shoes", "shoes_lv5_07.svg"),
     shoes_lv5_08(37L, "된장포숙", 40L, 5L, "shoes", "shoes_lv5_08.svg"),
-    shoes_lv6_01(38L, "조단", 70L, 6L, "shoes", "shoes_lv6_01.svg"),
+    shoes_lv6_01(38L, "구두", 70L, 6L, "shoes", "shoes_lv6_01.svg"),
     shoes_lv6_02(39L, "독일군 스니커즈", 60L, 6L, "shoes", "shoes_lv6_02.svg"),
     shoes_lv6_03(40L, "구두", 60L, 6L, "shoes", "shoes_lv6_03.svg"),
     shoes_lv6_04(41L, "구두", 60L, 6L, "shoes", "shoes_lv6_04.svg"),
-    shoes_lv6_05(42L, "구두", 60L, 6L, "shoes", "shoes_lv6_05.svg"),
+    shoes_lv6_05(42L, "조단", 60L, 6L, "shoes", "shoes_lv6_05.svg"),
 
     //accessories
     acc_lv4_01(43L, "수영모", 60L, 6L, "acc", "acc_lv4_01.svg"),

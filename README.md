@@ -1,4 +1,4 @@
-![image (7)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/dbaf8304-9b9b-4c35-ad24-603032294979)# 🐳 어푸어푸 🐳
+🐳 어푸어푸 🐳
 
 ![브로슈어 썸네일](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/e17530f8-ebad-4a09-a278-a1f65e80d045)
 

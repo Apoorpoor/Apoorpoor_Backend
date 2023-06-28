@@ -13,6 +13,7 @@ public class RankingResponseDto {
     private Long level;
     private String acc_url;
     private String top_url;
+    private String custom_url;
     private Long total;
     private AccountType accountType;
     private String date;

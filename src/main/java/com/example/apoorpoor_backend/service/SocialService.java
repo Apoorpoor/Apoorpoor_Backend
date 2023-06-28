@@ -98,6 +98,7 @@ public class SocialService {
 
             String topImage = ranking.getBeggar().getTop() == null ? null : itemUrl + ranking.getBeggar().getTop().getItemImage();
             String accImage = ranking.getBeggar().getAcc() == null ? null : itemUrl + ranking.getBeggar().getAcc().getItemImage();
+            String customImage = ranking.getBeggar().getCustom() == null ? null : itemUrl + ranking.getBeggar().getCustom().getItemImage();
 
             RankingResponseDto rankingResponseDto = RankingResponseDto.builder()
                     .rank_num(ranking.getRank_num())
@@ -106,6 +107,7 @@ public class SocialService {
                     .level(ranking.getBeggar().getLevel())
                     .acc_url(accImage)
                     .top_url(topImage)
+                    .custom_url(customImage)
                     .total(ranking.getTotal())
                     .accountType(ranking.getAccountType())
                     .date(ranking.getDate())

@@ -1,4 +1,4 @@
-### 🐳 어푸어푸 🐳
+# 🐳 어푸어푸 🐳
 
 ![브로슈어 썸네일](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/e17530f8-ebad-4a09-a278-a1f65e80d045)
 
@@ -237,4 +237,32 @@ https://www.figma.com/file/a4yKIz6LCPMPVbfaAmPgZg/%EC%96%B4%ED%91%B8%EC%96%B4%ED
 ![model](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/5ddca576-c2b7-456e-a017-fb6972dc0f0d)
 
 ## 🌊 피드백 개선
+
+`💧사용법을 잘 모르겠어요`
+
+- 메인 화면을 갔을 때 튜토리얼 확인가능하게수정
+  
+- 랭킹과 포인트 부분에서도 툴팁을 통해 설명 추가
+  
+![image (8)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/3f7a9c8e-73ed-4e70-9dc7-1871337049cc)
+![image (9)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/be6fb801-32e7-4e27-87aa-88efd8483a04)
+![image (10)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/2fa5b613-8639-48bd-a1e6-b9508c8bee37)
+
+
+
+`💧이전 채팅 내역이 안 보이고 채팅방에 누가 있는지 알 수 있었으면 좋겠어요 `
+
+- 채팅방을 나갔다가 들어와도 이전 채팅 내역이 보여지게끔 수정
+  
+- 현재 채팅방에 누가 있는지 확인 가능하게 대화 상대 목록 추가
+  
+![image (11)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/9d05e29f-ee71-494d-8201-4e652efea362)
+
+
+
+`💧더 재밌는 챌린지 요소를 추가했으면 좋겠어요 `
+
+- MZ세대 중심으로 확산되는 무지출 챌린지 추가
+  
+![image (12)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/4ad5b72e-177e-484a-94a1-c251a76d205a)
 

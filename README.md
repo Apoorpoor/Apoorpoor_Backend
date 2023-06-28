@@ -216,22 +216,11 @@ Beggar의 챌린지 참석여부가 null과 아닐때로 구분하여 null이면
 </details>
 
 ## 🌊 API 명세 / 와이어프레임
-<details>
-<summary>API명세</summary>
-<div markdown="1">
 
-https://docs.google.com/spreadsheets/d/1KdPC1GW8KxtWxX5jGaHe6r8tpokIT2xPr7AI5BdSE3M/edit#gid=0
+[API명세서](#https://docs.google.com/spreadsheets/d/1KdPC1GW8KxtWxX5jGaHe6r8tpokIT2xPr7AI5BdSE3M/edit#gid=0)
 
-</div>
-</details>
-<details>
-<summary>와이어프레임</summary>
-<div markdown="1">
+[와이어프레임](#https://www.figma.com/file/a4yKIz6LCPMPVbfaAmPgZg/%EC%96%B4%ED%91%B8%EC%96%B4%ED%91%B8?type=design&node-id=1-1560&mode=design&t=ZJtpxJrY7pYxlWpa-0)
 
-https://www.figma.com/file/a4yKIz6LCPMPVbfaAmPgZg/%EC%96%B4%ED%91%B8%EC%96%B4%ED%91%B8?type=design&node-id=1-1560&mode=design&t=ZJtpxJrY7pYxlWpa-0
-
-</div>
-</details>
 
 ## 🌊 ERD
 ![model](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/5ddca576-c2b7-456e-a017-fb6972dc0f0d)

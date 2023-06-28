@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.dto.account;
 
-import com.example.apoorpoor_backend.model.enumType.ExpenditureType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

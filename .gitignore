@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## .gitignore
+**/src/main/resources/firebase/firebase_service_key.json
+**/src/main/resources/static/firebase-messaging-sw.js
+**/src/main/resources/templates/firebase.html
+**/src/main/resources/firebase/apoorpoor-55170-firebase-adminsdk-mir91-a019045af1.json

@@ -1,4 +1,4 @@
-🐳 어푸어푸 🐳
+###🐳 어푸어푸 🐳###
 
 ![브로슈어 썸네일](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/e17530f8-ebad-4a09-a278-a1f65e80d045)
 
@@ -78,8 +78,11 @@ https://www.apoorpoor.com
 <div markdown="1">
 
 - 작성한 가계부 데이터를 캘린더에서 일일 `수입`, `지출` 합계 금액으로 확인 가능
+  
 - 이번달 카테고리별 지출 내역을 `파이그래프`로 확인 가능
+
 - 지난달, 작년 동월, 작년 동분기 데이터를 올해 데이터와 비교해서 `막대그래프`로 확인 가능
+  
 ![image (1)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/1883a2f7-ff26-4ed6-9611-c36d71ec053e)
 
 </div>
@@ -88,7 +91,8 @@ https://www.apoorpoor.com
 <summary>💬 수입/지출을 등록 할 수 있는 가계부 등록 페이지</summary>
 <div markdown="1">
   
--해당 날짜에 수입/지출 내역을 카테고리를 선택하여 등록 가능
+- 해당 날짜에 수입/지출 내역을 카테고리를 선택하여 등록 가능
+  
 ![image (2)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/df3dfbd1-cf9e-4c3a-b1d6-558b2d9e7b41)
 
 
@@ -99,9 +103,13 @@ https://www.apoorpoor.com
 <div markdown="1">
 
 - 가계부 작성 등으로 얻은 포인트를 사용해서 `푸어아이템` 구매/착용 가능
+  
 - 카테고리별 기준을 충족하면 `푸어뱃지` 획득 가능
+  
 - 사용자의 소비데이터를 카테고리 그룹별로 수치화하여 직관적으로 볼 수 있는 `육각그래프`, `꺾은선그래프`로 확인 가능
+  
 - 사용자의 포인트 적립, 사용 내역을 기간별로 확인 가능
+  
  ![image (3)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/3be6a358-c86b-4c13-8578-bded4cc3295a)
 ![image (4)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/376baf20-7eb0-4075-943b-c9b758c7a133)
 
@@ -112,7 +120,8 @@ https://www.apoorpoor.com
 <summary>💬 나와 다른 사람들의 수입/지출 랭킹을 확인할 수 있는 랭킹 페이지</summary>
 <div markdown="1">
 
--사용자와 같은 연령대, 성별을 가진 사용자들의 평균 수입, 지출 내역으로 순위 확인 가능
+- 사용자와 같은 연령대, 성별을 가진 사용자들의 평균 수입, 지출 내역으로 순위 확인 가능
+  
 ![image (5)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/9c957f51-a133-4664-a6a9-8009c9c31616)
 
 
@@ -123,9 +132,13 @@ https://www.apoorpoor.com
 <div markdown="1">
 
 - 카X오톡 거지방처럼 다양한 사용자들끼리 채팅 가능
+  
 - 채팅에 참여한 참여자를 알 수 있음
+  
 - 채팅 내역과 채팅에 보낸 이미지를 확인할 수 있음
+  
 - 상대의 프로필을 눌러서 푸어 상태, 뱃지 확인 가능
+  
   ![image (6)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/01edbb59-a069-4d66-980e-767333d581d7)
 
 
@@ -136,8 +149,11 @@ https://www.apoorpoor.com
 <div markdown="1">
 
 - 매주마다 2, 5, 10만원만 사용하는 지출 챌린지 가능
+  
 - 매주마다 무지출하는 챌린지 가능
+  
 - 챌린지 성공 시, 푸어 포인트 획득
+  
   ![image (7)](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/122453216/9d6392f2-3802-4318-8155-fd251dc17ba3)
 
 

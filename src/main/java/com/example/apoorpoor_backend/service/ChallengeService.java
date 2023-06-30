@@ -88,8 +88,6 @@ public class ChallengeService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss");
         String startTime = challenge.getCreatedAt().format(formatter);
 
-
-
         ChallengeInfoResponseDto challengeInfoResponseDto = ChallengeInfoResponseDto.builder()
                 .challengeTitle(challengeTitle)
                 .startTime(startTime)
@@ -124,7 +122,7 @@ public class ChallengeService {
                     .title(ledgerHistory.getTitle())
                     .expenditureType(ledgerHistory.getExpenditureType())
                     .expenditure(ledgerHistory.getExpenditure())
-                    .date(ledgerHistory.getCreatedAt())
+                    .date(ledgerHistory.getDate())
                     .build();
 
             challengeLedgerDtoList.add(challengeLedgerDto);

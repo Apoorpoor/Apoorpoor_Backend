@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +120,7 @@ public class ChallengeService {
 
         for (LedgerHistory ledgerHistory : findLedgerHistoryList) {
             if(ledgerHistory.getExpenditureType() == null) continue;
+            if(ledgerHistory.getDate().isBefore(challenge.getCreatedAt().toLocalDate())) continue;
             ChallengeLedgerDto challengeLedgerDto = ChallengeLedgerDto.builder()
                     .title(ledgerHistory.getTitle())
                     .expenditureType(ledgerHistory.getExpenditureType())

@@ -15,7 +15,7 @@ public class ChatScheduler {
     private final RedisService redisService;
     private final ChatRepository chatRepository;
 
-    @Scheduled(cron = "0 0 0 * * *") //자정
+    @Scheduled(cron = "0 0 0 * * *")
     public void saveChat() {
         Long chatRoomId = 1L;
         redisService.saveChat(chatRoomId);

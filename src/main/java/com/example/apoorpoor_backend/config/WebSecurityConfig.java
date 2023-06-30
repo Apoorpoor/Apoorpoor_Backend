@@ -31,7 +31,6 @@ public class WebSecurityConfig {
 
 
     private static final String[] PERMIT_URL_ARRAY = {
-            /* swagger v2 */
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
@@ -39,7 +38,6 @@ public class WebSecurityConfig {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            /* swagger v3 */
             "/v3/api-docs/**",
             "/swagger-ui/**"
     };

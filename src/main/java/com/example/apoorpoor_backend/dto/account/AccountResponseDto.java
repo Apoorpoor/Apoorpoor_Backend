@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.dto.account;
 
 import com.example.apoorpoor_backend.dto.ledgerhistory.LedgerHistoryResponseDto;
-import com.example.apoorpoor_backend.model.Account;
 import com.example.apoorpoor_backend.model.Balance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

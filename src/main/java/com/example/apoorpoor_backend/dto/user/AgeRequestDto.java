@@ -1,6 +1,4 @@
 package com.example.apoorpoor_backend.dto.user;
-
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 

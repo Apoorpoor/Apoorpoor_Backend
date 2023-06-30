@@ -49,9 +49,9 @@ public class SocialService {
         Long age_abb = age-(age%10L);
 
         if(condition.getAccountType() == AccountType.EXPENDITURE){
-            expenditure_sum = socialRepository.getExpenditure(condition, findUser); // 지난달 개인 지출 총합
-            expenditure_avg = socialRepository.getExpAverage(condition, findUser); // 지난달 유저 평균
-            expenditure_total = socialRepository.getExpSum(condition, findUser); // 지난달 유저 총합
+            expenditure_sum = socialRepository.getExpenditure(condition, findUser);
+            expenditure_avg = socialRepository.getExpAverage(condition, findUser);
+            expenditure_total = socialRepository.getExpSum(condition, findUser);
         }
         if(condition.getAccountType() == AccountType.INCOME){
             income_sum = socialRepository.getIncome(condition, findUser);

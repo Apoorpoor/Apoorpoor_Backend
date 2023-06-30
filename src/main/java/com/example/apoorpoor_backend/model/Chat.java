@@ -1,7 +1,6 @@
 package com.example.apoorpoor_backend.model;
 
 import com.example.apoorpoor_backend.model.enumType.MessageType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

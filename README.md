@@ -6,7 +6,7 @@
 https://www.apoorpoor.com
 
 ## 🌊 You Tube 시연 영상
-추가예정
+[바로가기](https://youtu.be/KhixXeC0qq8)
 
 ## 🌊 프로젝트 개요
 

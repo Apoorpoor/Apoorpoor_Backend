@@ -5,7 +5,7 @@
 ## 🌊 배포 주소
 https://www.apoorpoor.com
 
-## 🌊 You Tube 시연 영상
+## 🌊 YouTube 시연 영상
 [바로가기](https://youtu.be/KhixXeC0qq8)
 
 ## 🌊 프로젝트 개요
@@ -31,6 +31,9 @@ https://www.apoorpoor.com
     </tr>
   </tbody>
 </table>
+
+## 🌊 서비스 아키텍쳐
+<img width="1299" alt="image" src="https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/3e7682a1-791c-419c-9b74-76eaacf74220">
 
 ## 🌊 기술 스택 & 협업
 **Back-End**
@@ -58,9 +61,6 @@ https://www.apoorpoor.com
   <img src="https://img.shields.io/badge/googlesheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white">
   <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 </div>
-
-## 🌊 서비스 아키텍쳐
-<img width="1299" alt="image" src="https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/3e7682a1-791c-419c-9b74-76eaacf74220">
 
 ## 🌊 기술적 의사결정
 

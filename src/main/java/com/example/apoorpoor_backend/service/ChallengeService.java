@@ -20,8 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +79,8 @@ public class ChallengeService {
                     .build();
             return new ResponseEntity<>(challengeInfoResponseDto, HttpStatus.OK);
         }
+
+
 
         Challenge challenge = challengeCheck(beggar.getId());
 

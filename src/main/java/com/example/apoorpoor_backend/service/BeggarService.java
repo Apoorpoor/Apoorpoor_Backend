@@ -127,8 +127,7 @@ public class BeggarService {
         String bottomImage = beggar.getBottom() == null ? null : beggar.getBottom().getItemImage();
         String shoesImage = beggar.getShoes() == null ? null : beggar.getShoes().getItemImage();
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
-        String customImage = beggar.getCustom() == null ? null : itemUrl + beggar.getCustom().getItemImage();
-
+        String customImage = beggar.getCustom() == null ? null : beggar.getCustom().getItemImage();
 
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
@@ -313,7 +312,7 @@ public class BeggarService {
                 default -> throw new IllegalArgumentException("옳지 못한 행동입니다.");
             }
         }
-
+        beggarRepository.save(beggar);
         return new ResponseEntity<>("착용 완료", HttpStatus.OK);
     }
 

@@ -49,8 +49,9 @@ public class NotificationService {
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지 시작\", " +
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지\", " +
                         "\"challengeType\":\"" + challengeTitle + "\"," +
+                                "\"msg\":\"" + "성공" + "\"," +
                         "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
@@ -63,10 +64,8 @@ public class NotificationService {
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지 종료\", " +
-                        "\"challengeType\":\"" + challenge.getTitle() + "\"," +
-                        "\"challenge\":\"" + challenge.getWeekExpenditure() + "\"," +
-                        "\"result\":\"" + "성공" + "\"," +
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지\", " +
+                        "\"msg\":\"" + "성공" + "\"," +
                         "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
@@ -79,11 +78,8 @@ public class NotificationService {
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지 종료\", " +
-                        "\"challengeType\":\"" + challenge.getTitle() + "\"," +
-                        "\"challenge\":\"" + challenge.getWeekExpenditure() + "\"," +
-                        "\"result\":\"" + "실패" + "\"," +
-                        "\"point\":\"" + 0L + "\"," +
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지\", " +
+                        "\"msg\":\"" + "실패" + "\"," +
                         "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);
@@ -96,8 +92,8 @@ public class NotificationService {
         if(sseEmitters.containsKey(username)) {
             SseEmitter sseEmitter = sseEmitters.get(username);
             try {
-                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"스템프 10개 수집\", " +
-                        "\"point\":\"" + 100L + "\"," +
+                sseEmitter.send(SseEmitter.event().name("getBadge").data("{\"alarmType\":\"챌린지\", " +
+                        "\"msg\":\"" + "스탬프" + "\"," +
                         "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM월 dd일 a HH시 mm분")) + "\"}"));
             } catch (Exception e) {
                 sseEmitters.remove(username);

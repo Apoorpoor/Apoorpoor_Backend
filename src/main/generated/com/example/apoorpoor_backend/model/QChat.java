@@ -23,7 +23,11 @@ public class QChat extends EntityPathBase<Chat> {
 
     public final StringPath chatId = createString("chatId");
 
+    public final StringPath date = createString("date");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath image = createString("image");
 
     public final NumberPath<Long> level = createNumber("level", Long.class);
 
@@ -32,6 +36,8 @@ public class QChat extends EntityPathBase<Chat> {
     public final StringPath sender = createString("sender");
 
     public final EnumPath<com.example.apoorpoor_backend.model.enumType.MessageType> type = createEnum("type", com.example.apoorpoor_backend.model.enumType.MessageType.class);
+
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QChat(String variable) {
         super(Chat.class, forVariable(variable));

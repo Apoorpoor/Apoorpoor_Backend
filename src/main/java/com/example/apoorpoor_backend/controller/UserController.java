@@ -1,6 +1,5 @@
 package com.example.apoorpoor_backend.controller;
 
-import com.example.apoorpoor_backend.dto.account.MonthSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.RecentSumResponseDto;
 import com.example.apoorpoor_backend.dto.account.TotalSumResponseDto;
 import com.example.apoorpoor_backend.dto.user.AgeRequestDto;

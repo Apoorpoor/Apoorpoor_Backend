@@ -129,8 +129,6 @@ public class BeggarService {
         String accImage = beggar.getAcc() == null ? null : beggar.getAcc().getItemImage();
         String customImage = beggar.getCustom() == null ? null : beggar.getCustom().getItemImage();
 
-
-
         BeggarSearchResponseDto beggarSearchResponseDto = BeggarSearchResponseDto
                 .builder().beggarId(beggarId)
                 .userId(userId).nickname(nickname)

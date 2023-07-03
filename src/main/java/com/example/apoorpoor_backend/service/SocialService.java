@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,14 +50,14 @@ public class SocialService {
         Long age_abb = age-(age%10L);
 
         if(condition.getAccountType() == AccountType.EXPENDITURE){
-            expenditure_sum = socialRepository.getExpenditure(condition, findUser);
-            expenditure_avg = socialRepository.getExpAverage(condition, findUser);
-            expenditure_total = socialRepository.getExpSum(condition, findUser);
+            expenditure_sum = Optional.ofNullable(socialRepository.getExpenditure(condition, findUser)).orElse(0L);
+            expenditure_avg = Optional.ofNullable(socialRepository.getExpAverage(condition, findUser)).orElse(0.0);
+            expenditure_total = Optional.ofNullable(socialRepository.getExpSum(condition, findUser)).orElse(0L);
         }
         if(condition.getAccountType() == AccountType.INCOME){
-            income_sum = socialRepository.getIncome(condition, findUser);
-            income_avg = socialRepository.getIncAverage(condition, findUser);
-            income_total = socialRepository.getIncSum(condition, findUser);
+            income_sum = Optional.ofNullable(socialRepository.getIncome(condition, findUser)).orElse(0L);
+            income_avg = Optional.ofNullable(socialRepository.getIncAverage(condition, findUser)).orElse(0.0);
+            income_total = Optional.ofNullable(socialRepository.getIncSum(condition, findUser)).orElse(0L);
         }
 
         List<ExpenditurePercentDto> percentList = socialRepository.getPercent(condition, findUser);

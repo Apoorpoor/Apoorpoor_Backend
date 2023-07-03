@@ -109,7 +109,8 @@ https://www.apoorpoor.com
 
 - 사용자와 같은 연령대, 성별을 가진 사용자들의 평균 수입, 지출 내역으로 순위 확인 가능
 
-![랭킹](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/636926d1-7d9f-4cca-9a32-8d841261be5e)
+![랭킹2](https://github.com/Apoorpoor/Apoorpoor_Backend/assets/97949070/ca29ea8c-27c4-44c9-94a0-623180c4b739)
+
 
   
 💬 다른 유저들과 채팅을 할 수 있는 오픈채팅 푸어톡 페이지

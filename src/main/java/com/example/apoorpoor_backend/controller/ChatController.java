@@ -76,4 +76,9 @@ public class ChatController {
     public List<ChatImagesDto> saveChatImagesList(){
         return chatService.saveChatImageList();
     }
+
+    @PostMapping("/chat/likes/{chatId}")
+    public ChatDto chatlike(@PathVariable(name = "chatId")Long chatId){
+        return chatService.chatLike(chatId);
+    }
 }

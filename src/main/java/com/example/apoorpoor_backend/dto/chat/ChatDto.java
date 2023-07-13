@@ -20,6 +20,7 @@ public class ChatDto {
     private Long userId;
     private Long level;
     private Long chatRoomId = 1L;
+    private Long likeCount;
 
     public static ChatDto fromChat(Chat chat) {
         ChatDto chatDto = new ChatDto();
@@ -32,6 +33,7 @@ public class ChatDto {
         chatDto.setChatRoomId(1L);
         chatDto.setDate(chat.getDate());
         chatDto.setImage(chat.getImage());
+        chatDto.setLikeCount(chat.getLikeCount());
         return chatDto;
     }
 }

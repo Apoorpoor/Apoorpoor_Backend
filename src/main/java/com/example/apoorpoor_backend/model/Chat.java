@@ -42,6 +42,14 @@ public class Chat {
 
     private String date;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private long likeCount;
+
+    public void chatLike () {++likeCount;}
+
+    public void minusLike() {--likeCount;}
+
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }

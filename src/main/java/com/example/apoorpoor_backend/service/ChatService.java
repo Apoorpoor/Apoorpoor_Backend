@@ -5,13 +5,11 @@ import com.example.apoorpoor_backend.dto.chat.ChatDto;
 import com.example.apoorpoor_backend.dto.chat.ChatImagesDto;
 import com.example.apoorpoor_backend.dto.chat.ChatListDto;
 import com.example.apoorpoor_backend.dto.chat.ChatRoomDto;
-import com.example.apoorpoor_backend.model.Beggar;
-import com.example.apoorpoor_backend.model.Chat;
-import com.example.apoorpoor_backend.model.Image;
-import com.example.apoorpoor_backend.model.User;
+import com.example.apoorpoor_backend.model.*;
 import com.example.apoorpoor_backend.model.enumType.MessageType;
 import com.example.apoorpoor_backend.repository.ImageRepository;
 import com.example.apoorpoor_backend.repository.beggar.BeggarRepository;
+import com.example.apoorpoor_backend.repository.chat.ChatLikeRepository;
 import com.example.apoorpoor_backend.repository.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +28,7 @@ public class ChatService {
 
     private final BeggarRepository beggarRepository;
     private final ChatRepository chatRepository;
+    private final ChatLikeRepository chatLikeRepository;
     private final ImageRepository imageRepository;
     private final SimpMessagingTemplate msgOperation;
     private final BadWordFiltering badWordFiltering;
@@ -37,6 +36,7 @@ public class ChatService {
     private final Map<Long, ChatListDto> chatParticipantsMap = new HashMap<>();
     private static Long index = 0L;
     private static Long chatRoomId = 1L;
+
 
     public ChatDto enterChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("beggar_id", chatDto.getBeggar_id());
@@ -134,7 +134,7 @@ public class ChatService {
     public void removeChatParticipant(Long beggar_id) {
         chatParticipantsMap.remove(beggar_id);
     }
-    
+
     public void sendChatRoom(ChatDto chatDto, SimpMessageHeaderAccessor headerAccessor) {
         Beggar beggar = beggarCheck(chatDto.getBeggar_id());
         MessageType type = MessageType.TALK;
@@ -157,12 +157,6 @@ public class ChatService {
         msgOperation.convertAndSend("/sub/chat/room", newChatDto);
     }
 
-    public Beggar beggarCheck(Long beggar_id) {
-        return beggarRepository.findById(beggar_id).orElseThrow(
-                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
-        );
-    }
-
     public List<ChatImagesDto> saveChatImageList() {
         List<Image> imageList = imageRepository.findAll();
         List<ChatImagesDto> chatImagesList = new ArrayList<>();
@@ -175,5 +169,40 @@ public class ChatService {
             chatImagesList.add(imagesDto);
         }
         return chatImagesList;
+    }
+
+
+    public ChatDto chatLike(Long chatId) {
+        Chat chat = checkChat(chatId);
+        Beggar beggar = beggarCheck(chat.getBeggar_id());
+
+        if (ChatLikeCheck(beggar.getId(), chatId)) {
+            chatLikeRepository.deleteByBeggarIdAndChatId(beggar.getId(), chatId);
+            chat.minusLike();
+        } else {
+            ChatLike chatLike = new ChatLike(chat, beggar);
+            chatLikeRepository.save(chatLike);
+            chat.chatLike();
+        }
+
+        return ChatDto.fromChat(chat);
+    }
+
+    public Beggar beggarCheck(Long beggar_id) {
+        return beggarRepository.findById(beggar_id).orElseThrow(
+                () -> new IllegalArgumentException("푸어를 찾을 수 없습니다.")
+        );
+    }
+
+    private Chat checkChat(Long chatId) {
+        Chat chat = chatRepository.findById(chatId).orElseThrow(
+                () -> new IllegalArgumentException("채팅을 찾을 수 없습니다.")
+        );
+        return chat;
+    }
+
+    public boolean ChatLikeCheck(Long beggar_id, Long chatId) {
+        Optional<ChatLike> like = chatLikeRepository.findByBeggarIdAndChatId(beggar_id, chatId);
+        return like.isPresent();
     }
 }

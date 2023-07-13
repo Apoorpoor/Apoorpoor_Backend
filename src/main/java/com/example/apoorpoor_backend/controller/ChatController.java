@@ -65,8 +65,6 @@ public class ChatController {
         msgOperation.convertAndSend("/sub/chat/room", chatDto);
     }
 
-
-    @ResponseBody
     @PostMapping(value = "/chat/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadImage(@RequestParam(value = "image", required = false) MultipartFile image, @AuthenticationPrincipal UserDetails userDetails)throws IOException{
         return s3Uploader.uploadImage(image);
@@ -75,5 +73,10 @@ public class ChatController {
     @GetMapping(value = "/chat/images")
     public List<ChatImagesDto> saveChatImagesList(){
         return chatService.saveChatImageList();
+    }
+
+    @PostMapping("/chat/likes/{chatId}")
+    public ChatDto chatlike(@PathVariable(name = "chatId")Long chatId){
+        return chatService.chatLike(chatId);
     }
 }
